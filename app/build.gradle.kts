@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("io.gitlab.arturbosch.detekt")
+
 }
 
 android {
@@ -46,6 +48,11 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    detekt {
+        config = files("../detekt.yml")
+        buildUponDefaultConfig = true
+        allRules = false
     }
 }
 

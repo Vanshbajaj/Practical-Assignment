@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -37,6 +37,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+    detekt {
+        config = files("../detekt.yml")
+        buildUponDefaultConfig = true
+        allRules = false
+    }
 }
 
 dependencies {
@@ -46,7 +51,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.dagger)
-    annotationProcessor(libs.dagger.compiler)
+    detektPlugins(libs.detekt.formatting)
+    testImplementation(libs.mockk)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+
 
 }

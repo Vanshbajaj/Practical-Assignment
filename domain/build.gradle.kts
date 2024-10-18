@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -30,6 +31,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    detekt {
+        config = files("../detekt.yml")
+        buildUponDefaultConfig = true
+        allRules = false
+    }
 }
 
 dependencies {
@@ -40,4 +46,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    detektPlugins(libs.detekt.formatting)
+    testImplementation("io.mockk:mockk:1.13.8")
 }

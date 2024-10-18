@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -30,14 +31,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    detekt {
+        config = files("../detekt.yml")
+        buildUponDefaultConfig = true
+        allRules = false
+    }
 }
 
 dependencies {
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
-    implementation("com.apollographql.apollo3:apollo-runtime:3.8.5") // Apollo Client
-    implementation("com.apollographql.apollo3:apollo-coroutines-support:3.8.5") // Coroutine support
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.converter.scalars)
+    implementation(libs.apollo.runtime)
+    detektPlugins(libs.detekt.formatting)
 
 
 }
