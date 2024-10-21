@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.detekt.plugin)
 }
 
 android {

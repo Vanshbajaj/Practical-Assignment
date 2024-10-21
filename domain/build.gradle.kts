@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.detekt.plugin)
+    alias(libs.plugins.apollo.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -31,12 +33,18 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    detekt {
-        config = files("../detekt.yml")
-        buildUponDefaultConfig = true
-        allRules = false
+    apollo {
+        service("GraphQL") {
+            packageName.set("com.domain.graphql")
+            introspection {
+                endpointUrl.set("https://rickandmortyapi.com/graphql")
+                schemaFile.set(file("src/main/graphql/schema.sdl"))
+
+            }
+        }
     }
 }
+
 
 dependencies {
 
@@ -46,6 +54,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.apollo.runtime)
     detektPlugins(libs.detekt.formatting)
-    testImplementation("io.mockk:mockk:1.13.8")
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 }
