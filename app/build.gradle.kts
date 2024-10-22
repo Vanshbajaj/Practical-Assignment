@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.detekt.plugin)
 
 
+
 }
 
 android {

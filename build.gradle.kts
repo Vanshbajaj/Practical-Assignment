@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.apollo.android) apply  false
     alias(libs.plugins.detekt.plugin) apply  false
 
+
 }
