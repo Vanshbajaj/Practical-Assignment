@@ -44,7 +44,7 @@ android {
         }
     }
     detekt {
-        config = files("detekt.yml")
+        config = files("app/detekt.yml")
         parallel = true
         buildUponDefaultConfig = true
     }
