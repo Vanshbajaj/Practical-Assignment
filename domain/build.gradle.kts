@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.detekt.plugin)
     alias(libs.plugins.apollo.android)
     id("kotlin-kapt")
 }
@@ -45,23 +44,7 @@ android {
             }
         }
     }
-    detekt {
-        input = files("src/main/kotlin")
-        config = files("detekt.yml")
-        baseline = file("config/detekt/baseline.xml")
-        parallel = true
-        buildUponDefaultConfig = true
-        parallel = true
-        buildUponDefaultConfig = true
-    }
 
-    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-        reports {
-            html.enabled = true  // Enable HTML report
-            xml.enabled = false  // Disable XML report
-            txt.enabled = false  // Disable plain text report
-        }
-    }
 }
 
 
@@ -73,5 +56,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.apollo.runtime)
-    detektPlugins(libs.detekt.formatting)
+  
 }

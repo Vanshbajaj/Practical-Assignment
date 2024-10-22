@@ -1,11 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.detekt.plugin)
 }
-subprojects{
-    apply(from = "detekt-config.gradle.kts")
-}
+
 android {
     namespace = "com.practical.data"
     compileSdk = 34
@@ -40,7 +37,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.apollo.runtime)
-    detektPlugins(libs.detekt.formatting)
 
 
 }
