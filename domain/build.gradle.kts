@@ -44,10 +44,17 @@ android {
         }
     }
     detekt {
-        config = files("../detekt.yml")
-        buildUponDefaultConfig = true
-        allRules = false
+        config = files("detekt.yml")  // Path to your detekt.yml file
         parallel = true
+        buildUponDefaultConfig = true
+    }
+
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        reports {
+            html.enabled = true  // Enable HTML report
+            xml.enabled = false  // Disable XML report
+            txt.enabled = false  // Disable plain text report
+        }
     }
 }
 
