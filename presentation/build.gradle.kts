@@ -2,8 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.detekt.plugin)
+    id("kotlin-kapt")
 }
-
+subprojects{
+    apply(from = "detekt-config.gradle.kts")
+}
 android {
     namespace = "com.practical.presentation"
     compileSdk = 34
@@ -71,6 +74,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
 
 

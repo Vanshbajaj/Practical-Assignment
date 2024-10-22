@@ -4,7 +4,9 @@ plugins {
     alias(libs.plugins.detekt.plugin)
     id("kotlin-kapt")
 }
-
+subprojects{
+    apply(from = "detekt-config.gradle.kts")
+}
 android {
     namespace = "com.practical.data"
     compileSdk = 34
@@ -32,30 +34,13 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    detekt {
-        input = files("src/main/kotlin")
-        config = files("detekt.yml")
-        baseline = file("config/detekt/baseline.xml")
-        parallel = true
-        buildUponDefaultConfig = true
-        parallel = true
-        buildUponDefaultConfig = true
-    }
 
-    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-        reports {
-            html.enabled = true  // Enable HTML report
-            xml.enabled = false  // Disable XML report
-            txt.enabled = false  // Disable plain text report
-        }
-    }
 }
 
 dependencies {
     implementation(project(":domain"))
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
     implementation(libs.apollo.runtime)
     detektPlugins(libs.detekt.formatting)
     implementation(libs.dagger)
