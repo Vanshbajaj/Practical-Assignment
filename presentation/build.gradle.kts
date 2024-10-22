@@ -1,12 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.detekt.plugin)
-    id("kotlin-kapt")
+
 }
-subprojects{
-    apply(from = "detekt-config.gradle.kts")
-}
+
 android {
     namespace = "com.practical.presentation"
     compileSdk = 34
@@ -40,13 +37,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
-    detekt {
-        input = files("src/main/kotlin")
-        config = files("detekt.yml")
-        baseline = file("config/detekt/baseline.xml")
-        parallel = true
-        buildUponDefaultConfig = true
-    }
+
 
     tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         reports {
@@ -64,7 +55,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    detektPlugins(libs.detekt.formatting)
     testImplementation(libs.mockk)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -74,9 +64,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
-
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
 
 
 }
