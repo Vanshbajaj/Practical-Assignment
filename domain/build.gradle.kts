@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.detekt.plugin)
     alias(libs.plugins.apollo.android)
     id("kotlin-kapt")
 }
-
+subprojects{
+    apply(from = "detekt-config.gradle.kts")
+}
 android {
     namespace = "com.practical.domain"
     compileSdk = 34
@@ -43,11 +44,11 @@ android {
             }
         }
     }
+
 }
 
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -55,7 +56,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.apollo.runtime)
-    detektPlugins(libs.detekt.formatting)
-    implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
+  
 }

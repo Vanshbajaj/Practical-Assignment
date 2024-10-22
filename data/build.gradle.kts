@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.detekt.plugin)
 }
 
 android {
@@ -31,19 +30,13 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    detekt {
-        config = files("../detekt.yml")
-        buildUponDefaultConfig = true
-        allRules = false
-    }
+
 }
 
 dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
     implementation(libs.apollo.runtime)
-    detektPlugins(libs.detekt.formatting)
 
 
 }

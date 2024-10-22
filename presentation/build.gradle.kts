@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.detekt.plugin)
+
 }
 
 android {
@@ -37,10 +37,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
-    detekt {
-        config = files("../detekt.yml")
-        buildUponDefaultConfig = true
-        allRules = false
+
+
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        reports {
+            html.enabled = true  // Enable HTML report
+            xml.enabled = false  // Disable XML report
+            txt.enabled = false  // Disable plain text report
+        }
     }
 }
 
@@ -51,7 +55,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    detektPlugins(libs.detekt.formatting)
     testImplementation(libs.mockk)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -61,6 +64,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
 
 
 }

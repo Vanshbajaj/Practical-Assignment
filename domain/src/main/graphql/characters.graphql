@@ -1,0 +1,30 @@
+query Characters {
+    characters {
+        info {
+            count
+            pages
+            next
+            prev
+        }
+        results {
+            created
+            origin {
+                id
+                name
+                type
+                dimension
+                created
+            }
+            location {
+                dimension
+                created
+            }
+            image
+            gender
+            type
+            species
+            status
+            name
+        }
+    }
+}
