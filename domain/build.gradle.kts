@@ -64,7 +64,6 @@ android {
 
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -73,6 +72,4 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.apollo.runtime)
     detektPlugins(libs.detekt.formatting)
-    implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
 }
