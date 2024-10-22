@@ -38,7 +38,9 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
     detekt {
+        input = files("src/main/kotlin")
         config = files("detekt.yml")
+        baseline = file("config/detekt/baseline.xml")
         parallel = true
         buildUponDefaultConfig = true
     }

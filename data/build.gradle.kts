@@ -32,7 +32,11 @@ android {
         jvmTarget = "1.8"
     }
     detekt {
+        input = files("src/main/kotlin")
         config = files("detekt.yml")
+        baseline = file("config/detekt/baseline.xml")
+        parallel = true
+        buildUponDefaultConfig = true
         parallel = true
         buildUponDefaultConfig = true
     }

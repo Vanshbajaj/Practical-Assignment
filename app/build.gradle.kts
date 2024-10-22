@@ -52,7 +52,11 @@ android {
         }
     }
     detekt {
-        config = files("detekt.yml")      // Path to your detekt.yml file
+        input = files("src/main/kotlin")
+        config = files("detekt.yml")
+        baseline = file("config/detekt/baseline.xml")
+        parallel = true
+        buildUponDefaultConfig = true     // Path to your detekt.yml file
         parallel = true
         buildUponDefaultConfig = true
     }
