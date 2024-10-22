@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.detekt.plugin)
+    id("kotlin-kapt")
 }
 
 android {
@@ -51,11 +52,14 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
     implementation(libs.apollo.runtime)
     detektPlugins(libs.detekt.formatting)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
 
 }
