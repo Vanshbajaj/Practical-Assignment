@@ -41,6 +41,7 @@ android {
         config = files("../detekt.yml")
         buildUponDefaultConfig = true
         allRules = false
+        parallel = true
     }
 }
 
