@@ -44,7 +44,7 @@ android {
         }
     }
     detekt {
-        config = files("$projectDir/.github/workflows/detekt.yml")
+        config = files(".github/workflows/detekt.yml")
         parallel = true
         buildUponDefaultConfig = true
     }
