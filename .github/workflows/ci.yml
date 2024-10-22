@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - feature   # Trigger on pushes to the feature branch
+      - Domain-Setup  # Trigger on pushes to the feature branch
   pull_request:
     branches:
-      - feature   # Trigger on PRs targeting the feature branch
+      - Domain-Setup  # Trigger on PRs targeting the feature branch
 
 jobs:
   build:
