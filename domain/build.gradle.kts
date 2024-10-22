@@ -5,7 +5,9 @@ plugins {
     alias(libs.plugins.apollo.android)
     id("kotlin-kapt")
 }
-
+subprojects{
+    apply(from = "detekt-config.gradle.kts")
+}
 android {
     namespace = "com.practical.domain"
     compileSdk = 34
