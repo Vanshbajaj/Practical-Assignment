@@ -38,7 +38,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
     detekt {
-        config = files(".github/workflows/detekt.yml")
+        config = files("detekt.yml")
         parallel = true
         buildUponDefaultConfig = true
     }
