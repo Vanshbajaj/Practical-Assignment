@@ -32,7 +32,7 @@ android {
         jvmTarget = "1.8"
     }
     detekt {
-        config = files("GitHub/workflows/detekt.yml")
+        config = files(".github/workflows/detekt.yml")
         parallel = true
         buildUponDefaultConfig = true
     }
