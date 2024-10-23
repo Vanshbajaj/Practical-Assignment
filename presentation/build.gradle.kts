@@ -38,14 +38,6 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
 
-
-    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-        reports {
-            html.enabled = true  // Enable HTML report
-            xml.enabled = false  // Disable XML report
-            txt.enabled = false  // Disable plain text report
-        }
-    }
 }
 
 dependencies {
@@ -64,7 +56,4 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
-
-
 }

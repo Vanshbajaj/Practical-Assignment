@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp.plugin)
+
 
 }
 
@@ -42,7 +43,5 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.apollo.runtime)
     implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
-
-
+    implementation(libs.dagger.compiler)
 }

@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.apollo.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp.plugin)
 }
 subprojects{
     apply(from = "detekt-config.gradle.kts")
