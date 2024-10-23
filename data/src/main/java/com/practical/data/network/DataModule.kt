@@ -1,6 +1,7 @@
 package com.practical.data.network
 
 import com.apollographql.apollo3.ApolloClient
+import com.practical.common.Constants
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.repository.CharacterRepository
 import com.practical.domain.usecases.GetCharactersUseCase
@@ -14,7 +15,7 @@ object DataModule {
     @Singleton
     fun provideApolloClient(): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl("https://rickandmortyapi.com/graphql")
+            .serverUrl(Constants.RICK_MORTY_URL)
             .build()
     }
 
