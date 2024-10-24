@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.apollo.android) apply false
     alias(libs.plugins.detekt.plugin) apply true  // Apply Detekt globally
+   alias(libs.plugins.ksp.plugin) apply  false
+
 }
 
 

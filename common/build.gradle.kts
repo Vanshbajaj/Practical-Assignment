@@ -1,13 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp.plugin)
-
-
 }
 
 android {
-    namespace = "com.practical.data"
+    namespace = "com.practical.common"
     compileSdk = 34
 
     defaultConfig {
@@ -33,15 +30,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 }
 
-dependencies {
-    implementation(project(":domain"))
-    implementation(project(":common"))
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.apollo.runtime)
-    implementation(libs.dagger)
-    implementation(libs.dagger.compiler)
-}
+dependencies {}
