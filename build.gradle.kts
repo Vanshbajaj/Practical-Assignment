@@ -3,21 +3,20 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.apollo.android) apply false
-    alias(libs.plugins.detekt.plugin) apply true  // Apply Detekt globally
-   alias(libs.plugins.ksp.plugin) apply  false
-
+    alias(libs.plugins.detekt.plugin) apply true
+    alias(libs.plugins.ksp.plugin) apply false
 }
 
 
 
 
-        detekt {
-            input = files("src/main/kotlin") // Path to Kotlin source files
-            config = files("detekt.yml") // Path to configuration file
-            baseline = file("config/detekt/baseline.xml") // Path to baseline (optional)
-            parallel = true // Run detekt in parallel
-            buildUponDefaultConfig = true // Build upon default config
-        }
+detekt {
+    input = files("src/main/kotlin") // Path to Kotlin source files
+    config = files("detekt.yml") // Path to configuration file
+    baseline = file("config/detekt/baseline.xml") // Path to baseline (optional)
+    parallel = true // Run detekt in parallel
+    buildUponDefaultConfig = true // Build upon default config
+}
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     reports {
