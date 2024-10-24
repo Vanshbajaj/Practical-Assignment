@@ -32,12 +32,12 @@ jobs:
 
       # Step 4: Build the project
       - name: Build the project
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build
 
       # Step 5: Run tests
       - name: Run tests
-        run: ./gradlew test --no-daemon
+        run: ./gradlew test
 
       # Step 6: Run Detekt linting
       - name: Run Detekt (Linting)
-        run: ./gradlew detekt --no-daemon
+        run: ./gradlew detekt
