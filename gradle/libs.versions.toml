@@ -1,6 +1,5 @@
 [versions]
-agp = "8.6.0"
-converterScalars = "2.9.0"
+agp = "8.6.1"
 dagger = "2.49"
 detektFormatting = "1.22.0"
 kotlin = "1.9.0"
@@ -17,12 +16,12 @@ mockk = "1.12.8"
 apollo = "3.2.1"
 dekect = "1.23.0"
 ksp = "1.9.0-1.0.13"
+gson="2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 apollo-runtime = { module = "com.apollographql.apollo3:apollo-runtime", version.ref = "apollo" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterScalars" }
-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "gson" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektFormatting" }
@@ -42,7 +41,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterScalars" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

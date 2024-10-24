@@ -13,7 +13,35 @@ detekt:
     android: false
 
   rules:
+    formatting:
+      SpacingBetweenDeclarations:
+        active: true
+      SpacingBetweenFunctionDeclarations:
+        active: true
+      SpacingAroundOperators:
+        active: true
+      SpacingAroundKeyword:
+        active: true
+
+    comments:
+      CommentOverPrivateFunction:
+        active: true
+
     complexity:
       ComplexMethod:
         active: true
         threshold: 10
+
+    style:
+      MagicNumber:
+        active: true
+        ignoreNumbers: [0, 1, 2]
+      NamingConvention:
+        active: true
+        property: camelCase
+        function: camelCase
+        class: PascalCase
+
+    potential-bugs:
+      UnnecessarySafeCall:
+        active: true
