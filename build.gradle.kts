@@ -11,7 +11,7 @@ plugins {
 
 
 detekt {
-    input = files("src/main/java/com/pratical/data") // Path to Kotlin source files
+    input = files("src/main/kotlin") // Path to Kotlin source files
     config = files("detekt.yml") // Path to configuration file
     baseline = file("config/detekt/baseline.xml") // Path to baseline (optional)
     parallel = true // Run detekt in parallel
