@@ -1,3 +1,4 @@
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.js.backend.ast.JsEmpty.setSource
 
 plugins {
@@ -10,27 +11,26 @@ plugins {
 }
 
 
-
-
 detekt {
+    toolVersion = "1.23.7"
+    config.setFrom(file("detekt.yml"))
+    buildUponDefaultConfig = true
     setSource(files( // Use 'setSource' instead of 'source ='
         "app/src/main/kotlin",
         "data/src/main/kotlin",
         "domain/src/main/kotlin",
         "presentation/src/main/kotlin"
     ))
-    config.setFrom(files("detekt.yml")) // Set configuration file
-//    baseline.set(file("config/detekt/baseline.xml")) // Optional baseline file
-
     parallel = true // Run Detekt in parallel
     buildUponDefaultConfig = true // Build upon default config
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+tasks.withType<Detekt>().configureEach {
     reports {
-        html.required.set(true) // Enable HTML report
-        xml.required.set(false)  // Disable XML report
-        txt.required.set(false)   // Disable TXT report
+        xml.required.set(true)
+        html.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(true)
+        md.required.set(true)
     }
 }
-
