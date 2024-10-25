@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp.plugin)
+    alias(libs.plugins.apollo.android)
 
 
 }
@@ -34,7 +35,16 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    apollo {
+        service("GraphQL") {
+            packageName.set("com.data.graphql")
+            introspection {
+                endpointUrl.set("https://rickandmortyapi.com/graphql")
+                schemaFile.set(file("src/main/graphql/schema.sdl"))
 
+            }
+        }
+    }
 }
 
 dependencies {
@@ -44,5 +54,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.apollo.runtime)
     implementation(libs.dagger)
-    implementation(libs.dagger.compiler)
+    ksp(libs.dagger.compiler)
+
+
 }
