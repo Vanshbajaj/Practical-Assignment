@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.js.backend.ast.JsEmpty.setSource
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
@@ -11,17 +13,24 @@ plugins {
 
 
 detekt {
-    input = files("src/main/kotlin") // Path to Kotlin source files
-    config = files("detekt.yml") // Path to configuration file
-    baseline = file("config/detekt/baseline.xml") // Path to baseline (optional)
-    parallel = true // Run detekt in parallel
+    setSource(files( // Use 'setSource' instead of 'source ='
+        "app/src/main/kotlin",
+        "data/src/main/kotlin",
+        "domain/src/main/kotlin",
+        "presentation/src/main/kotlin"
+    ))
+    config.setFrom(files("detekt.yml")) // Set configuration file
+//    baseline.set(file("config/detekt/baseline.xml")) // Optional baseline file
+
+    parallel = true // Run Detekt in parallel
     buildUponDefaultConfig = true // Build upon default config
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     reports {
-        html.enabled = true
-        xml.enabled = false
-        txt.enabled = false
+        html.required.set(true) // Enable HTML report
+        xml.required.set(false)  // Disable XML report
+        txt.required.set(false)   // Disable TXT report
     }
 }
+
