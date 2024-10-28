@@ -3,8 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp.plugin)
     alias(libs.plugins.apollo.android)
-
-
 }
 
 android {
@@ -50,11 +48,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
-    implementation(project(":common"))
-
     implementation(libs.apollo.runtime)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
-
-
 }

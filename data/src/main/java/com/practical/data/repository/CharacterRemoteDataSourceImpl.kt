@@ -16,13 +16,13 @@ class CharacterRepositoryImpl @Inject constructor(
         // Handle the response and map it to domain models
         return response.data?.characters?.results?.map { character ->
             CharacterDataClass(
-                name = character?.name ?: "",
-                species = character?.species ?: "",
-                gender = character?.gender ?: "",
-                status = character?.status ?: "",
-                image = character?.image ?: "",
-                origin = character?.origin?.name ?: "",
-                location = character?.location?.dimension ?: ""
+                name = character?.name.orEmpty(),
+                species = character?.species.orEmpty(),
+                gender = character?.gender.orEmpty(),
+                status = character?.status.orEmpty(),
+                image = character?.image.orEmpty(),
+                origin = character?.origin?.name.orEmpty(),
+                location = character?.location?.dimension.orEmpty()
             )
         } ?: emptyList()
     }

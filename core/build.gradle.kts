@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":common"))
     implementation(libs.apollo.runtime)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)

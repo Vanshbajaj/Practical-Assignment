@@ -1,10 +1,7 @@
-
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp.plugin)
-//    alias(libs.plugins.apollo.android)
     alias(libs.plugins.kotlin.compose.complier)
 
 }
@@ -53,17 +50,7 @@ android {
         }
     }
 
-//    apollo {
-//        service("GraphQL") {
-//            packageName.set("com.practical.assignment")
-//            introspection {
-//                endpointUrl.set("https://rickandmortyapi.com/graphql")
-//                schemaFile.set(file("src/main/graphql/schema.sdl"))
-//
-//
-//            }
-//        }
-//    }
+
 
 
 }

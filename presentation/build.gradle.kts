@@ -1,6 +1,3 @@
-import org.gradle.internal.extensions.stdlib.capitalized
-import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)

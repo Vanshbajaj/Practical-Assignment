@@ -1,6 +1,7 @@
 package com.practical.core
 
 import com.apollographql.apollo.ApolloClient
+import com.practical.common.Constants
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -10,7 +11,7 @@ object Apollo {
     @Singleton
     fun provideApolloClient(): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl("")
+            .serverUrl(Constants.RICK_MORTY_URL)
             .build()
     }
 

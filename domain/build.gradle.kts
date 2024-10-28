@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-
     alias(libs.plugins.ksp.plugin)
 }
 
@@ -47,5 +46,4 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
-
 }
