@@ -3,11 +3,12 @@ package com.practical.assignment
 
 import com.practical.core.Apollo
 import com.practical.data.network.DataModule
+import com.practical.presentation.viewmodel.ViewModelModule
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [Apollo::class,DataModule::class])
+@Component(modules = [Apollo::class,DataModule::class, ViewModelModule::class])
 interface AppComponent {
     fun inject(application: RickAndMorty)
     fun inject(activity: MainActivity)
