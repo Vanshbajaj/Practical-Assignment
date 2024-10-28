@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import com.practical.assignment.ui.theme.PracticalAssignmentTheme
-import com.practical.presentation.CharacterListScreen
+import com.practical.presentation.CharacterScreen
 import com.practical.presentation.viewmodel.CharacterViewModel
 import com.practical.presentation.viewmodel.ViewModelFactory
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PracticalAssignmentTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    CharacterListScreen(viewModel)
+                    CharacterScreen(viewModel)
                 }
 
             }
