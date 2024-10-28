@@ -1,12 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.apollo.android)
     alias(libs.plugins.ksp.plugin)
 }
-subprojects{
-    apply(from = "detekt-config.gradle.kts")
-}
+
 android {
     namespace = "com.practical.domain"
     compileSdk = 34
@@ -35,16 +32,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    apollo {
-        service("GraphQL") {
-            packageName.set("com.domain.graphql")
-            introspection {
-                endpointUrl.set("https://rickandmortyapi.com/graphql")
-                schemaFile.set(file("src/main/graphql/schema.sdl"))
 
-            }
-        }
-    }
 
 }
 
@@ -56,5 +44,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.apollo.runtime)
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
 }

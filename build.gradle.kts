@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.apollo.android) apply false
     alias(libs.plugins.detekt.plugin) apply true
     alias(libs.plugins.ksp.plugin) apply false
+    alias(libs.plugins.kotlin.compose.complier) apply false
 }
 
 

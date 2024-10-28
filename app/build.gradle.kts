@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp.plugin)
+    alias(libs.plugins.kotlin.compose.complier)
+
 }
 
 android {
@@ -41,18 +43,20 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 
+
+
+
 }
 
 dependencies {
+   implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":presentation"))
@@ -71,4 +75,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+    implementation(libs.apollo.runtime)
 }
+

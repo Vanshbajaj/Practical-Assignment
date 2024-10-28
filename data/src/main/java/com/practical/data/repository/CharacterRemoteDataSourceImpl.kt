@@ -1,7 +1,7 @@
 package com.practical.data.repository
 
-import com.apollographql.apollo3.ApolloClient
-import com.domain.graphql.CharactersQuery
+import com.apollographql.apollo.ApolloClient
+import com.data.graphql.CharactersQuery
 import com.practical.domain.CharacterDataClass
 import com.practical.domain.repository.CharacterRepository
 import javax.inject.Inject
@@ -14,15 +14,15 @@ class CharacterRepositoryImpl @Inject constructor(
         val response = apolloClient.query(CharactersQuery()).execute()
 
         // Handle the response and map it to domain models
-        return response.data?.characters?.results?.map {
+        return response.data?.characters?.results?.map { character ->
             CharacterDataClass(
-                name = it?.name ?: "",
-                species = it?.species ?: "",
-                gender = it?.gender ?: "",
-                status = it?.status ?: "",
-                image = it?.image ?: "",
-                origin = it?.origin?.name ?: "",
-                location = it?.location?.dimension ?: ""
+                name = character?.name.orEmpty(),
+                species = character?.species.orEmpty(),
+                gender = character?.gender.orEmpty(),
+                status = character?.status.orEmpty(),
+                image = character?.image.orEmpty(),
+                origin = character?.origin?.name.orEmpty(),
+                location = character?.location?.dimension.orEmpty()
             )
         } ?: emptyList()
     }

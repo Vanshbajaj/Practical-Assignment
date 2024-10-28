@@ -1,26 +1,26 @@
 [versions]
 agp = "8.6.1"
-dagger = "2.49"
+dagger = "2.52"
 detektFormatting = "1.22.0"
-kotlin = "1.9.0"
+kotlin = "2.0.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
-composeBom = "2024.04.01"
+composeBom = "2024.10.00"
 appcompat = "1.7.0"
 material = "1.12.0"
-mockk = "1.12.8"
-apollo = "3.2.1"
+mockk = "1.13.8"
+apollo = "4.0.1"
 dekect = "1.23.0"
-ksp = "1.9.0-1.0.13"
+ksp = "2.0.21-1.0.26"
 gson="2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-apollo-runtime = { module = "com.apollographql.apollo3:apollo-runtime", version.ref = "apollo" }
+apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "gson" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
@@ -47,7 +47,8 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "gson" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-apollo-android = { id = "com.apollographql.apollo3", version.ref = "apollo" }
+apollo-android = { id = "com.apollographql.apollo", version.ref = "apollo" }
 detekt-plugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "dekect" }
 ksp-plugin = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-compose-complier = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

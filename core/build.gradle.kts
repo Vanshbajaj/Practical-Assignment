@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.practical.data"
+    namespace = "com.practical.core"
     compileSdk = 34
 
     defaultConfig {
@@ -29,25 +29,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
     kotlinOptions {
         jvmTarget = "17"
-    }
-    apollo {
-        service("GraphQL") {
-            packageName.set("com.data.graphql")
-            introspection {
-                endpointUrl.set("https://rickandmortyapi.com/graphql")
-                schemaFile.set(file("src/main/graphql/schema.sdl"))
-
-            }
-        }
     }
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":domain"))
+    implementation(project(":common"))
     implementation(libs.apollo.runtime)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
