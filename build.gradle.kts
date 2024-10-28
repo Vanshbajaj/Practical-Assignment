@@ -1,4 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import org.codehaus.groovy.ast.tools.GeneralUtils.args
 import org.jetbrains.kotlin.js.backend.ast.JsEmpty.setSource
 
 plugins {
@@ -16,14 +17,18 @@ detekt {
     toolVersion = "1.23.7"
     config.setFrom(file("detekt.yml"))
     buildUponDefaultConfig = true
-    setSource(files( // Use 'setSource' instead of 'source ='
-        "app/src/main/kotlin",
-        "data/src/main/kotlin",
-        "domain/src/main/kotlin",
-        "presentation/src/main/kotlin"
-    ))
+
+    // Input directories for Detekt
+
+
+    val input = projectDir
+    val exclude = listOf("**/build/**", "**/resources/**")
+
+    // Set up input and exclusion parameters
+    source.setFrom(fileTree(input) {
+        exclude(exclude)
+    })
     parallel = true // Run Detekt in parallel
-    buildUponDefaultConfig = true // Build upon default config
 }
 
 tasks.withType<Detekt>().configureEach {
