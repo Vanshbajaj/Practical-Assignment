@@ -48,10 +48,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":common"))
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
+
     implementation(libs.apollo.runtime)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)

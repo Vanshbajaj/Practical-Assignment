@@ -1,7 +1,12 @@
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp.plugin)
+//    alias(libs.plugins.apollo.android)
+    alias(libs.plugins.kotlin.compose.complier)
+
 }
 
 android {
@@ -41,18 +46,30 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 
+//    apollo {
+//        service("GraphQL") {
+//            packageName.set("com.practical.assignment")
+//            introspection {
+//                endpointUrl.set("https://rickandmortyapi.com/graphql")
+//                schemaFile.set(file("src/main/graphql/schema.sdl"))
+//
+//
+//            }
+//        }
+//    }
+
+
 }
 
 dependencies {
+   implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":presentation"))
@@ -71,8 +88,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.google.dagger:dagger-android:2.48.1")
-    ksp("com.google.dagger:dagger-compiler:2.48.1")
-
-
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+    implementation(libs.apollo.runtime)
 }
+

@@ -11,18 +11,18 @@ class CharacterRepositoryImpl @Inject constructor(
 ) : CharacterRepository {
 
     override suspend fun getCharacters(): List<CharacterDataClass> {
-        val response = apolloClient.query(CharactersQuery()).executeV3()
+        val response = apolloClient.query(CharactersQuery()).execute()
 
         // Handle the response and map it to domain models
         return response.data?.characters?.results?.map { character ->
             CharacterDataClass(
-                name = character?.name ?: "Unknown",
-                species = character?.species ?: "Unknown",
-                gender = character?.gender ?: "Unknown",
-                status = character?.status ?: "Unknown",
+                name = character?.name ?: "",
+                species = character?.species ?: "",
+                gender = character?.gender ?: "",
+                status = character?.status ?: "",
                 image = character?.image ?: "",
-                origin = character?.origin?.name ?: "Unknown",
-                location = character?.location?.dimension ?: "Unknown"
+                origin = character?.origin?.name ?: "",
+                location = character?.location?.dimension ?: ""
             )
         } ?: emptyList()
     }
