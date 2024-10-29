@@ -9,6 +9,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -32,6 +34,34 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 
+)
+
+data class Dimens(
+    val paddingSmall: Dp,
+    val paddingMedium: Dp,
+    val paddingLarge: Dp,
+    val marginSmall: Dp,
+    val marginMedium: Dp,
+    val marginLarge: Dp
+)
+
+
+val lightDimens = Dimens(
+    paddingSmall = 8.dp,
+    paddingMedium = 16.dp,
+    paddingLarge = 24.dp,
+    marginSmall = 4.dp,
+    marginMedium = 12.dp,
+    marginLarge = 20.dp
+)
+
+val darkDimens = Dimens(
+    paddingSmall = 10.dp,
+    paddingMedium = 18.dp,
+    paddingLarge = 26.dp,
+    marginSmall = 5.dp,
+    marginMedium = 15.dp,
+    marginLarge = 25.dp
 )
 
 @Composable

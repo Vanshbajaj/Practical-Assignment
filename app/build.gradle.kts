@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
     implementation(libs.apollo.runtime)
+    implementation(libs.androidx.navigation.compose)
 }
 
 

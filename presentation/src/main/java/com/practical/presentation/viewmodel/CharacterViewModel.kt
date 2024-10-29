@@ -16,15 +16,25 @@ class CharacterViewModel @Inject constructor(
     private val _characters = MutableStateFlow<List<CharacterModel>>(emptyList())
     val characters: StateFlow<List<CharacterModel>> get() = _characters
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing
+
     init {
         fetchCharacters()
     }
 
-    private fun fetchCharacters() {
+    fun fetchCharacters() {
         viewModelScope.launch {
-            _characters.emit(getCharactersUseCase()) // Calling the use case
+            _isRefreshing.emit(true)
+            runCatching {
+                getCharactersUseCase()
+            }.onSuccess { fetchedCharacters ->
+                _characters.emit(fetchedCharacters)
+            }.onFailure {
+                // Optionally handle the error here
+            }.also {
+                _isRefreshing.emit(false)
+            }
         }
     }
-
 }
-
