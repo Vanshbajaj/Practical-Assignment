@@ -40,7 +40,7 @@ fun characterScreen(viewModel: CharacterViewModel) {
         viewModel.fetchCharacters()
     }
 
-    SwipeRefresh(isRefreshing = isRefreshing, onRefresh = refreshData) {
+    swipeRefresh(isRefreshing = isRefreshing, onRefresh = refreshData) {
         val gridCells = 2
         Column(
             modifier = Modifier
@@ -69,7 +69,7 @@ fun characterScreen(viewModel: CharacterViewModel) {
 }
 
 @Composable
-fun SwipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composable () -> Unit) {
+fun swipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composable () -> Unit) {
     var offset by remember { mutableStateOf(0f) }
 
     Box(

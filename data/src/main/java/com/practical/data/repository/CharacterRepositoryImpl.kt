@@ -28,3 +28,4 @@ class CharacterRepositoryImpl @Inject constructor(
     }
 
 }
+

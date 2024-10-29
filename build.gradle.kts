@@ -41,3 +41,4 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
+
