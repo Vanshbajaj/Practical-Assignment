@@ -22,6 +22,5 @@ object ApolloModule {
             .okHttpClient(httpClient) // Attach the OkHttpClient to Apollo
             .build()
     }
-
 }
 

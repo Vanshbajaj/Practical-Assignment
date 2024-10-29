@@ -27,13 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.presentation.viewmodel.CharacterViewModel
-
+private const val PULL_TO_REFRESH_THRESHOLD = 200
 @Composable
-fun characterScreen(viewModel: CharacterViewModel, navController: NavController) {
+fun characterScreen(viewModel: CharacterViewModel) {
     val characters by viewModel.characters.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
@@ -72,6 +71,7 @@ fun characterScreen(viewModel: CharacterViewModel, navController: NavController)
 @Composable
 fun SwipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composable () -> Unit) {
     var offset by remember { mutableStateOf(0f) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -79,7 +79,7 @@ fun SwipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composa
                 detectVerticalDragGestures { change, dragAmount ->
                     if (dragAmount > 0 && !isRefreshing) {
                         offset += dragAmount
-                        if (offset > 500) {
+                        if (offset > PULL_TO_REFRESH_THRESHOLD) {
                             onRefresh()
                             offset = 0f
                         }
