@@ -29,7 +29,7 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel) {
     val characters by viewModel.characters.collectAsState()
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
@@ -55,33 +55,31 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
 }
 
 
-
-
-    @Composable
-    fun CharacterItem(character: CharacterDataClass) {
-        Card(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
+@Composable
+fun CharacterItem(character: CharacterDataClass) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                AsyncImage(
-                    model = character.image,
-                    contentDescription = character.name,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .aspectRatio(1f)
-                )
-                Text(
-                    text = character.name,
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .padding(8.dp) // Adjust padding as needed
-                        .align(Alignment.BottomCenter) // Align text in the center
-                )
-            }
+            AsyncImage(
+                model = character.image,
+                contentDescription = character.name,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .aspectRatio(1f)
+            )
+            Text(
+                text = character.name,
+                color = Color.White,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .padding(8.dp) // Adjust padding as needed
+                    .align(Alignment.BottomCenter) // Align text in the center
+            )
         }
     }
+}
