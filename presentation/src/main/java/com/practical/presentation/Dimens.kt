@@ -10,5 +10,5 @@ object Dimens {
 }
 
 object Ratio{
-    val oneFloat=1f
+    const val oneFloat=1f
 }
