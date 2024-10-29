@@ -20,32 +20,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.practical.domain.CharacterDataClass
+import com.practical.domain.CharacterModel
 import com.practical.presentation.viewmodel.CharacterViewModel
+
 
 @Composable
 fun characterScreen(viewModel: CharacterViewModel) {
     val characters by viewModel.characters.collectAsState()
+    val gridCells = 2
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(Dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = stringResource(R.string.rick_morty_app),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
-                .padding(4.dp)
+                .padding(Dimens.extraPaddingSmall)
                 .align(Alignment.CenterHorizontally)
         )
 
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(8.dp)
+            columns = GridCells.Fixed(gridCells),
+            contentPadding = PaddingValues(Dimens.paddingSmall)
         ) {
             items(characters.size) { character ->
                 characterItem(characters[character])
@@ -56,10 +56,10 @@ fun characterScreen(viewModel: CharacterViewModel) {
 
 
 @Composable
-private fun characterItem(character: CharacterDataClass) {
+private fun characterItem(character: CharacterModel) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(Dimens.paddingSmall)
             .fillMaxWidth()
     ) {
         Box(
@@ -70,14 +70,14 @@ private fun characterItem(character: CharacterDataClass) {
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()
-                    .aspectRatio(1f)
+                    .aspectRatio(Ratio.oneFloat)
             )
             Text(
                 text = character.name,
                 color = Color.White,
-                fontSize = 20.sp,
+                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier
-                    .padding(8.dp) // Adjust padding as needed
+                    .padding(Dimens.paddingSmall) // Adjust padding as needed
                     .align(Alignment.BottomCenter) // Align text in the center
             )
         }

@@ -1,6 +1,6 @@
 package com.practical.domain
 
-data class CharacterDataClass(
+data class CharacterModel(
     val name: String,
     val species: String,
     val gender: String,
