@@ -24,4 +24,5 @@ class CoreServiceTest {
 
 interface CoreService {
     fun calculate(a: Int, b: Int): Int
+
 }

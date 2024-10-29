@@ -21,4 +21,5 @@ object DataModule {
     fun provideMyUseCase(repository: CharacterRepository): GetCharactersUseCase {
         return GetCharactersUseCase(repository)
     }
+
 }

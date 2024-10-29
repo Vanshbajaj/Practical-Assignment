@@ -22,8 +22,8 @@ class CharacterViewModel @Inject constructor(
 
     private fun fetchCharacters() {
         viewModelScope.launch {
-               _characters.emit(getCharactersUseCase()) // Calling the use case
-            }
+            _characters.emit(getCharactersUseCase()) // Calling the use case
         }
+    }
 
 }

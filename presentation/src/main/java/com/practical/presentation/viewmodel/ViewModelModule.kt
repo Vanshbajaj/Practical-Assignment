@@ -6,11 +6,12 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class ViewModelModule {
+class ViewModelModule{
 
     @Provides
     @Singleton
     fun provideViewModelFactory(getCharactersUseCase: GetCharactersUseCase): ViewModelFactory {
         return ViewModelFactory(getCharactersUseCase)
     }
+
 }

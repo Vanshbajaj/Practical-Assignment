@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 @Module
-object Apollo {
+object ApolloModule {
     @Provides
     @Singleton
     fun provideApolloClient(): ApolloClient {
@@ -24,4 +24,5 @@ object Apollo {
             .okHttpClient(httpClient) // Attach the OkHttpClient to Apollo
             .build()
     }
+
 }
