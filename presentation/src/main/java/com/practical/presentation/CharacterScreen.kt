@@ -27,7 +27,7 @@ import com.practical.domain.CharacterDataClass
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 @Composable
-fun CharacterScreen(viewModel: CharacterViewModel) {
+fun characterScreen(viewModel: CharacterViewModel) {
     val characters by viewModel.characters.collectAsState()
     Column(
         modifier = Modifier
@@ -48,7 +48,7 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
             contentPadding = PaddingValues(8.dp)
         ) {
             items(characters.size) { character ->
-                CharacterItem(characters[character])
+                characterItem(characters[character])
             }
         }
     }
@@ -56,7 +56,7 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
 
 
 @Composable
-private fun CharacterItem(character: CharacterDataClass) {
+private fun characterItem(character: CharacterDataClass) {
     Card(
         modifier = Modifier
             .padding(8.dp)

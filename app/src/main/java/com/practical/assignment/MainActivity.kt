@@ -7,8 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.practical.assignment.ui.theme.PracticalAssignmentTheme
-import com.practical.presentation.CharacterScreen
+import com.practical.assignment.ui.theme.practicalAssignmentTheme
+import com.practical.presentation.characterScreen
+
 
 import com.practical.presentation.viewmodel.CharacterViewModel
 import com.practical.presentation.viewmodel.ViewModelFactory
@@ -24,9 +25,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         (application as RickAndMorty).appComponent.inject(this)
         setContent {
-            PracticalAssignmentTheme {
+            practicalAssignmentTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    CharacterScreen(viewModel)
+                    characterScreen(viewModel)
                 }
 
             }

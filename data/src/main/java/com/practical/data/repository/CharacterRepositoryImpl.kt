@@ -26,4 +26,5 @@ class CharacterRepositoryImpl @Inject constructor(
             )
         } ?: emptyList()
     }
+
 }

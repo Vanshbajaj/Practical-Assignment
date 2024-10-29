@@ -19,6 +19,7 @@ class CoreServiceTest {
         assertEquals(3, result)
         verify { service.calculate(1, 2) }
     }
+
 }
 
 interface CoreService {
