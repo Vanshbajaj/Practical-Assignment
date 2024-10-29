@@ -56,7 +56,7 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
 
 
 @Composable
-fun CharacterItem(character: CharacterDataClass) {
+private fun CharacterItem(character: CharacterDataClass) {
     Card(
         modifier = Modifier
             .padding(8.dp)
