@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
             practicalAssignmentTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    AppNavGraph(navController, viewModelFactory)
+                    appNavGraph(navController, viewModelFactory)
                 }
 
             }
