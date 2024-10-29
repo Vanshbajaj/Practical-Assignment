@@ -40,3 +40,4 @@ tasks.withType<Detekt>().configureEach {
         md.required.set(true)
     }
 }
+

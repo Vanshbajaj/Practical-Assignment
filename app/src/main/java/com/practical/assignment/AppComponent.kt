@@ -14,3 +14,4 @@ interface AppComponent {
     fun inject(activity: MainActivity)
     // Add other inject methods as needed
 }
+

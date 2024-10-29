@@ -83,3 +83,4 @@ private fun characterItem(character: CharacterDataClass) {
         }
     }
 }
+

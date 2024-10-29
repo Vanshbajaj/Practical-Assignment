@@ -10,3 +10,4 @@ data class CharacterDataClass(
     val location: String
 )
 
+
