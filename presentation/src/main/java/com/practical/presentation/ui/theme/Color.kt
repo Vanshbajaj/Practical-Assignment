@@ -1,4 +1,4 @@
-package com.practical.assignment.ui.theme
+package com.practical.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 private const val COLOR_PURPLE_80_HEX = 0xFFD0BCFF

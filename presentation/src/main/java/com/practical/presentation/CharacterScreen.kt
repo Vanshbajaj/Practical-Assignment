@@ -29,6 +29,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
+import com.practical.presentation.ui.theme.LocalDimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 
@@ -40,6 +41,7 @@ object CharacterScreen {
 
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel) {
+    val dimens = LocalDimens.current
     val characters by viewModel.characters.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
@@ -52,20 +54,20 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.spacing_medium)),
+                .padding(dimens.paddingMedium),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = stringResource(R.string.rick_morty_app),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.spacing_small))
+                    .padding(dimens.paddingSmall)
                     .align(Alignment.CenterHorizontally)
             )
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(CharacterScreen.GRID_CELLS),
-                contentPadding = PaddingValues(dimensionResource(R.dimen.spacing_medium))
+                contentPadding = PaddingValues(dimens.marginSmall)
             ) {
                 items(characters.size) { index ->
                     CharacterItem(characters[index])
@@ -78,6 +80,7 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
 @Composable
 fun SwipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composable () -> Unit) {
     var offset by remember { mutableStateOf(0f) }
+    val dimens = LocalDimens.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -99,7 +102,7 @@ fun SwipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composa
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = dimensionResource(R.dimen.spacing_large))
+                    .padding(top = dimens.paddingMedium)
             )
         }
     }
@@ -107,9 +110,10 @@ fun SwipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composa
 
 @Composable
 private fun CharacterItem(character: CharacterModel) {
+    val dimens = LocalDimens.current
     Card(
         modifier = Modifier
-            .padding(dimensionResource(R.dimen.spacing_medium))
+            .padding(dimens.paddingMedium)
             .fillMaxWidth()
     ) {
         Box(
@@ -127,7 +131,7 @@ private fun CharacterItem(character: CharacterModel) {
                 color = Color.White,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.spacing_medium)) // Adjust padding as needed
+                    .padding(dimens.paddingMedium) // Adjust padding as needed
                     .align(Alignment.BottomCenter) // Align text in the center
             )
         }

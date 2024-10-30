@@ -1,4 +1,4 @@
-package com.practical.assignment.ui.theme
+package com.practical.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -8,6 +8,8 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -42,7 +44,7 @@ data class Dimens(
     val paddingLarge: Dp,
     val marginSmall: Dp,
     val marginMedium: Dp,
-    val marginLarge: Dp
+    val marginLarge: Dp,
 )
 
 
@@ -55,21 +57,13 @@ val lightDimens = Dimens(
     marginLarge = 20.dp
 )
 
-val darkDimens = Dimens(
-    paddingSmall = 10.dp,
-    paddingMedium = 18.dp,
-    paddingLarge = 26.dp,
-    marginSmall = 5.dp,
-    marginMedium = 15.dp,
-    marginLarge = 25.dp
-)
-
 @Composable
 fun PracticalAssignmentTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -80,11 +74,15 @@ fun PracticalAssignmentTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
-    )
+        content = {
+            // Provide dimens to content
+            CompositionLocalProvider(LocalDimens provides lightDimens) {
+                content()
+            }
+            })
+
 
 }
