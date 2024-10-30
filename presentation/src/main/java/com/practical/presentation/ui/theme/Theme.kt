@@ -8,11 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -38,24 +34,7 @@ private val LightColorScheme = lightColorScheme(
 
 )
 
-data class Dimens(
-    val paddingSmall: Dp,
-    val paddingMedium: Dp,
-    val paddingLarge: Dp,
-    val marginSmall: Dp,
-    val marginMedium: Dp,
-    val marginLarge: Dp,
-)
 
-
-val lightDimens = Dimens(
-    paddingSmall = 8.dp,
-    paddingMedium = 16.dp,
-    paddingLarge = 24.dp,
-    marginSmall = 4.dp,
-    marginMedium = 12.dp,
-    marginLarge = 20.dp
-)
 
 @Composable
 fun PracticalAssignmentTheme(
@@ -77,12 +56,7 @@ fun PracticalAssignmentTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = {
-            // Provide dimens to content
-            CompositionLocalProvider(LocalDimens provides lightDimens) {
-                content()
-            }
-            })
+        content =content)
 
 
 }

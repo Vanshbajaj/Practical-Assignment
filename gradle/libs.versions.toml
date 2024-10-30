@@ -2,7 +2,6 @@
 agp = "8.6.1"
 coilCompose = "2.7.0"
 dagger = "2.52"
-detektFormatting = "1.22.0"
 kotlin = "2.0.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -19,8 +18,8 @@ material = "1.12.0"
 mockk = "1.13.8"
 apollo = "4.0.1"
 dekect = "1.23.0"
+detektcompose = "0.4.16+"
 ksp = "2.0.21-1.0.26"
-gson="2.11.0"
 navigationCompose = "2.8.3"
 
 [libraries]
@@ -28,10 +27,8 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "gson" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektFormatting" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -51,7 +48,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "gson" }
+detekt = { module = "io.nlopez.compose.rules:detekt",version.ref="detektcompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

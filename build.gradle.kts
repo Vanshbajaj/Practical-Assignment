@@ -1,6 +1,4 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.psi.addRemoveModifier.addModifier
-
 
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -10,22 +8,18 @@ plugins {
     alias(libs.plugins.detekt.plugin) apply true
     alias(libs.plugins.ksp.plugin) apply false
     alias(libs.plugins.kotlin.compose.complier) apply false
-}
 
+}
+dependencies {
+    detektPlugins(libs.detekt)
+}
 
 detekt {
     toolVersion = "1.23.7"
     config.setFrom(file("detekt.yml"))
     buildUponDefaultConfig = true
-
-
-    // Input directories for Detekt
-
-
     val input = projectDir
     val exclude = listOf("**/build/**", "**/resources/**")
-
-    // Set up input and exclusion parameters
     source.setFrom(fileTree(input) {
         exclude(exclude)
     })
