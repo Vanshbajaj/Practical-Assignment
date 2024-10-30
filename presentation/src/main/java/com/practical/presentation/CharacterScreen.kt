@@ -30,9 +30,16 @@ import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.presentation.viewmodel.CharacterViewModel
-private const val PULL_TO_REFRESH_THRESHOLD = 200
+
+
+object CharacterScreen {
+    const val PULL_TO_REFRESH_THRESHOLD = 200
+    const val IMAGE_RATIO = 1f
+    const val GRID_CELLS = 2
+}
+
 @Composable
-fun characterScreen(viewModel: CharacterViewModel) {
+fun CharacterScreen(viewModel: CharacterViewModel) {
     val characters by viewModel.characters.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
@@ -40,8 +47,8 @@ fun characterScreen(viewModel: CharacterViewModel) {
         viewModel.fetchCharacters()
     }
 
-    swipeRefresh(isRefreshing = isRefreshing, onRefresh = refreshData) {
-        val gridCells = 2
+    SwipeRefresh(isRefreshing = isRefreshing, onRefresh = refreshData) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -57,11 +64,11 @@ fun characterScreen(viewModel: CharacterViewModel) {
             )
 
             LazyVerticalGrid(
-                columns = GridCells.Fixed(gridCells),
+                columns = GridCells.Fixed(CharacterScreen.GRID_CELLS),
                 contentPadding = PaddingValues(dimensionResource(R.dimen.spacing_medium))
             ) {
                 items(characters.size) { index ->
-                    characterItem(characters[index])
+                    CharacterItem(characters[index])
                 }
             }
         }
@@ -69,9 +76,8 @@ fun characterScreen(viewModel: CharacterViewModel) {
 }
 
 @Composable
-fun swipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composable () -> Unit) {
+fun SwipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composable () -> Unit) {
     var offset by remember { mutableStateOf(0f) }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -79,7 +85,7 @@ fun swipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composa
                 detectVerticalDragGestures { change, dragAmount ->
                     if (dragAmount > 0 && !isRefreshing) {
                         offset += dragAmount
-                        if (offset > PULL_TO_REFRESH_THRESHOLD) {
+                        if (offset > CharacterScreen.PULL_TO_REFRESH_THRESHOLD) {
                             onRefresh()
                             offset = 0f
                         }
@@ -100,8 +106,7 @@ fun swipeRefresh(isRefreshing: Boolean, onRefresh: () -> Unit, content: @Composa
 }
 
 @Composable
-private fun characterItem(character: CharacterModel) {
-    val imageRatio=1f
+private fun CharacterItem(character: CharacterModel) {
     Card(
         modifier = Modifier
             .padding(dimensionResource(R.dimen.spacing_medium))
@@ -115,7 +120,7 @@ private fun characterItem(character: CharacterModel) {
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()
-                    .aspectRatio(imageRatio)
+                    .aspectRatio(CharacterScreen.IMAGE_RATIO)
             )
             Text(
                 text = character.name,

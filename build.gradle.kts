@@ -1,6 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.codehaus.groovy.ast.tools.GeneralUtils.args
-import org.jetbrains.kotlin.js.backend.ast.JsEmpty.setSource
+import org.jetbrains.kotlin.psi.addRemoveModifier.addModifier
+
 
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -18,6 +18,7 @@ detekt {
     config.setFrom(file("detekt.yml"))
     buildUponDefaultConfig = true
 
+
     // Input directories for Detekt
 
 
@@ -29,6 +30,7 @@ detekt {
         exclude(exclude)
     })
     parallel = true // Run Detekt in parallel
+
 }
 
 tasks.withType<Detekt>().configureEach {
@@ -40,5 +42,3 @@ tasks.withType<Detekt>().configureEach {
         md.required.set(true)
     }
 }
-
-

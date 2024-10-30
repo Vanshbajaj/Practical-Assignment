@@ -23,5 +23,3 @@ object ApolloModule {
             .build()
     }
 }
-
-

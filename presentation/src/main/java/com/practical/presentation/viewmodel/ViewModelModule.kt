@@ -12,7 +12,4 @@ class ViewModelModule {
     fun provideViewModelFactory(getCharactersUseCase: GetCharactersUseCase): ViewModelFactory {
         return ViewModelFactory(getCharactersUseCase)
     }
-    //new line
 }
-
-

@@ -6,4 +6,3 @@ interface CharacterRepository {
     suspend fun getCharacters(): List<CharacterModel>
 
 }
-

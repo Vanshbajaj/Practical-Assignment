@@ -9,6 +9,3 @@ data class CharacterModel(
     val origin: String,
     val location: String
 )
-
-
-

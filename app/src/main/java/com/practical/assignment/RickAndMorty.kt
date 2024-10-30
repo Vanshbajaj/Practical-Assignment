@@ -12,8 +12,4 @@ class RickAndMorty : Application() {
             .build()
         appComponent.inject(this)
     }
-
-
 }
-
-

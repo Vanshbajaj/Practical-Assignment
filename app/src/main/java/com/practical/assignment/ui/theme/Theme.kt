@@ -65,7 +65,7 @@ val darkDimens = Dimens(
 )
 
 @Composable
-fun practicalAssignmentTheme(
+fun PracticalAssignmentTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -88,4 +88,3 @@ fun practicalAssignmentTheme(
     )
 
 }
-

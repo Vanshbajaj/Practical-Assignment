@@ -38,4 +38,3 @@ class CharacterViewModel @Inject constructor(
         }
     }
 }
-

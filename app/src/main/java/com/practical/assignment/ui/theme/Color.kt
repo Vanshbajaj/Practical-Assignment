@@ -17,4 +17,3 @@ val Pink80 = Color(COLOR_PINK_80_HEX)
 val Purple40 = Color(COLOR_PURPLE_40_HEX)
 val PurpleGrey40 = Color(COLOR_PURPLE_GREY_40_HEX)
 val Pink40 = Color(COLOR_PINK_40_HEX)
-

@@ -80,6 +80,3 @@ dependencies {
     implementation(libs.apollo.runtime)
     implementation(libs.androidx.navigation.compose)
 }
-
-
-
