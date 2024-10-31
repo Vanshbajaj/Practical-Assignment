@@ -24,31 +24,12 @@ class CharacterViewModel @Inject constructor(
         fetchCharacters()
     }
 
-    fun fetchCharacters() {
-        viewModelScope.launch(Dispatchers.IO) { // Emit loading state
-            val result = runCatching {
-                getCharactersUseCase() // Fetch characters
-            }
-
-            result.onSuccess { state ->
-                // Ensure that the result is of type Success
-                when (state) {
-                    is ResultState.Success -> {
-                        _charactersState.emit(ResultState.Success(state.data)) // Emit success
-                    }
-                    is ResultState.Error -> {
-                        _charactersState.emit(ResultState.Error(state.exception)) // Emit error
-                    }
-                    ResultState.Loading -> {
-                        _charactersState.emit(ResultState.Loading)
-                    }
+        private fun fetchCharacters() {
+            viewModelScope.launch(Dispatchers.IO) {
+                getCharactersUseCase.invoke().collect { result ->
+                    _charactersState.emit(result)// Update the state based on the repository result
                 }
-            }.onFailure { exception ->
-                val exception = exception as? Exception ?: Exception(exception) // Cast or wrap
-                _charactersState.emit(ResultState.Error(exception))
             }
         }
     }
-
-}
 

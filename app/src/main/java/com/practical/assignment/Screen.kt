@@ -1,5 +1,6 @@
 package com.practical.assignment
 
-sealed class Screen(val route: String) {
-    object Home : Screen("home")
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Home

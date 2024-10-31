@@ -11,8 +11,8 @@ import com.practical.presentation.viewmodel.ViewModelFactory
 
 @Composable
 fun AppNavGraph(navController: NavHostController, viewModelFactory: ViewModelFactory) {
-    NavHost(navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) {
+    NavHost(navController, startDestination = Home) {
+        composable<Home> {
             val characterViewModel: CharacterViewModel = viewModel(factory = viewModelFactory)
             CharacterScreen(characterViewModel)
         }

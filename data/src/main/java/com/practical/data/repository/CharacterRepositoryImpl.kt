@@ -2,22 +2,32 @@ package com.practical.data.repository
 
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.exception.ApolloException
 import com.data.graphql.CharactersQuery
 import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
 import com.practical.domain.repository.CharacterRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
     private val apolloClient: ApolloClient,
 ) : CharacterRepository {
-    override suspend fun getCharacters(): ResultState<List<CharacterModel>> {
-        return try {
-            // Indicate loading state
-            ResultState.Loading
 
+        override fun getCharacters(): Flow<ResultState<List<CharacterModel>>> = flow {
+            // Emit loading state before fetching data
+            emit(ResultState.Loading)
+
+            // Fetch the characters from Apollo Client
             val response = apolloClient.query(CharactersQuery()).execute()
+
+            // Check for successful data
+            if (response.hasErrors()) {
+                // If there are errors in the response, emit an error state
+                emit(ResultState.Error(Exception("GraphQL errors: ${response.errors}")))
+                return@flow // Exit the flow
+            }
 
             // Map results to CharacterModel
             val characters = response.data?.characters?.results?.map { character ->
@@ -32,13 +42,12 @@ class CharacterRepositoryImpl @Inject constructor(
                 )
             } ?: emptyList()
 
-            // Return success state with characters
-            ResultState.Success(characters)
-        } catch (e: ApolloException) {
+            // Emit success state with characters
+            emit(ResultState.Success(characters))
+        }.catch { e ->
             // Log the error
             Log.e("CharacterRepository", "Error fetching characters", e)
-            // Return error state
-            ResultState.Error(e)
+            // Emit error state
+            emit(ResultState.Error(e))
         }
     }
-}

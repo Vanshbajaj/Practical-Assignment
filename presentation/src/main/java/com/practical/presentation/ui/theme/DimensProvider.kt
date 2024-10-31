@@ -1,5 +1,6 @@
 package com.practical.presentation.ui.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -22,3 +23,5 @@ val MaterialDimens = DimensProvider(
     marginLarge = 20.dp
 )
 
+val MaterialTheme.dimens: DimensProvider
+    get() = MaterialDimens

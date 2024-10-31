@@ -66,4 +66,5 @@ dependencies {
     ksp(libs.dagger.compiler)
     implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.core)
 }

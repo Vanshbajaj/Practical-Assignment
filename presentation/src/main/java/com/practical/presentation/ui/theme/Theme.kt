@@ -35,7 +35,6 @@ private val LightColorScheme = lightColorScheme(
 )
 
 
-
 @Composable
 fun PracticalAssignmentTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -56,7 +55,6 @@ fun PracticalAssignmentTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content =content)
-
-
+        content = content
+    )
 }
