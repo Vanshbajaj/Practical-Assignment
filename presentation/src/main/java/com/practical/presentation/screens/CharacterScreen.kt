@@ -31,13 +31,8 @@ import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 
-internal object CharacterScreenValues {
-    const val IMAGE_RATIO = 1f
-    const val GRID_CELLS = 2
-}
-
 @Composable
-fun CharacterScreen(viewModel: CharacterViewModel) {
+fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsState()
 
     val characters = remember(charactersState) {
@@ -48,7 +43,7 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(MaterialTheme.dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
@@ -65,7 +60,10 @@ fun CharacterScreen(viewModel: CharacterViewModel) {
             }
 
             is ResultState.Error -> {
-                ErrorMessage((charactersState as ResultState.Error).exception.localizedMessage ?: "Unknown error")
+                ErrorMessage(
+                    (charactersState as ResultState.Error).exception.localizedMessage
+                        ?: "Unknown error"
+                )
             }
         }
     }
@@ -78,7 +76,8 @@ fun Header() {
             text = stringResource(R.string.rick_morty_app),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
-                .padding(MaterialTheme.dimens.paddingMedium).align(Alignment.CenterVertically)
+                .padding(MaterialTheme.dimens.paddingMedium)
+                .align(Alignment.CenterVertically)
 
         )
     }
@@ -102,13 +101,13 @@ fun CharacterGrid(characters: List<CharacterModel>) {
 }
 
 @Composable
-fun ErrorMessage(errorMessage: String) {
+fun ErrorMessage(errorMessage: String, modifier: Modifier = Modifier) {
     Text(
         text = errorMessage,
-        color = MaterialTheme.colorScheme.error
+        color = MaterialTheme.colorScheme.error,
+        modifier = modifier
     )
 }
-
 
 
 @Composable
@@ -140,4 +139,9 @@ private fun CharacterItem(character: CharacterModel) {
             )
         }
     }
+}
+
+internal object CharacterScreenValues {
+    const val IMAGE_RATIO = 1f
+    const val GRID_CELLS = 2
 }

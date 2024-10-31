@@ -73,7 +73,7 @@ Compose:
     # You can optionally add your own Modifier types
     # customModifiers: BananaModifier,PotatoModifier
   ModifierMissing:
-    active: true
+    active: false
     # You can optionally control the visibility of which composables to check for here
     # checkModifiersForVisibility: only_public
     # You can optionally add your own Modifier types
