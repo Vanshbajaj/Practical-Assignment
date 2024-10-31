@@ -1,10 +1,12 @@
 package com.practical.presentation.ui.theme
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-data class DimensProvider(
+data class Dimens(
     val paddingSmall: Dp,
     val paddingMedium: Dp,
     val paddingLarge: Dp,
@@ -14,7 +16,7 @@ data class DimensProvider(
 )
 
 
-val MaterialDimens = DimensProvider(
+val MaterialDimens = Dimens(
     paddingSmall = 8.dp,
     paddingMedium = 16.dp,
     paddingLarge = 24.dp,
@@ -22,6 +24,7 @@ val MaterialDimens = DimensProvider(
     marginMedium = 12.dp,
     marginLarge = 20.dp
 )
-
-val MaterialTheme.dimens: DimensProvider
-    get() = MaterialDimens
+val LocalDimens = compositionLocalOf<Dimens> { error("No dimens provided") }
+val MaterialTheme.dimens: Dimens
+    @Composable
+    get() = LocalDimens.current
