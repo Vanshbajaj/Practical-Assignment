@@ -72,7 +72,7 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.error,
-                        modifier = modifier
+                        modifier = Modifier
                     )
                 }
             }
