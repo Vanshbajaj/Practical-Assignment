@@ -2,39 +2,36 @@ package com.practical.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practical.domain.ResultState
 import com.practical.domain.CharacterModel
 import com.practical.domain.usecases.GetCharactersUseCase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharacterViewModel @Inject constructor(
-    private val getCharactersUseCase: GetCharactersUseCase
+    private val getCharactersUseCase: GetCharactersUseCase,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
-    private val _characters = MutableStateFlow<List<CharacterModel>>(emptyList())
-    val characters: StateFlow<List<CharacterModel>> get() = _characters
+    private val _charactersState =
+        MutableStateFlow<ResultState<List<CharacterModel>>>(ResultState.Loading)
+    val charactersState: StateFlow<ResultState<List<CharacterModel>>> get() = _charactersState
 
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> get() = _isRefreshing
 
     init {
         fetchCharacters()
     }
 
-    fun fetchCharacters() {
-        viewModelScope.launch {
-            _isRefreshing.emit(true)
-            runCatching {
-                getCharactersUseCase()
-            }.onSuccess { fetchedCharacters ->
-                _characters.emit(fetchedCharacters)
-            }.onFailure {
-                // Optionally handle the error here
-            }.also {
-                _isRefreshing.emit(false)
+        fun fetchCharacters() {
+            viewModelScope.launch(defaultDispatcher) {
+                getCharactersUseCase.invoke().collect { result ->
+                    _charactersState.emit(result)
+                }
             }
         }
     }
-}
+
