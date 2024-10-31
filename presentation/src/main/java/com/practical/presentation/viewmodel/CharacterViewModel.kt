@@ -29,7 +29,7 @@ class CharacterViewModel @Inject constructor(
          fun fetchCharacters() {
             viewModelScope.launch(defaultDispatcher) {
                 getCharactersUseCase.invoke().collect { result ->
-                    _charactersState.emit(result)// Update the state based on the repository result
+                    _charactersState.emit(result)
                 }
             }
         }

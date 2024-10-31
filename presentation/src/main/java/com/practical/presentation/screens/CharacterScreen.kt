@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -80,12 +83,12 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
 
 @Composable
-fun CharacterGrid(characters: List<CharacterModel>) {
+private fun CharacterGrid(characters: List<CharacterModel>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(CharacterScreenValues.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].name }) { index ->
+        items(characters.size, key = { characters[it].name.orEmpty() }) { index ->
             CharacterItem(character = characters[index])
         }
     }
@@ -114,7 +117,7 @@ private fun CharacterItem(character: CharacterModel) {
                     .aspectRatio(CharacterScreenValues.IMAGE_RATIO)
             )
             Text(
-                text = character.name,
+                text = character.name.orEmpty(),
                 color = Color.White,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier
