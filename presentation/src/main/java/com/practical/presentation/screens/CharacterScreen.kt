@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,13 +15,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
@@ -33,12 +32,13 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
-    val charactersState by viewModel.charactersState.collectAsState()
+    val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
 
-    val characters = remember(charactersState) {
-        when (charactersState) {
-            is ResultState.Success -> (charactersState as ResultState.Success).data
-            else -> emptyList()
+    val characters = remember(charactersState){
+        if (charactersState is ResultState.Success) {
+            (charactersState as ResultState.Success).data
+        } else {
+            emptyList()
         }
     }
 
@@ -48,11 +48,19 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
             .padding(MaterialTheme.dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Header()
+        Text(
+            text = stringResource(R.string.rick_morty_app),
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(MaterialTheme.dimens.paddingSmall)
+                .align(Alignment.CenterHorizontally)
+
+        )
+
 
         when (charactersState) {
             is ResultState.Loading -> {
-                LoadingIndicator()
+                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
 
             is ResultState.Success -> {
@@ -60,39 +68,24 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
             }
 
             is ResultState.Error -> {
-                ErrorMessage(
-                    (charactersState as ResultState.Error).exception.localizedMessage
-                        ?: "Unknown error"
-                )
+                (characters as ResultState.Error).exception.localizedMessage?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = modifier
+                    )
+                }
             }
         }
     }
 }
 
-@Composable
-fun Header() {
-    Row() {
-        Text(
-            text = stringResource(R.string.rick_morty_app),
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier
-                .padding(MaterialTheme.dimens.paddingMedium)
-                .align(Alignment.CenterVertically)
-
-        )
-    }
-}
-
-@Composable
-fun LoadingIndicator() {
-    CircularProgressIndicator()
-}
 
 @Composable
 fun CharacterGrid(characters: List<CharacterModel>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(CharacterScreenValues.GRID_CELLS),
-        contentPadding = PaddingValues(MaterialTheme.dimens.paddingMedium)
+        contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
         items(characters.size, key = { characters[it].name }) { index ->
             CharacterItem(character = characters[index])
@@ -100,14 +93,7 @@ fun CharacterGrid(characters: List<CharacterModel>) {
     }
 }
 
-@Composable
-fun ErrorMessage(errorMessage: String, modifier: Modifier = Modifier) {
-    Text(
-        text = errorMessage,
-        color = MaterialTheme.colorScheme.error,
-        modifier = modifier
-    )
-}
+
 
 
 @Composable
@@ -116,7 +102,7 @@ private fun CharacterItem(character: CharacterModel) {
 
     Card(
         modifier = Modifier
-            .padding(MaterialTheme.dimens.paddingMedium)
+            .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
     ) {
         Box(
@@ -134,7 +120,7 @@ private fun CharacterItem(character: CharacterModel) {
                 color = Color.White,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier
-                    .padding(MaterialTheme.dimens.paddingMedium)
+                    .padding(MaterialTheme.dimens.paddingSmall)
                     .align(Alignment.BottomCenter)
             )
         }
