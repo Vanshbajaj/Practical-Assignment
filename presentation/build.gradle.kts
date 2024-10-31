@@ -70,7 +70,4 @@ dependencies {
     implementation(libs.kotlinx.serialization.core)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.core.testing)
-    testImplementation(libs.turbine)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.core.testing)
 }
