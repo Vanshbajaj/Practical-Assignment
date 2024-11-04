@@ -28,8 +28,6 @@ import com.practical.domain.ResultState
 import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
-
-
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
