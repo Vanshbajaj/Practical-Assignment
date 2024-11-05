@@ -30,10 +30,8 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterViewModelTest {
-
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
-
     private lateinit var viewModel: CharacterViewModel
     private lateinit var getCharactersUseCase: GetCharactersUseCase
     private val testDispatcher = StandardTestDispatcher()
@@ -44,7 +42,6 @@ class CharacterViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = CharacterViewModel(getCharactersUseCase, testDispatcher)
     }
-
 
     @After
     fun tearDown() {
@@ -112,6 +109,7 @@ class CharacterViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
     @Test
     fun `given the use case returns an error, when fetching characters, then it should emit error state`() =
         runTest {
@@ -128,7 +126,7 @@ class CharacterViewModelTest {
             // Then
             viewModel.charactersState.test {
                 assertTrue(awaitItem() is ResultState.Loading)
-                assertEquals(ResultState.Error(exception),awaitItem())
+                assertEquals(ResultState.Error(exception), awaitItem())
             }
 
         }
