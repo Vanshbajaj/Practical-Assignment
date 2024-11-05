@@ -1,6 +1,5 @@
 package com.practical.data.repository
 
-import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.data.graphql.CharactersQuery
 import com.practical.domain.CharacterModel
@@ -45,9 +44,7 @@ class CharacterRepositoryImpl @Inject constructor(
             // Emit success state with characters
             emit(ResultState.Success(characters))
         }.catch { e ->
-            // Log the error
-//            Log.e("CharacterRepository", "Error fetching characters", e)
-            // Emit error state
+
             emit(ResultState.Error(e))
         }
     }
