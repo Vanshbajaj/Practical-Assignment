@@ -3,7 +3,7 @@ package com.practical.data
 import app.cash.turbine.test
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
-import com.data.graphql.CharactersListQuery
+import com.data.graphql.CharactersQuery
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.ResultState
 import io.mockk.MockKAnnotations
@@ -16,7 +16,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-
 
 @ExperimentalCoroutinesApi
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,11 +35,11 @@ class CharacterRepositoryImplTest {
             // Mock the Apollo Client
             val apolloClient: ApolloClient = mockk(relaxed = true)
 
-            val response: ApolloResponse<CharactersListQuery.Data> = mockk {
+            val response: ApolloResponse<CharactersQuery.Data> = mockk {
                 every { hasErrors() } returns true
                 //every { errors } returns listOf(mockk()) // Ensure this is a valid mock
             }
-            coEvery { apolloClient.query(CharactersListQuery()).execute() } returns response
+            coEvery { apolloClient.query(any<CharactersQuery>()).execute() } returns response
 
             // Create the repository with the mocked Apollo client
             val repository = CharacterRepositoryImpl(apolloClient)
@@ -65,7 +64,7 @@ class CharacterRepositoryImplTest {
             val expectedException = Exception("Network error")
             // Mock the Apollo client to throw the exception
             coEvery {
-                apolloClient.query(CharactersListQuery()).execute()
+                apolloClient.query(any<CharactersQuery>()).execute()
             } throws expectedException
             // Create the repository with the mocked Apollo client
             val repositoryWithMockApolloClient = CharacterRepositoryImpl(apolloClient)
