@@ -52,15 +52,13 @@ class CharacterViewModelTest {
     fun `given the ViewModel is initialized, when fetching characters, then it should emit loading state initially`() {
         // Given
         // ViewModel is initialized
-        // Act
-
+        viewModel.fetchCharacters()
 
         // When
         val currentState = viewModel.charactersState.value
 
         // Then
         assertEquals(ResultState.Loading, currentState)
-        // Assert
         val state = viewModel.charactersState.value
         assertTrue(state is ResultState.Loading)
     }
