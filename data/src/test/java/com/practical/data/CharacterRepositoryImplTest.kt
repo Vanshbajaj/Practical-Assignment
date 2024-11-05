@@ -60,9 +60,7 @@ class CharacterRepositoryImplTest {
     @Test
     fun `given an unexpected exception, when getCharacters is called, then emits loading followed by error`() =
         runTest {
-            // Given: An unexpected exception to be thrown
             val expectedException = Exception("Network error")
-            // Mock the Apollo client to throw the exception
             coEvery {
                 apolloClient.query(any<CharactersQuery>()).execute()
             } throws expectedException
@@ -72,14 +70,8 @@ class CharacterRepositoryImplTest {
             repositoryWithMockApolloClient.getCharacters().test {
                 // Then: Assert that the first emitted state is Loading
                 assertEquals(ResultState.Loading, awaitItem())
-                assertEquals(
-                    ResultState.Error(expectedException),
-                    awaitItem()
-                )
-
+                assertEquals(ResultState.Error(expectedException), awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
-
 }
