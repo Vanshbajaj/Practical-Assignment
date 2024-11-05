@@ -57,11 +57,19 @@ class CharacterViewModelTest {
                 "Character 1",
                 "Test",
                 "Male",
+                "Single",
+                "www.google.com",
+                "US",
+                "America"
             ),
             CharacterModel(
                 "Character 2",
                 "Test1",
                 "Female",
+                "Single",
+                "www.google.com",
+                "Germany",
+                "US"
             )
         )
 
