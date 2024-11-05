@@ -84,7 +84,7 @@ fun CharacterGrid(characters: List<CharacterModel>) {
         columns = gridCells,
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].name }) { index ->
+        items(characters.size, key = { characters[it].id }) { index ->
             CharacterItem(character = characters[index])
         }
     }
