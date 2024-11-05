@@ -27,15 +27,16 @@ class CharacterRepositoryImpl @Inject constructor(
             emit(ResultState.Error(Exception("GraphQL errors: ${response.errors}")))
             return@flow // Exit the flow
         }
+
+
         val characters = response.data?.characters?.results?.map { character ->
             CharacterModel(
+                id = character?.id.orEmpty(),
                 name = character?.name.orEmpty(),
                 species = character?.species.orEmpty(),
                 gender = character?.gender.orEmpty(),
                 status = character?.status.orEmpty(),
                 image = character?.image.orEmpty(),
-                origin = character?.origin?.name.orEmpty(),
-                location = character?.location?.dimension.orEmpty()
             )
         } ?: emptyList()
 
