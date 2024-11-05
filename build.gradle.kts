@@ -1,5 +1,4 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.js.backend.ast.JsEmpty.setSource
 
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -9,21 +8,24 @@ plugins {
     alias(libs.plugins.detekt.plugin) apply true
     alias(libs.plugins.ksp.plugin) apply false
     alias(libs.plugins.kotlin.compose.complier) apply false
-}
+    alias(libs.plugins.seriazlation.plugin) apply  false
 
+}
+dependencies {
+    detektPlugins(libs.detekt)
+}
 
 detekt {
     toolVersion = "1.23.7"
     config.setFrom(file("detekt.yml"))
     buildUponDefaultConfig = true
-    setSource(files( // Use 'setSource' instead of 'source ='
-        "app/src/main/kotlin",
-        "data/src/main/kotlin",
-        "domain/src/main/kotlin",
-        "presentation/src/main/kotlin"
-    ))
+    val input = projectDir
+    val exclude = listOf("**/build/**", "**/resources/**")
+    source.setFrom(fileTree(input) {
+        exclude(exclude)
+    })
     parallel = true // Run Detekt in parallel
-    buildUponDefaultConfig = true // Build upon default config
+
 }
 
 tasks.withType<Detekt>().configureEach {

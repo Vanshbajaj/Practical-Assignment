@@ -39,4 +39,5 @@ dependencies {
     implementation(libs.apollo.runtime)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
+    implementation(libs.logging.interceptor)
 }

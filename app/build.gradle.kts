@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp.plugin)
     alias(libs.plugins.kotlin.compose.complier)
-
+    alias(libs.plugins.seriazlation.plugin)
 }
 
 android {
@@ -78,5 +78,6 @@ dependencies {
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
     implementation(libs.apollo.runtime)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 }
-

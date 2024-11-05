@@ -19,8 +19,10 @@ class CoreServiceTest {
         assertEquals(3, result)
         verify { service.calculate(1, 2) }
     }
+
 }
 
 interface CoreService {
     fun calculate(a: Int, b: Int): Int
+
 }
