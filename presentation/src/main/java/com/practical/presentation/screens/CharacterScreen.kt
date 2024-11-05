@@ -11,13 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -86,9 +83,9 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 @Composable
 private fun CharacterGrid(characters: List<CharacterModel>, isLandscape: Boolean) {
     val gridCells = if (isLandscape) {
-        GridCells.Fixed(3) // More columns in landscape
+        GridCells.Fixed(CharacterScreenValues.GRID_CELLS_LANDSCAPE)
     } else {
-        GridCells.Fixed(2) // Fewer columns in portrait
+        GridCells.Fixed(CharacterScreenValues.GRID_CELLS)
     }
 
     LazyVerticalGrid(
@@ -104,11 +101,12 @@ private fun CharacterGrid(characters: List<CharacterModel>, isLandscape: Boolean
 @Composable
 private fun CharacterItem(character: CharacterModel) {
     val imageUrl = remember(character.image) { character.image }
-    val aspectRatio = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        1.5f // Wider aspect ratio in landscape
-    } else {
-        1f // Square in portrait
-    }
+    val aspectRatio =
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            CharacterScreenValues.IMAGE_RATIO_LANDSCAPE// Wider aspect ratio in landscape
+        } else {
+            CharacterScreenValues.IMAGE_RATIO// Square in portrait
+        }
 
     Card(
         modifier = Modifier
@@ -140,5 +138,7 @@ private fun CharacterItem(character: CharacterModel) {
 
 internal object CharacterScreenValues {
     const val IMAGE_RATIO = 1f
+    const val IMAGE_RATIO_LANDSCAPE = 1f
     const val GRID_CELLS = 2
+    const val GRID_CELLS_LANDSCAPE = 2
 }
