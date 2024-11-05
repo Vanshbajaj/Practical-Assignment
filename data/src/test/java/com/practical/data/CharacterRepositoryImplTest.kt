@@ -4,10 +4,14 @@ import app.cash.turbine.test
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.data.graphql.CharactersQuery
 =======
 import com.data.graphql.CharactersListQuery
 >>>>>>> fc4d27f (Code Formatted)
+=======
+import com.data.graphql.CharactersQuery
+>>>>>>> 5f9063d (Pr Updated)
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.ResultState
 import io.mockk.MockKAnnotations
@@ -22,7 +26,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-
 
 @ExperimentalCoroutinesApi
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -81,12 +84,16 @@ class CharacterRepositoryImplTest {
             // Mock the Apollo Client
             val apolloClient: ApolloClient = mockk(relaxed = true)
 
-            val response: ApolloResponse<CharactersListQuery.Data> = mockk {
+            val response: ApolloResponse<CharactersQuery.Data> = mockk {
                 every { hasErrors() } returns true
                 //every { errors } returns listOf(mockk()) // Ensure this is a valid mock
             }
+<<<<<<< HEAD
             coEvery { apolloClient.query(CharactersListQuery()).execute() } returns response
 >>>>>>> fc4d27f (Code Formatted)
+=======
+            coEvery { apolloClient.query(any<CharactersQuery>()).execute() } returns response
+>>>>>>> 5f9063d (Pr Updated)
 
                     // When: The getCharacters function is called
                     repository.getCharacters().test {
@@ -143,7 +150,7 @@ class CharacterRepositoryImplTest {
             val expectedException = Exception("Network error")
             // Mock the Apollo client to throw the exception
             coEvery {
-                apolloClient.query(CharactersListQuery()).execute()
+                apolloClient.query(any<CharactersQuery>()).execute()
             } throws expectedException
             // Create the repository with the mocked Apollo client
             val repositoryWithMockApolloClient = CharacterRepositoryImpl(apolloClient)
