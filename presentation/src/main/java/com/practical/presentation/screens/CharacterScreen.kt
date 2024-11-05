@@ -1,46 +1,29 @@
 package com.practical.presentation.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
-import com.practical.presentation.R
+import com.practical.presentation.getDynamicGridColumns
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
+    // Collect the state from the viewModel
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
-
-    val characters = remember(charactersState){
-        if (charactersState is ResultState.Success) {
-            (charactersState as ResultState.Success).data
-        } else {
-            emptyList()
-        }
-    }
+    val configuration = LocalConfiguration.current
 
     Column(
         modifier = modifier
@@ -49,26 +32,28 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.rick_morty_app),
+            text = "Rick & Morty",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(MaterialTheme.dimens.paddingSmall)
                 .align(Alignment.CenterHorizontally)
-
         )
 
-
+        // Handle loading, success, and error states
         when (charactersState) {
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
-
             is ResultState.Success -> {
-                CharacterGrid(characters)
+                // Determine the number of columns dynamically based on screen size and density
+                CharacterGrid(
+                    characters = state.data,
+                    configuration = configuration,
+                    density = density
+                )
             }
-
             is ResultState.Error -> {
-                (characters as ResultState.Error).exception.localizedMessage?.let {
+                state.exception.localizedMessage?.let {
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.error,
@@ -80,11 +65,10 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
     }
 }
 
-
 @Composable
 fun CharacterGrid(characters: List<CharacterModel>) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(CharacterScreenValues.GRID_CELLS),
+        columns = gridCells,
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
         items(characters.size, key = { characters[it].name }) { index ->
