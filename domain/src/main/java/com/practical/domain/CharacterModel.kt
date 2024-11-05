@@ -8,4 +8,5 @@ data class CharacterModel(
     val image: String,
     val origin: String,
     val location: String,
+
 )

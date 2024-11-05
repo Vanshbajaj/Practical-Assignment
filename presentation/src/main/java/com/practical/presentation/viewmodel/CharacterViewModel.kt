@@ -34,7 +34,10 @@ class CharacterViewModel @Inject constructor(
                 .onStart { _charactersState.emit(ResultState.Loading) }
                 .catch { _charactersState.emit(ResultState.Error(it)) }
                 .collect { result ->
-                    _charactersState.emit(result)
+        fun fetchCharacters() {
+            viewModelScope.launch(defaultDispatcher) {
+                getCharactersUseCase.invoke().collect { result ->
+                _charactersState.emit(result)
                 }
         }
     }
