@@ -1,6 +1,5 @@
 package com.practical.presentation
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
@@ -10,28 +9,20 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 
 @ExperimentalCoroutinesApi
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterViewModelTest {
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
     private lateinit var viewModel: CharacterViewModel
     private lateinit var getCharactersUseCase: GetCharactersUseCase
     private val testDispatcher = StandardTestDispatcher()
@@ -43,16 +34,11 @@ class CharacterViewModelTest {
         viewModel = CharacterViewModel(getCharactersUseCase, testDispatcher)
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
     @Test
     fun `given the ViewModel is initialized, when fetching characters, then it should emit loading state initially`() {
         // Given
         // ViewModel is initialized
-        viewModel.fetchCharacters()
+
 
         // When
         val currentState = viewModel.charactersState.value
@@ -97,11 +83,8 @@ class CharacterViewModelTest {
         // Act
         viewModel.fetchCharacters()
 
-
-//        advanceUntilIdle()
         // Assert
         viewModel.charactersState.test {
-
             assertTrue(awaitItem() is ResultState.Loading)
             assertEquals(expectedCharacters, (awaitItem() as ResultState.Success).data)
             cancelAndIgnoreRemainingEvents()
