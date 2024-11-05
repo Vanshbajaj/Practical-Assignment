@@ -22,6 +22,10 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class CharacterViewModelTest {
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
     private lateinit var viewModel: CharacterViewModel
     private lateinit var getCharactersUseCase: GetCharactersUseCase
     private val testDispatcher = StandardTestDispatcher()
@@ -31,6 +35,7 @@ class CharacterViewModelTest {
         getCharactersUseCase = mockk(relaxed = true)
         viewModel = CharacterViewModel(getCharactersUseCase, testDispatcher)
     }
+
 
     @Test
     fun `given the ViewModel is initialized, when fetching characters, then it should emit loading state initially`() {

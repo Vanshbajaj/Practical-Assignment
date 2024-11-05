@@ -3,16 +3,18 @@ package com.practical.data
 import app.cash.turbine.test
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
+<<<<<<< HEAD
 import com.data.graphql.CharactersQuery
+=======
+import com.data.graphql.CharactersListQuery
+>>>>>>> fc4d27f (Code Formatted)
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.ResultState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -41,6 +43,7 @@ class CharacterRepositoryImplTest {
         repository = CharacterRepositoryImpl(apolloClient)
     }
 
+<<<<<<< HEAD
     @After
     fun tearDown() {
         mockWebServer.shutdown()
@@ -71,6 +74,19 @@ class CharacterRepositoryImplTest {
 
                     // Create the repository with the mocked Apollo client
                     val repository = CharacterRepositoryImpl(apolloClientMockk)
+=======
+    @Test
+    fun `given GraphQL errors, when getCharacters is called, then emits loading followed by error`() =
+        runTest {
+            // Mock the Apollo Client
+            val apolloClient: ApolloClient = mockk(relaxed = true)
+
+            val response: ApolloResponse<CharactersListQuery.Data> = mockk {
+                every { hasErrors() } returns true
+                //every { errors } returns listOf(mockk()) // Ensure this is a valid mock
+            }
+            coEvery { apolloClient.query(CharactersListQuery()).execute() } returns response
+>>>>>>> fc4d27f (Code Formatted)
 
                     // When: The getCharacters function is called
                     repository.getCharacters().test {
@@ -85,6 +101,7 @@ class CharacterRepositoryImplTest {
                     }
                 }
 
+<<<<<<< HEAD
             @Test
             fun `given an unexpected exception, when getCharacters is called, then emits loading followed by error`() =
                 runTest {
@@ -105,5 +122,45 @@ class CharacterRepositoryImplTest {
                 }
 
         }
+=======
+            // When: The getCharacters function is called
+            repository.getCharacters().test {
+                // Then: Assert that the first emitted state is Loading
+                assertEquals(ResultState.Loading, awaitItem())
+                // Then: Assert that the next emitted state is Error
+                val actualErrorState = awaitItem()
+                assertTrue(actualErrorState is ResultState.Error)
+                assertTrue(actualErrorState.toString().contains("GraphQL errors:"))
+                // Then: Ensure there are no more emissions
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given an unexpected exception, when getCharacters is called, then emits loading followed by error`() =
+        runTest {
+            // Given: An unexpected exception to be thrown
+            val expectedException = Exception("Network error")
+            // Mock the Apollo client to throw the exception
+            coEvery {
+                apolloClient.query(CharactersListQuery()).execute()
+            } throws expectedException
+            // Create the repository with the mocked Apollo client
+            val repositoryWithMockApolloClient = CharacterRepositoryImpl(apolloClient)
+            // When: The getCharacters function is called
+            repositoryWithMockApolloClient.getCharacters().test {
+                // Then: Assert that the first emitted state is Loading
+                assertEquals(ResultState.Loading, awaitItem())
+                assertEquals(
+                    ResultState.Error(expectedException),
+                    awaitItem()
+                )
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+
+>>>>>>> fc4d27f (Code Formatted)
 }
 
