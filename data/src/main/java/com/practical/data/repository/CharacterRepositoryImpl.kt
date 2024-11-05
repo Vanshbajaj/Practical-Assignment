@@ -46,7 +46,7 @@ class CharacterRepositoryImpl @Inject constructor(
             emit(ResultState.Success(characters))
         }.catch { e ->
             // Log the error
-            Log.e("CharacterRepository", "Error fetching characters", e)
+//            Log.e("CharacterRepository", "Error fetching characters", e)
             // Emit error state
             emit(ResultState.Error(e))
         }

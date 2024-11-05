@@ -1,5 +1,6 @@
 package com.practical.presentation.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -31,17 +33,11 @@ import com.practical.domain.ResultState
 import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
+
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
-
-    val characters = remember(charactersState){
-        if (charactersState is ResultState.Success) {
-            (charactersState as ResultState.Success).data
-        } else {
-            emptyList()
-        }
-    }
+    val configuration = LocalConfiguration.current
 
     Column(
         modifier = modifier
@@ -58,18 +54,23 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
         )
 
-
-        when (charactersState) {
+        when (val state = charactersState) {
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
 
             is ResultState.Success -> {
-                CharacterGrid(characters)
+                if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    // Adjust layout for landscape
+                    CharacterGrid(characters = state.data, isLandscape = true)
+                } else {
+                    // Portrait layout
+                    CharacterGrid(characters = state.data, isLandscape = false)
+                }
             }
 
             is ResultState.Error -> {
-                (characters as ResultState.Error).exception.localizedMessage?.let {
+                (state).exception.localizedMessage?.let {
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.error,
@@ -83,23 +84,31 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
 
 @Composable
-private fun CharacterGrid(characters: List<CharacterModel>) {
+private fun CharacterGrid(characters: List<CharacterModel>, isLandscape: Boolean) {
+    val gridCells = if (isLandscape) {
+        GridCells.Fixed(3) // More columns in landscape
+    } else {
+        GridCells.Fixed(2) // Fewer columns in portrait
+    }
+
     LazyVerticalGrid(
-        columns = GridCells.Fixed(CharacterScreenValues.GRID_CELLS),
+        columns = gridCells,
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].name.orEmpty() }) { index ->
+        items(characters.size, key = { characters[it].name }) { index ->
             CharacterItem(character = characters[index])
         }
     }
 }
 
-
-
-
 @Composable
 private fun CharacterItem(character: CharacterModel) {
     val imageUrl = remember(character.image) { character.image }
+    val aspectRatio = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        1.5f // Wider aspect ratio in landscape
+    } else {
+        1f // Square in portrait
+    }
 
     Card(
         modifier = Modifier
@@ -114,10 +123,10 @@ private fun CharacterItem(character: CharacterModel) {
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()
-                    .aspectRatio(CharacterScreenValues.IMAGE_RATIO)
+                    .aspectRatio(aspectRatio)
             )
             Text(
-                text = character.name.orEmpty(),
+                text = character.name,
                 color = Color.White,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier
@@ -127,6 +136,7 @@ private fun CharacterItem(character: CharacterModel) {
         }
     }
 }
+
 
 internal object CharacterScreenValues {
     const val IMAGE_RATIO = 1f
