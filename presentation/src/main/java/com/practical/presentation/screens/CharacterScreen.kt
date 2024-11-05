@@ -1,43 +1,32 @@
 package com.practical.presentation.screens
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
-import com.practical.presentation.R
+import com.practical.presentation.getDynamicGridColumns
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
+
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
+    // Collect the state from the viewModel
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
+    val density = LocalDensity.current.density
 
     Column(
         modifier = modifier
@@ -46,31 +35,28 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.rick_morty_app),
+            text = "Rick & Morty",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(MaterialTheme.dimens.paddingSmall)
                 .align(Alignment.CenterHorizontally)
-
         )
 
+        // Handle loading, success, and error states
         when (val state = charactersState) {
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
-
             is ResultState.Success -> {
-                if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    // Adjust layout for landscape
-                    CharacterGrid(characters = state.data, isLandscape = true)
-                } else {
-                    // Portrait layout
-                    CharacterGrid(characters = state.data, isLandscape = false)
-                }
+                // Determine the number of columns dynamically based on screen size and density
+                CharacterGrid(
+                    characters = state.data,
+                    configuration = configuration,
+                    density = density
+                )
             }
-
             is ResultState.Error -> {
-                (state).exception.localizedMessage?.let {
+                state.exception.localizedMessage?.let {
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.error,
@@ -82,21 +68,16 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
     }
 }
 
-
 @Composable
-private fun CharacterGrid(characters: List<CharacterModel>, isLandscape: Boolean) {
-    val gridCells = if (isLandscape) {
-        GridCells.Fixed(CharacterScreenValues.GRID_CELLS_LANDSCAPE)
-    } else {
-        GridCells.Fixed(CharacterScreenValues.GRID_CELLS)
-    }
+private fun CharacterGrid(characters: List<CharacterModel>, configuration: Configuration, density: Float) {
+    val screenWidthDp = configuration.screenWidthDp.dp
+    val gridColumns = getDynamicGridColumns(screenWidthDp, configuration, density)
 
-private fun CharacterGrid(characters: List<CharacterModel>) {
     LazyVerticalGrid(
-        columns = gridCells,
+        columns = GridCells.Fixed(gridColumns),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].name.orEmpty() }) { index ->
+        items(characters.size, key = { characters[it].name }) { index ->
             CharacterItem(character = characters[index])
         }
     }
@@ -105,12 +86,11 @@ private fun CharacterGrid(characters: List<CharacterModel>) {
 @Composable
 private fun CharacterItem(character: CharacterModel) {
     val imageUrl = remember(character.image) { character.image }
-    val aspectRatio =
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            CharacterScreenValues.IMAGE_RATIO_LANDSCAPE// Wider aspect ratio in landscape
-        } else {
-            CharacterScreenValues.IMAGE_RATIO// Square in portrait
-        }
+    val aspectRatio = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        CharacterScreenValues.IMAGE_RATIO_LANDSCAPE
+    } else {
+        CharacterScreenValues.IMAGE_RATIO
+    }
 
     Card(
         modifier = Modifier
@@ -128,7 +108,7 @@ private fun CharacterItem(character: CharacterModel) {
                     .aspectRatio(aspectRatio)
             )
             Text(
-                text = character.name.orEmpty(),
+                text = character.name,
                 color = Color.White,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier
@@ -139,10 +119,7 @@ private fun CharacterItem(character: CharacterModel) {
     }
 }
 
-
 internal object CharacterScreenValues {
     const val IMAGE_RATIO = 1f
     const val IMAGE_RATIO_LANDSCAPE = 1f
-    const val GRID_CELLS = 2
-    const val GRID_CELLS_LANDSCAPE = 2
 }
