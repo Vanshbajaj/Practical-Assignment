@@ -32,7 +32,7 @@ import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 @Composable
-fun CharacterListScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
+fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
 
