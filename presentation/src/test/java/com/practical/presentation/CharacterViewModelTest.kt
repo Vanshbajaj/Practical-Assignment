@@ -41,8 +41,7 @@ class CharacterViewModelTest {
     fun `given the ViewModel is initialized, when fetching characters, then it should emit loading state initially`() {
         // Given
         // ViewModel is initialized
-        viewModel.fetchCharacters()
-
+viewModel.fetchCharacters()
         // When
         val currentState = viewModel.charactersState.value
 

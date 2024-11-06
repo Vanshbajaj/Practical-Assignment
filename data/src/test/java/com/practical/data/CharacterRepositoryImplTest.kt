@@ -13,6 +13,7 @@ import com.data.graphql.CharactersListQuery
 import com.data.graphql.CharactersQuery
 >>>>>>> 5f9063d (Pr Updated)
 import com.practical.data.repository.CharacterRepositoryImpl
+import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -45,6 +46,76 @@ class CharacterRepositoryImplTest {
             .build()
         repository = CharacterRepositoryImpl(apolloClient)
     }
+    @Test
+    fun `should emit loading and then success when data is fetched`() = runTest {
+        // Given: Mock GraphQL response data
+        val characterResults = listOf(
+            CharactersQuery.Result(
+                name = "Rick Sanchez",
+                species = "Human",
+                gender = "Male",
+                status = "Alive",
+                image = "image_url",
+                origin = CharactersQuery.Origin(
+                    name = "Earth",
+                    id = "1",
+                    type = "Planet",
+                    dimension = "C-137",
+                    created = "2020-01-01"
+                ),
+                location = CharactersQuery.Location(
+                    dimension = "Dimension C-137",
+                    created = "2020-01-01"
+                ),
+                type = "",
+                created = ""
+            )
+        )
+
+        // Create a mock ApolloResponse with the required data
+        val mockResponse: ApolloResponse<CharactersQuery.Data> = mockk()
+
+        // Mock the ApolloClient query execution to return the mock response
+        coEvery { apolloClient.query(CharactersQuery()) } returns mockk {
+            coEvery { execute() } returns mockResponse
+        }
+
+        // Mock the data property to return the expected data
+        coEvery { mockResponse.data } returns CharactersQuery.Data(
+            characters = CharactersQuery.Characters(
+                info = CharactersQuery.Info(count = 1, pages = 1, next = null, prev = null),
+                results = characterResults
+            )
+        )
+
+        coEvery { mockResponse.hasErrors() } returns false
+        // When & Then
+        repository.getCharacters().test {
+            // Assert loading state first
+            assertEquals(ResultState.Loading, awaitItem())
+
+            // Assert success state with the transformed characters data
+            val expectedCharacters = listOf(
+                CharacterModel(
+                    name = "Rick Sanchez",
+                    species = "Human",
+                    gender = "Male",
+                    status = "Alive",
+                    image = "image_url",
+                    origin = "Earth",
+                    location = "Dimension C-137"
+                )
+            )
+
+            // Check the emitted success state
+            val result = awaitItem()
+            println("Emitted result: $result")  // Log the emitted result for debugging
+            assertEquals(ResultState.Success(expectedCharacters), result)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
 
 <<<<<<< HEAD
     @After
@@ -82,11 +153,8 @@ class CharacterRepositoryImplTest {
     fun `given GraphQL errors, when getCharacters is called, then emits loading followed by error`() =
         runTest {
             // Mock the Apollo Client
-            val apolloClient: ApolloClient = mockk(relaxed = true)
-
             val response: ApolloResponse<CharactersQuery.Data> = mockk {
                 every { hasErrors() } returns true
-                //every { errors } returns listOf(mockk()) // Ensure this is a valid mock
             }
 <<<<<<< HEAD
             coEvery { apolloClient.query(CharactersListQuery()).execute() } returns response

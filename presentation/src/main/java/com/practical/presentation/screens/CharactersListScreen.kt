@@ -22,17 +22,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+<<<<<<<< HEAD:presentation/src/main/java/com/practical/presentation/screens/CharacterScreen.kt
+import androidx.compose.ui.unit.dp
+========
 import androidx.compose.ui.res.stringResource
+>>>>>>>> cf9b900 (Added Test Case For Repository):presentation/src/main/java/com/practical/presentation/screens/CharactersListScreen.kt
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
+<<<<<<<< HEAD:presentation/src/main/java/com/practical/presentation/screens/CharacterScreen.kt
+import com.practical.presentation.getDynamicGridColumns
+========
 import com.practical.presentation.R
+>>>>>>>> cf9b900 (Added Test Case For Repository):presentation/src/main/java/com/practical/presentation/screens/CharactersListScreen.kt
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 @Composable
-fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
     val configuration = LocalConfiguration.current
 
@@ -43,7 +51,6 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.rick_morty_app),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(MaterialTheme.dimens.paddingSmall)
@@ -51,7 +58,6 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
         )
 
-        when (val state = charactersState) {
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
@@ -79,32 +85,25 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
 
 @Composable
-private fun CharacterGrid(characters: List<CharacterModel>, isLandscape: Boolean) {
-    val gridCells = if (isLandscape) {
-        GridCells.Fixed(CharacterScreenValues.GRID_CELLS_LANDSCAPE)
-    } else {
-        GridCells.Fixed(CharacterScreenValues.GRID_CELLS)
-    }
-
     LazyVerticalGrid(
         columns = gridCells,
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].id }) { index ->
             CharacterItem(character = characters[index])
         }
     }
 }
 
+<<<<<<<< HEAD:presentation/src/main/java/com/practical/presentation/screens/CharacterScreen.kt
+========
+
+
+
 @Composable
 private fun CharacterItem(character: CharacterModel) {
     val imageUrl = remember(character.image) { character.image }
-    val aspectRatio =
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            CharacterScreenValues.IMAGE_RATIO_LANDSCAPE// Wider aspect ratio in landscape
-        } else {
-            CharacterScreenValues.IMAGE_RATIO// Square in portrait
-        }
+    } else {
+    }
 
     Card(
         modifier = Modifier
@@ -119,7 +118,6 @@ private fun CharacterItem(character: CharacterModel) {
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()
-                    .aspectRatio(aspectRatio)
             )
             Text(
                 text = character.name,
@@ -140,3 +138,4 @@ internal object CharacterScreenValues {
     const val GRID_CELLS = 2
     const val GRID_CELLS_LANDSCAPE = 3
 }
+>>>>>>>> cf9b900 (Added Test Case For Repository):presentation/src/main/java/com/practical/presentation/screens/CharactersListScreen.kt
