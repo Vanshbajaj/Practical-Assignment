@@ -28,7 +28,7 @@ class CharacterViewModel @Inject constructor(
         fetchCharacters()
     }
 
-    private fun fetchCharacters() {
+    fun fetchCharacters() {
         viewModelScope.launch(defaultDispatcher) {
             getCharactersUseCase.invoke()
                 .onStart { _charactersState.emit(ResultState.Loading) }

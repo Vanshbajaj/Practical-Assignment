@@ -58,10 +58,8 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
             is ResultState.Success -> {
                 if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    // Adjust layout for landscape
                     CharacterGrid(characters = state.data, isLandscape = true)
                 } else {
-                    // Portrait layout
                     CharacterGrid(characters = state.data, isLandscape = false)
                 }
             }
@@ -138,7 +136,7 @@ private fun CharacterItem(character: CharacterModel) {
 
 internal object CharacterScreenValues {
     const val IMAGE_RATIO = 1f
-    const val IMAGE_RATIO_LANDSCAPE = 1f
+    const val IMAGE_RATIO_LANDSCAPE = 1.5f
     const val GRID_CELLS = 2
-    const val GRID_CELLS_LANDSCAPE = 2
+    const val GRID_CELLS_LANDSCAPE = 3
 }
