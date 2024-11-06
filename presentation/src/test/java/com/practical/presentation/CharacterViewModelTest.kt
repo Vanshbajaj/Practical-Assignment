@@ -21,7 +21,6 @@ import org.junit.Test
 
 
 @ExperimentalCoroutinesApi
-@OptIn(ExperimentalCoroutinesApi::class)
 class CharacterViewModelTest {
     private lateinit var viewModel: CharacterViewModel
     private lateinit var getCharactersUseCase: GetCharactersUseCase
@@ -30,7 +29,6 @@ class CharacterViewModelTest {
     @Before
     fun setUp() {
         getCharactersUseCase = mockk(relaxed = true)
-        Dispatchers.setMain(testDispatcher)
         viewModel = CharacterViewModel(getCharactersUseCase, testDispatcher)
     }
 
@@ -50,7 +48,7 @@ class CharacterViewModelTest {
 
 
     @Test
-    fun `when fetching characters, then it should emit success state`() = runTest {
+    fun `when fetching characters, then it should emit success state`() = runTest(testDispatcher) {
         // Arrange
         val expectedCharacters = listOf(
             CharacterModel(
@@ -92,7 +90,7 @@ class CharacterViewModelTest {
 
     @Test
     fun `given the use case returns an error, when fetching characters, then it should emit error state`() =
-        runTest {
+        runTest(testDispatcher) {
             // Given
             val exception = RuntimeException("Error fetching characters")
             coEvery { getCharactersUseCase.invoke() } returns flow {
