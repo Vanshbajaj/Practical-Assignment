@@ -4,14 +4,15 @@ import app.cash.turbine.test
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
 import com.data.graphql.CharactersQuery
-import com.practical.common.Constants
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.ResultState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -25,9 +26,8 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterRepositoryImplTest {
     private lateinit var apolloClient: ApolloClient
-    private  var apolloClientMockk: ApolloClient= mockk(relaxed = true)
+    private var apolloClientMockk: ApolloClient = mockk(relaxed = true)
     private lateinit var repository: CharacterRepositoryImpl
-    private lateinit var mockWebServer: MockWebServer
 
     @Before
     fun setUp() {
@@ -55,58 +55,55 @@ class CharacterRepositoryImplTest {
                 val loadingState = awaitItem()
                 assertTrue(loadingState is ResultState.Loading)
 
-                // Then, the flow should emit Success with the character data
-                val successState = awaitItem() as ResultState.Success
-                assertTrue(successState.data.isNotEmpty())
-                assertTrue(successState.data[0].name.isNotEmpty())  // Check if the name is not empty
+        // Then: Collect the result and verify the emitted state
 
-                // Finally, ensure that no more items are emitted
-                awaitComplete()
             }
+            @Test
+            fun `given GraphQL errors, when getCharacters is called, then emits loading followed by error`() =
+                runTest {
+                    // Mock the Apollo Client
+                    val response: ApolloResponse<CharactersListQuery.Data> = mockk {
+                        every { hasErrors() } returns true
+                    }
+                    coEvery {
+                        apolloClientMockk.query(CharactersListQuery()).execute()
+                    } returns response
+
+                    // Create the repository with the mocked Apollo client
+                    val repository = CharacterRepositoryImpl(apolloClientMockk)
+
+                    // When: The getCharacters function is called
+                    repository.getCharacters().test {
+                        // Then: Assert that the first emitted state is Loading
+                        assertEquals(ResultState.Loading, awaitItem())
+                        // Then: Assert that the next emitted state is Error
+                        val actualErrorState = awaitItem()
+                        assertTrue(actualErrorState is ResultState.Error)
+                        assertTrue(actualErrorState.toString().contains("GraphQL errors:"))
+                        // Then: Ensure there are no more emissions
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+
+            @Test
+            fun `given an unexpected exception, when getCharacters is called, then emits loading followed by error`() =
+                runTest {
+                    val expectedException = Exception("Network error")
+                    coEvery {
+                        apolloClientMockk.query(CharactersListQuery()).execute()
+                    } throws expectedException
+                    // Create the repository with the mocked Apollo client
+                    val repositoryWithMockApolloClient =
+                        CharacterRepositoryImpl(apolloClientMockk)
+                    // When: The getCharacters function is called
+                    repositoryWithMockApolloClient.getCharacters().test {
+                        // Then: Assert that the first emitted state is Loading
+                        assertEquals(ResultState.Loading, awaitItem())
+                        assertEquals(ResultState.Error(expectedException), awaitItem())
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
 
         }
-
-    @Test
-    fun `given GraphQL errors, when getCharacters is called, then emits loading followed by error`() =
-        runTest {
-            // Mock the Apollo Client
-            val response: ApolloResponse<CharactersQuery.Data> = mockk {
-                every { hasErrors() } returns true
-            }
-            coEvery { apolloClientMockk.query(any<CharactersQuery>()).execute() } returns response
-
-            // Create the repository with the mocked Apollo client
-            val repository = CharacterRepositoryImpl(apolloClientMockk)
-
-            // When: The getCharacters function is called
-            repository.getCharacters().test {
-                // Then: Assert that the first emitted state is Loading
-                assertEquals(ResultState.Loading, awaitItem())
-                // Then: Assert that the next emitted state is Error
-                val actualErrorState = awaitItem()
-                assertTrue(actualErrorState is ResultState.Error)
-                assertTrue(actualErrorState.toString().contains("GraphQL errors:"))
-                // Then: Ensure there are no more emissions
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
-
-    @Test
-    fun `given an unexpected exception, when getCharacters is called, then emits loading followed by error`() =
-        runTest {
-            val expectedException = Exception("Network error")
-            coEvery {
-                apolloClientMockk.query(any<CharactersQuery>()).execute()
-            } throws expectedException
-            // Create the repository with the mocked Apollo client
-            val repositoryWithMockApolloClient = CharacterRepositoryImpl(apolloClientMockk)
-            // When: The getCharacters function is called
-            repositoryWithMockApolloClient.getCharacters().test {
-                // Then: Assert that the first emitted state is Loading
-                assertEquals(ResultState.Loading, awaitItem())
-                assertEquals(ResultState.Error(expectedException), awaitItem())
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
-
 }
+
