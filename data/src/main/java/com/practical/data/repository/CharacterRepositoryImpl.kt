@@ -21,17 +21,18 @@ class CharacterRepositoryImpl @Inject constructor(
         // Fetch the characters from Apollo Client
         val response = apolloClient.query(CharactersListQuery()).execute()
 
-            // Check for successful data
-            if (response.hasErrors()) {
-                // If there are errors in the response, emit an error state
-                emit(ResultState.Error(Exception("GraphQL errors: ${response.errors}")))
-                return@flow // Exit the flow
-            }
-            val characters = response.data?.characters?.results?.map { character ->
-                CharacterModel(
-                    id = character?.id.orEmpty(),
+        // Check for successful data
+        if (response.hasErrors()) {
+            // If there are errors in the response, emit an error state
+            emit(ResultState.Error(Exception("GraphQL errors: ${response.errors}")))
+            return@flow // Exit the flow
+        }
+        val characters = response.data?.characters?.results?.map { character ->
+            CharacterModel(
+                id = character?.id.orEmpty(),
                 name = character?.name.orEmpty(),
                 image = character?.image.orEmpty(),
+
             )
         } ?: emptyList()
 
