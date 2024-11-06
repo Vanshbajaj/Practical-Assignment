@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
+import com.practical.presentation.R
 import com.practical.presentation.getDynamicGridColumns
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
@@ -35,7 +37,7 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Rick & Morty",
+            text = stringResource(R.string.rick_morty_app),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(MaterialTheme.dimens.paddingSmall)
