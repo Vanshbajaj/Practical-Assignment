@@ -23,7 +23,6 @@ class CharacterViewModel @Inject constructor(
         MutableStateFlow<ResultState<List<CharacterModel>>>(ResultState.Loading)
     val charactersState: StateFlow<ResultState<List<CharacterModel>>> = _charactersState
 
-
     init {
         fetchCharacters()
     }

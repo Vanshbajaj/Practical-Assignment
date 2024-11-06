@@ -39,7 +39,6 @@ class CharacterViewModelTest {
         // Given
         // ViewModel is initialized
 
-
         // When
         val currentState = viewModel.charactersState.value
 
@@ -99,10 +98,8 @@ class CharacterViewModelTest {
             coEvery { getCharactersUseCase.invoke() } returns flow {
                 emit(ResultState.Error(exception))
             }
-
             // When
             viewModel.fetchCharacters()
-
 
             // Then
             viewModel.charactersState.test {
