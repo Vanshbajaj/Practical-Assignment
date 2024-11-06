@@ -123,5 +123,5 @@ private fun CharacterItem(character: CharacterModel) {
 
 internal object CharacterScreenValues {
     const val IMAGE_RATIO = 1f
-    const val IMAGE_RATIO_LANDSCAPE = 1f
+    const val IMAGE_RATIO_LANDSCAPE = 1.5f
 }
