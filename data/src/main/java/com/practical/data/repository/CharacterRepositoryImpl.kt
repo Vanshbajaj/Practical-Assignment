@@ -14,35 +14,34 @@ class CharacterRepositoryImpl @Inject constructor(
     private val apolloClient: ApolloClient,
 ) : CharacterRepository {
 
-        override fun getCharacters(): Flow<ResultState<List<CharacterModel>>> = flow {
-            // Emit loading state before fetching data
-            emit(ResultState.Loading)
+    override fun getCharacters(): Flow<ResultState<List<CharacterModel>>> = flow {
+        // Emit loading state before fetching data
+        emit(ResultState.Loading)
 
-            // Fetch the characters from Apollo Client
-            val response = apolloClient.query(CharactersQuery()).execute()
+        // Fetch the characters from Apollo Client
+        val response = apolloClient.query(CharactersQuery()).execute()
 
-            // Check for successful data
-            if (response.hasErrors()) {
-                // If there are errors in the response, emit an error state
-                emit(ResultState.Error(Exception("GraphQL errors: ${response.errors}")))
-                return@flow // Exit the flow
-            }
-            val characters = response.data?.characters?.results?.map { character ->
-                CharacterModel(
-                    name = character?.name.orEmpty(),
-                    species = character?.species.orEmpty(),
-                    gender = character?.gender.orEmpty(),
-                    status = character?.status.orEmpty(),
-                    image = character?.image.orEmpty(),
-                    origin = character?.origin?.name.orEmpty(),
-                    location = character?.location?.dimension.orEmpty()
-                )
-            } ?: emptyList()
-
-            // Emit success state with characters
-            emit(ResultState.Success(characters))
-        }.catch { e ->
-
-            emit(ResultState.Error(e))
+        // Check for successful data
+        if (response.hasErrors()) {
+            // If there are errors in the response, emit an error state
+            emit(ResultState.Error(Exception("GraphQL errors: ${response.errors}")))
+            return@flow // Exit the flow
         }
+        val characters = response.data?.characters?.results?.map { character ->
+            CharacterModel(
+                name = character?.name.orEmpty(),
+                species = character?.species.orEmpty(),
+                gender = character?.gender.orEmpty(),
+                status = character?.status.orEmpty(),
+                image = character?.image.orEmpty(),
+                origin = character?.origin?.name.orEmpty(),
+                location = character?.location?.dimension.orEmpty()
+            )
+        } ?: emptyList()
+
+        // Emit success state with characters
+        emit(ResultState.Success(characters))
+    }.catch { e ->
+        emit(ResultState.Error(e))
     }
+}
