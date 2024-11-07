@@ -1,0 +1,25 @@
+query CharacterDetails {
+    character(id: "") {
+        id
+        name
+        status
+        species
+        type
+        origin {
+            id
+            name
+            type
+            dimension
+            created
+        }
+        image
+        created
+        episode {
+            id
+            name
+            air_date
+            episode
+            created
+        }
+    }
+}

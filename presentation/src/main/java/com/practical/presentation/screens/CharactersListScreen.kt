@@ -10,13 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,14 +34,6 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
 
-    val characters = remember(charactersState){
-        if (charactersState is ResultState.Success) {
-            (charactersState as ResultState.Success).data
-        } else {
-            emptyList()
-        }
-    }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -60,18 +49,15 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
         )
 
-
-        when (charactersState) {
+        when (val state = charactersState) {
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
-
             is ResultState.Success -> {
-                CharacterGrid(characters)
+                CharacterGrid(state.data)
             }
-
             is ResultState.Error -> {
-                (characters as ResultState.Error).exception.localizedMessage?.let {
+                state.exception.localizedMessage?.let {
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.error,
@@ -97,8 +83,6 @@ private fun CharacterGrid(characters: List<CharacterModel>) {
 }
 
 
-
-
 @Composable
 private fun CharacterItem(character: CharacterModel) {
     val imageUrl = remember(character.image) { character.image }
@@ -119,7 +103,7 @@ private fun CharacterItem(character: CharacterModel) {
                     .aspectRatio(CharacterScreenValues.IMAGE_RATIO)
             )
             Text(
-                text = character.name.orEmpty(),
+                text = character.name,
                 color = Color.White,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier
