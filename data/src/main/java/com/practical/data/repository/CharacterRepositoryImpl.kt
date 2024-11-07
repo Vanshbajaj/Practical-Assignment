@@ -1,8 +1,11 @@
 package com.practical.data.repository
 
 import com.apollographql.apollo.ApolloClient
+import com.data.graphql.CharacterDetailsQuery
 import com.data.graphql.CharactersListQuery
+import com.practical.data.toCharacterModel
 import com.practical.domain.CharacterModel
+import com.practical.domain.CharactersListModel
 import com.practical.domain.ResultState
 import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +17,7 @@ class CharacterRepositoryImpl @Inject constructor(
     private val apolloClient: ApolloClient,
 ) : CharacterRepository {
 
-    override fun getCharacters(): Flow<ResultState<List<CharacterModel>>> = flow {
+    override fun getCharactersList(): Flow<ResultState<List<CharactersListModel>>> = flow {
         // Emit loading state before fetching data
         emit(ResultState.Loading)
 
@@ -30,7 +33,7 @@ class CharacterRepositoryImpl @Inject constructor(
 
 
         val characters = response.data?.characters?.results?.map { character ->
-            CharacterModel(
+            CharactersListModel(
                 id = character?.id.orEmpty(),
                 name = character?.name.orEmpty(),
                 image = character?.image.orEmpty(),
@@ -42,4 +45,27 @@ class CharacterRepositoryImpl @Inject constructor(
     }.catch { e ->
         emit(ResultState.Error(e))
     }
+
+    override suspend fun getCharacter(id: String): Flow<ResultState<CharacterModel>> {
+        return flow {
+            try {
+                emit(ResultState.Loading) // Emit loading state
+                val response = apolloClient.query(CharacterDetailsQuery(id)).execute()
+                if (response.hasErrors()) {
+                    // Handle any GraphQL errors (invalid response from server)
+                    emit(ResultState.Error(Exception(response.errors?.joinToString())))
+                } else {
+                    val character = response.data?.character!!.toCharacterModel()
+                    emit(ResultState.Success(character))
+
+                }
+            } catch (e: Exception) {
+                emit(ResultState.Error(e)) // Emit error state if an exception occurs
+            }
+        }
+
+    }
+
 }
+
+

@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.domain.CharacterModel
+import com.practical.domain.CharactersListModel
 import com.practical.domain.ResultState
 import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
@@ -71,12 +71,12 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
 
 @Composable
-private fun CharacterGrid(characters: List<CharacterModel>) {
+private fun CharacterGrid(characters: List<CharactersListModel>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(CharacterScreenValues.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].name.orEmpty() }) { index ->
+        items(characters.size, key = { characters[it].id }) { index ->
             CharacterItem(character = characters[index])
         }
     }
@@ -84,7 +84,7 @@ private fun CharacterGrid(characters: List<CharacterModel>) {
 
 
 @Composable
-private fun CharacterItem(character: CharacterModel) {
+private fun CharacterItem(character: CharactersListModel) {
     val imageUrl = remember(character.image) { character.image }
 
     Card(

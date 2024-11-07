@@ -45,7 +45,7 @@ class CharacterRepositoryImplTest {
             val repository = CharacterRepositoryImpl(apolloClient)
 
             // When: The getCharacters function is called
-            repository.getCharacters().test {
+            repository.getCharactersList().test {
                 // Then: Assert that the first emitted state is Loading
                 assertEquals(ResultState.Loading, awaitItem())
                 // Then: Assert that the next emitted state is Error
@@ -67,7 +67,7 @@ class CharacterRepositoryImplTest {
             // Create the repository with the mocked Apollo client
             val repositoryWithMockApolloClient = CharacterRepositoryImpl(apolloClient)
             // When: The getCharacters function is called
-            repositoryWithMockApolloClient.getCharacters().test {
+            repositoryWithMockApolloClient.getCharactersList().test {
                 // Then: Assert that the first emitted state is Loading
                 assertEquals(ResultState.Loading, awaitItem())
                 assertEquals(ResultState.Error(expectedException), awaitItem())
