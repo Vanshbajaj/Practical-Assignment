@@ -48,7 +48,7 @@ class CharacterRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacter(id: String): Flow<ResultState<CharacterModel>> {
         return flow {
-            try {
+
                 emit(ResultState.Loading) // Emit loading state
                 val response = apolloClient.query(CharacterDetailsQuery(id)).execute()
                 if (response.hasErrors()) {
@@ -59,9 +59,8 @@ class CharacterRepositoryImpl @Inject constructor(
                     emit(ResultState.Success(character))
 
                 }
-            } catch (e: Exception) {
-                emit(ResultState.Error(e)) // Emit error state if an exception occurs
-            }
+        }.catch {e->
+            emit(ResultState.Error(e)) // Emit error state if an exception occurs
         }
 
     }
