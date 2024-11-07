@@ -1,27 +1,28 @@
 package com.practical.data
 
 import app.cash.turbine.test
-import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
 <<<<<<< HEAD
 <<<<<<< HEAD
 import com.data.graphql.CharactersQuery
+<<<<<<< HEAD
 =======
 import com.data.graphql.CharactersListQuery
 >>>>>>> fc4d27f (Code Formatted)
 =======
 import com.data.graphql.CharactersQuery
 >>>>>>> 5f9063d (Pr Updated)
+=======
+import com.practical.common.Constants
+>>>>>>> 8847331 (Success Case Added)
 import com.practical.data.repository.CharacterRepositoryImpl
-import com.practical.domain.CharacterModel
 import com.practical.domain.ResultState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -35,9 +36,12 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterRepositoryImplTest {
     private lateinit var apolloClient: ApolloClient
+<<<<<<< HEAD
     private var apolloClientMockk: ApolloClient = mockk(relaxed = true)
+=======
+>>>>>>> 8847331 (Success Case Added)
     private lateinit var repository: CharacterRepositoryImpl
-    private val testDispatcher = StandardTestDispatcher()
+    private lateinit var mockWebServer: MockWebServer
 
     @Before
     fun setUp() {
@@ -51,34 +55,30 @@ class CharacterRepositoryImplTest {
         repository = CharacterRepositoryImpl(apolloClient)
     }
 
+    @After
+    fun tearDown() {
+        mockWebServer.shutdown()
+    }
 
     @Test
-    fun `getCharacters should emit Success state with characters when data is fetched successfully`() =
-        runTest(testDispatcher) {
-            val mockCharacters = listOf(
-                CharacterModel(
-                    name = "Rick Sanchez",
-                    species = "Human",
-                    gender = "Male",
-                    status = "Alive",
-                    image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-                    origin = "Earth (Dimension C-137)",
-                    location = "Earth (Dimension C-137)"
-                )
-            )
-            val mockResponse = mockk<ApolloResponse<CharactersQuery.Data>>(relaxed = true)
-            // Mock the ApolloCall to return the mockResponse directly
-            val mockCall = mockk<ApolloCall<CharactersQuery.Data>>(relaxed = true)
-            coEvery { mockCall.execute() } returns mockResponse
-            every { apolloClient.query<CharactersQuery.Data>(any()) } returns mockCall
+    fun `getCharacters should emit Loading, Success when data is returned from Rick and Morty API`() =
+        runTest {
+            // When: Collect emissions from the flow using Turbine
+            repository.getCharacters().test {
+                // First, the flow should emit Loading
+                val loadingState = awaitItem()
+                assertTrue(loadingState is ResultState.Loading)
 
-           repository.getCharacters().test {
-                assertEquals(ResultState.Loading,awaitItem())
-               println(awaitItem())
-               cancelAndIgnoreRemainingEvents()
+                // Then, the flow should emit Success with the character data
+                val successState = awaitItem() as ResultState.Success
+                assertTrue(successState.data.isNotEmpty())
+                assertTrue(successState.data[0].name.isNotEmpty())  // Check if the name is not empty
+
+                // Finally, ensure that no more items are emitted
+                awaitComplete()
             }
-        }
 
+        }
 
 <<<<<<< HEAD
     @After
@@ -198,9 +198,12 @@ class CharacterRepositoryImplTest {
             }
         }
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 >>>>>>> fc4d27f (Code Formatted)
+=======
+>>>>>>> 8847331 (Success Case Added)
 }
 
 =======
