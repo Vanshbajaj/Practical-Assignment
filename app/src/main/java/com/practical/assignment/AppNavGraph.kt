@@ -6,8 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.practical.presentation.screens.CharacterScreen
-
-
 import com.practical.presentation.viewmodel.CharacterViewModel
 import com.practical.presentation.viewmodel.ViewModelFactory
 
