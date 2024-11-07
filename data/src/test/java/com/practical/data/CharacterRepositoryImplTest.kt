@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
 import com.data.graphql.CharactersListQuery
+import com.practical.common.Constants
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.ResultState
 import io.mockk.MockKAnnotations
