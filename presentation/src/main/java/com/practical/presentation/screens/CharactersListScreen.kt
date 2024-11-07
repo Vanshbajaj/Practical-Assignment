@@ -34,8 +34,6 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
 
-
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -51,16 +49,13 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
         )
 
-
         when (val state = charactersState) {
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
-
             is ResultState.Success -> {
                 CharacterGrid(state.data)
             }
-
             is ResultState.Error -> {
                 state.exception.localizedMessage?.let {
                     Text(
