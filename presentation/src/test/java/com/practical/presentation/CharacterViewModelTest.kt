@@ -7,13 +7,11 @@ import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.viewmodel.CharacterViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -36,6 +34,8 @@ class CharacterViewModelTest {
     fun `given the ViewModel is initialized, when fetching characters, then it should emit loading state initially`() {
         // Given
         // ViewModel is initialized
+        // Act
+
 
         // When
         val currentState = viewModel.charactersState.value
@@ -55,19 +55,11 @@ class CharacterViewModelTest {
                 "Character 1",
                 "Test",
                 "Male",
-                "Single",
-                "www.google.com",
-                "US",
-                "America"
             ),
             CharacterModel(
                 "Character 2",
                 "Test1",
                 "Female",
-                "Single",
-                "www.google.com",
-                "Germany",
-                "US"
             )
         )
 
