@@ -1,7 +1,7 @@
 package com.practical.presentation
 
 import app.cash.turbine.test
-import com.practical.domain.CharacterModel
+import com.practical.domain.CharactersListModel
 import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.viewmodel.CharacterViewModel
@@ -51,12 +51,12 @@ class CharacterViewModelTest {
     fun `when fetching characters, then it should emit success state`() = runTest(testDispatcher) {
         // Arrange
         val expectedCharacters = listOf(
-            CharacterModel(
+            CharactersListModel(
                 "Character 1",
                 "Test",
-                "Male",
+                "Male"
             ),
-            CharacterModel(
+            CharactersListModel(
                 "Character 2",
                 "Test1",
                 "Female",

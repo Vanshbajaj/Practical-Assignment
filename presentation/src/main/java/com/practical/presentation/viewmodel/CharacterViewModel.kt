@@ -3,6 +3,7 @@ package com.practical.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practical.domain.CharacterModel
+import com.practical.domain.CharactersListModel
 import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharactersUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,20 +21,31 @@ class CharacterViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _charactersState =
-        MutableStateFlow<ResultState<List<CharacterModel>>>(ResultState.Loading)
-    val charactersState: StateFlow<ResultState<List<CharacterModel>>> = _charactersState
+        MutableStateFlow<ResultState<List<CharactersListModel>>>(ResultState.Loading)
+    val charactersState: StateFlow<ResultState<List<CharactersListModel>>> = _charactersState
+    private val _characterState = MutableStateFlow<ResultState<CharacterModel>>(ResultState.Loading)
+    val characterState: StateFlow<ResultState<CharacterModel>> = _characterState
+
 
     init {
         fetchCharacters()
     }
 
     fun fetchCharacters() {
-            viewModelScope.launch(defaultDispatcher) {
-                getCharactersUseCase.invoke().onStart { _charactersState.emit(ResultState.Loading) }
+        viewModelScope.launch(defaultDispatcher) {
+            getCharactersUseCase.invoke().onStart { _charactersState.emit(ResultState.Loading) }
                 .catch { _charactersState.emit(ResultState.Error(it)) }
                 .collect { result ->
                     _charactersState.emit(result)
                 }
+        }
+    }
+
+    fun getCharacter(id: String) {
+        viewModelScope.launch {
+            getCharactersUseCase.getCharacters(id).collect { result ->
+                _characterState.emit(result)
+            }
         }
     }
 }
