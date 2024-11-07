@@ -20,8 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -31,10 +29,12 @@ import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
+
 @Composable
 fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
-    val configuration = LocalConfiguration.current
+
+
 
     Column(
         modifier = modifier
@@ -51,21 +51,18 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
         )
 
-        when (charactersState) {
+
+        when (val state = charactersState) {
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
 
             is ResultState.Success -> {
-                if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    CharacterGrid(characters = state.data, isLandscape = true)
-                } else {
-                    CharacterGrid(characters = state.data, isLandscape = false)
-                }
+                CharacterGrid(state.data)
             }
 
             is ResultState.Error -> {
-                (state).exception.localizedMessage?.let {
+                state.exception.localizedMessage?.let {
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.error,
@@ -79,28 +76,21 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
 
 @Composable
-fun CharacterGrid(characters: List<CharacterModel>) {
+private fun CharacterGrid(characters: List<CharacterModel>) {
     LazyVerticalGrid(
-        columns = gridCells,
+        columns = GridCells.Fixed(CharacterScreenValues.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].id }) { index ->
+        items(characters.size, key = { characters[it].name.orEmpty() }) { index ->
             CharacterItem(character = characters[index])
         }
     }
 }
 
 
-
-
 @Composable
 private fun CharacterItem(character: CharacterModel) {
     val imageUrl = remember(character.image) { character.image }
-    val aspectRatio = if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        CharacterScreenValues.IMAGE_RATIO_LANDSCAPE
-    } else {
-        CharacterScreenValues.IMAGE_RATIO
-    }
 
     Card(
         modifier = Modifier
@@ -128,7 +118,6 @@ private fun CharacterItem(character: CharacterModel) {
         }
     }
 }
-
 
 internal object CharacterScreenValues {
     const val IMAGE_RATIO = 1f

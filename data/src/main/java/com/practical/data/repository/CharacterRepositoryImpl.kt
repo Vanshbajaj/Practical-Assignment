@@ -34,8 +34,6 @@ class CharacterRepositoryImpl @Inject constructor(
                 id = character?.id.orEmpty(),
                 name = character?.name.orEmpty(),
                 image = character?.image.orEmpty(),
-                origin = character?.origin?.name.orEmpty(),
-                location = character?.location?.dimension.orEmpty()
             )
         } ?: emptyList()
 
