@@ -46,6 +46,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":common"))
     implementation(project(":core"))
     implementation(project(":domain"))
     implementation(libs.apollo.runtime)
@@ -60,4 +61,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     testImplementation(libs.mockk)
+    testImplementation(libs.mockwebserver)
 }
