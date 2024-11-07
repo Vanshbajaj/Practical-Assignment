@@ -25,6 +25,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterRepositoryImplTest {
     private lateinit var apolloClient: ApolloClient
+    private  var apolloClientMockk: ApolloClient= mockk(relaxed = true)
     private lateinit var repository: CharacterRepositoryImpl
     private lateinit var mockWebServer: MockWebServer
 
@@ -72,10 +73,10 @@ class CharacterRepositoryImplTest {
             val response: ApolloResponse<CharactersQuery.Data> = mockk {
                 every { hasErrors() } returns true
             }
-            coEvery { apolloClient.query(any<CharactersQuery>()).execute() } returns response
+            coEvery { apolloClientMockk.query(any<CharactersQuery>()).execute() } returns response
 
             // Create the repository with the mocked Apollo client
-            val repository = CharacterRepositoryImpl(apolloClient)
+            val repository = CharacterRepositoryImpl(apolloClientMockk)
 
             // When: The getCharacters function is called
             repository.getCharacters().test {
@@ -95,10 +96,10 @@ class CharacterRepositoryImplTest {
         runTest {
             val expectedException = Exception("Network error")
             coEvery {
-                apolloClient.query(any<CharactersQuery>()).execute()
+                apolloClientMockk.query(any<CharactersQuery>()).execute()
             } throws expectedException
             // Create the repository with the mocked Apollo client
-            val repositoryWithMockApolloClient = CharacterRepositoryImpl(apolloClient)
+            val repositoryWithMockApolloClient = CharacterRepositoryImpl(apolloClientMockk)
             // When: The getCharacters function is called
             repositoryWithMockApolloClient.getCharacters().test {
                 // Then: Assert that the first emitted state is Loading
