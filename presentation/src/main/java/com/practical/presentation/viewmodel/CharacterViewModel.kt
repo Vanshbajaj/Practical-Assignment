@@ -7,8 +7,8 @@ import com.practical.domain.CharactersListModel
 import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
-import com.practical.presentation.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CharacterViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
     private val getCharacterUseCase: GetCharacterUseCase,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 
 ) : ViewModel() {
 
@@ -34,7 +34,7 @@ class CharacterViewModel @Inject constructor(
     }
 
     fun fetchCharacters() {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(defaultDispatcher) {
             getCharactersUseCase.invoke()
                 .catch { _charactersState.emit(ResultState.Error(it)) }
                 .collect { result ->
