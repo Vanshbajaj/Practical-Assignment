@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
     fun getCharactersList(): Flow<ResultState<List<CharactersListModel>>>
-    suspend fun getCharacter(id: String): Flow<ResultState<CharacterModel>>
+    fun getCharacter(id: String): Flow<ResultState<CharacterModel>>
 }

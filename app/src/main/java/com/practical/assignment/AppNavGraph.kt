@@ -1,6 +1,9 @@
 package com.practical.assignment
 
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,7 +16,10 @@ import com.practical.presentation.viewmodel.ViewModelFactory
 fun AppNavGraph(navController: NavHostController, viewModelFactory: ViewModelFactory) {
     NavHost(navController, startDestination = Home) {
         composable<Home> {
-            val characterViewModel: CharacterViewModel = viewModel(factory = viewModelFactory)
+            val characterViewModel: CharacterViewModel =
+                ViewModelProvider(LocalContext.current as ComponentActivity, viewModelFactory).get(
+                    CharacterViewModel::class.java
+                )
             CharacterScreen(characterViewModel)
         }
     }

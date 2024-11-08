@@ -3,6 +3,7 @@ package com.practical.data.network
 import com.apollographql.apollo.ApolloClient
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.repository.CharacterRepository
+import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
 import dagger.Module
 import dagger.Provides
@@ -20,6 +21,12 @@ object DataModule {
     @Singleton
     fun provideMyUseCase(repository: CharacterRepository): GetCharactersUseCase {
         return GetCharactersUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUseCase(repository: CharacterRepository): GetCharacterUseCase {
+        return GetCharacterUseCase(repository)
     }
 
 }

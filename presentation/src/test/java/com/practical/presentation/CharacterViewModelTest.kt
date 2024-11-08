@@ -3,6 +3,7 @@ package com.practical.presentation
 import app.cash.turbine.test
 import com.practical.domain.CharactersListModel
 import com.practical.domain.ResultState
+import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.viewmodel.CharacterViewModel
 import io.mockk.coEvery
@@ -22,12 +23,14 @@ import org.junit.Test
 class CharacterViewModelTest {
     private lateinit var viewModel: CharacterViewModel
     private lateinit var getCharactersUseCase: GetCharactersUseCase
+    private lateinit var getCharacterUseCase: GetCharacterUseCase
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         getCharactersUseCase = mockk(relaxed = true)
-        viewModel = CharacterViewModel(getCharactersUseCase, testDispatcher)
+        getCharacterUseCase= mockk()
+        viewModel = CharacterViewModel(getCharactersUseCase,getCharacterUseCase, testDispatcher)
     }
 
     @Test
