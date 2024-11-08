@@ -6,6 +6,7 @@ import com.data.graphql.CharactersListQuery
 import com.practical.data.toCharacterModel
 import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
+import com.practical.domain.OriginModel
 import com.practical.domain.ResultState
 import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
@@ -43,7 +44,17 @@ class CharacterRepositoryImpl @Inject constructor(
             if (response.hasErrors()) {
                 emit(ResultState.Error(Exception(response.errors?.joinToString())))
             } else {
-                val character = response.data?.character!!.toCharacterModel()
+                val character = response.data?.character?.toCharacterModel() ?: CharacterModel(
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    OriginModel("", "", "", "", ""),
+                    "",
+                    "",
+                    emptyList()
+                )
                 emit(ResultState.Success(character))
             }
         }.catch { e ->
