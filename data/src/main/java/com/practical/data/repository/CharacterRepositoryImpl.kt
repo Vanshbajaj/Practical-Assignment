@@ -44,7 +44,7 @@ class CharacterRepositoryImpl @Inject constructor(
             if (response.hasErrors()) {
                 emit(ResultState.Error(Exception(response.errors?.joinToString())))
             } else {
-                val character = response.data?.character?.toCharacterModel() ?: CharacterModel(
+                val character = response.data?.character?.toCharacterModel()?: CharacterModel(
                     "",
                     "",
                     "",
