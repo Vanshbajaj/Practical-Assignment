@@ -1,5 +1,6 @@
 package com.practical.presentation.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,9 +32,12 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 
 
 @Composable
-fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier) {
+fun CharacterListScreen(
+    viewModel: CharacterViewModel,
+    modifier: Modifier = Modifier,
+    onNavigateToCharacterScreen: (String, String) -> Unit = { characterId, characterName -> },
+) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -53,9 +57,11 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
             is ResultState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
+
             is ResultState.Success -> {
-                CharacterGrid(state.data)
+                CharacterGrid(state.data, onNavigateToCharacterScreen)
             }
+
             is ResultState.Error -> {
                 state.exception.localizedMessage?.let {
                     Text(
@@ -71,26 +77,35 @@ fun CharacterScreen(viewModel: CharacterViewModel, modifier: Modifier = Modifier
 
 
 @Composable
-private fun CharacterGrid(characters: List<CharactersListModel>) {
+private fun CharacterGrid(
+    characters: List<CharactersListModel>,
+    onNavigateToCharacterScreen: (String, String) -> Unit,
+) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(CharacterScreenValues.GRID_CELLS),
+        columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
         items(characters.size, key = { characters[it].id }) { index ->
-            CharacterItem(character = characters[index])
+            CharacterItem(character = characters[index], onNavigateToCharacterScreen)
         }
     }
 }
 
 
 @Composable
-private fun CharacterItem(character: CharactersListModel) {
+private fun CharacterItem(
+    character: CharactersListModel,
+    onNavigateToCharacterScreen: (String, String) -> Unit,
+) {
     val imageUrl = remember(character.image) { character.image }
 
     Card(
         modifier = Modifier
             .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
+            .clickable {
+                onNavigateToCharacterScreen.invoke(character.id, character.name)
+            }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -100,7 +115,7 @@ private fun CharacterItem(character: CharactersListModel) {
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()
-                    .aspectRatio(CharacterScreenValues.IMAGE_RATIO)
+                    .aspectRatio(CharactersListScreen.IMAGE_RATIO)
             )
             Text(
                 text = character.name,
@@ -114,7 +129,7 @@ private fun CharacterItem(character: CharactersListModel) {
     }
 }
 
-internal object CharacterScreenValues {
+internal object CharactersListScreen {
     const val IMAGE_RATIO = 1f
     const val GRID_CELLS = 2
 }
