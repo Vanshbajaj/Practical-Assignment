@@ -44,8 +44,12 @@ class CharacterRepositoryImpl @Inject constructor(
             if (response.hasErrors()) {
                 emit(ResultState.Error(Exception(response.errors?.joinToString())))
             } else {
-                val character = response.data?.character?.toCharacterModel()?:CharacterModel()
-                emit(ResultState.Success(character))
+                val character = response.data?.character?.toCharacterModel()
+                if (character == null || character.id.isEmpty()) {
+                    emit(ResultState.Error(Exception("Character not found or invalid data")))
+                } else {
+                    emit(ResultState.Success(character))
+                }
             }
         }.catch { e ->
             emit(ResultState.Error(e))

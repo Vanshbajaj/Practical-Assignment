@@ -7,35 +7,45 @@ import com.practical.domain.OriginModel
 
 
 fun CharacterDetailsQuery.Character.toCharacterModel(): CharacterModel {
-    return CharacterModel(
-        id = this.id?:"",
-        name = this.name?:"",
-        status = this.status?:"",
-        species = this.species?:"",
-        type = this.type?:"",
-        origin = this.origin?.toOriginModel()?:OriginModel(),
-        image = this.image?:"",
-        created = this.created?:"",
-        episodes = this.episode.mapNotNull { it?.toEpisodeModel() }
-    )
+    if (!this.id.isNullOrEmpty()) {
+        return CharacterModel(
+            id = this.id,
+            name = this.name.orEmpty(),
+            status = this.status.orEmpty(),
+            species = this.species.orEmpty(),
+            type = this.type.orEmpty(),
+            origin = this.origin?.toOriginModel() ?: OriginModel(),
+            image = this.image.orEmpty(),
+            created = this.created.orEmpty(),
+            episodes = this.episode.mapNotNull { it?.toEpisodeModel() }
+        )
+    }
+    return CharacterModel()
+
 }
 
 fun CharacterDetailsQuery.Origin.toOriginModel(): OriginModel {
-    return OriginModel(
-        id = this.id?:"",
-        name = this.name?:"",
-        type = this.type?:"",
-        dimension = this.dimension?:"",
-        created = this.created?:""
-    )
+    if (!id.isNullOrEmpty()) {
+        return OriginModel(
+            id = this.id,
+            name = this.name.orEmpty(),
+            type = this.type.orEmpty(),
+            dimension = this.dimension.orEmpty(),
+            created = this.created.orEmpty()
+        )
+    }
+    return OriginModel()
 }
 
 fun CharacterDetailsQuery.Episode.toEpisodeModel(): EpisodeModel {
-    return EpisodeModel(
-        id = this.id?:"",
-        name = this.name?:"",
-        airDate = this.air_date?:"",
-        episode = this.episode?:"",
-        created = this.created?:""
-    )
+    if (!this.id.isNullOrEmpty()) {
+        return EpisodeModel(
+            id = this.id,
+            name = this.name.orEmpty(),
+            airDate = this.air_date.orEmpty(),
+            episode = this.episode.orEmpty(),
+            created = this.created.orEmpty()
+        )
+    }
+    return EpisodeModel()
 }

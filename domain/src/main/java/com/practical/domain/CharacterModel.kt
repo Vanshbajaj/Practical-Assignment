@@ -2,7 +2,7 @@ package com.practical.domain
 
 
 data class CharacterModel(
-    val id: String = "",
+    val id: String="",
     val name: String = "",
     val status: String = "",
     val species: String = "",
