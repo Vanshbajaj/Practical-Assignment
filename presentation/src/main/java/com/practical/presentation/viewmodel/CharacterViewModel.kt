@@ -45,7 +45,7 @@ class CharacterViewModel @Inject constructor(
 
     fun getCharacter(id: String) {
         viewModelScope.launch {
-            getCharacterUseCase.getCharacters(id).collect { result ->
+            getCharacterUseCase.invoke(id).collect { result ->
                 _characterState.emit(result)
             }
         }

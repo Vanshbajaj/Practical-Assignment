@@ -6,7 +6,7 @@ import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetCharacterUseCase(private val repository: CharacterRepository) {
-    suspend fun getCharacters(id: String): Flow<ResultState<CharacterModel>> {
+    suspend operator fun invoke(id: String): Flow<ResultState<CharacterModel>> {
         return repository.getCharacter(id)
     }
 }

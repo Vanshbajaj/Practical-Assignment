@@ -95,7 +95,7 @@ type Character {
   """
   The character's last known location
   """
-  location: Location
+  location: Location!
 
   """
   Link to the character's image.
@@ -267,7 +267,7 @@ type Locations {
 
   """
   """
-  results: [Location]
+  results: [Location]!
 }
 
 """

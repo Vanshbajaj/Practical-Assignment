@@ -7,8 +7,8 @@ import com.practical.domain.OriginModel
 
 
 fun CharacterDetailsQuery.Character.toCharacterModel(): CharacterModel {
-    if (this.id.isNotEmpty()) {
-        return CharacterModel(
+    return this.id.let {
+        CharacterModel(
             id = this.id,
             name = this.name,
             status = this.status,
@@ -20,32 +20,27 @@ fun CharacterDetailsQuery.Character.toCharacterModel(): CharacterModel {
             episodes = this.episode.mapNotNull { it?.toEpisodeModel() }
         )
     }
-    return CharacterModel()
 
 }
 
 fun CharacterDetailsQuery.Origin.toOriginModel(): OriginModel {
-    if (id.isNotEmpty()) {
-        return OriginModel(
-            id = this.id,
-            name = this.name,
-            type = this.type,
-            dimension = this.dimension,
-            created = this.created
-        )
-    }
-    return OriginModel()
+    return OriginModel(
+        id = this.id,
+        name = this.name,
+        type = this.type,
+        dimension = this.dimension,
+        created = this.created
+    )
+
 }
 
 fun CharacterDetailsQuery.Episode.toEpisodeModel(): EpisodeModel {
-    if (this.id.isNotEmpty()) {
-        return EpisodeModel(
-            id = this.id,
-            name = this.name,
-            airDate = this.air_date,
-            episode = this.episode,
-            created = this.created
-        )
-    }
-    return EpisodeModel()
+    return EpisodeModel(
+        id = this.id,
+        name = this.name,
+        airDate = this.air_date,
+        episode = this.episode,
+        created = this.created
+    )
+
 }
