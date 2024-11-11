@@ -7,16 +7,16 @@ import com.practical.domain.OriginModel
 
 
 fun CharacterDetailsQuery.Character.toCharacterModel(): CharacterModel {
-    if (!this.id.isNullOrEmpty()) {
+    if (this.id.isNotEmpty()) {
         return CharacterModel(
             id = this.id,
-            name = this.name.orEmpty(),
-            status = this.status.orEmpty(),
-            species = this.species.orEmpty(),
-            type = this.type.orEmpty(),
-            origin = this.origin?.toOriginModel() ?: OriginModel(),
-            image = this.image.orEmpty(),
-            created = this.created.orEmpty(),
+            name = this.name,
+            status = this.status,
+            species = this.species,
+            type = this.type,
+            origin = this.origin.toOriginModel(),
+            image = this.image,
+            created = this.created,
             episodes = this.episode.mapNotNull { it?.toEpisodeModel() }
         )
     }
@@ -25,26 +25,26 @@ fun CharacterDetailsQuery.Character.toCharacterModel(): CharacterModel {
 }
 
 fun CharacterDetailsQuery.Origin.toOriginModel(): OriginModel {
-    if (!id.isNullOrEmpty()) {
+    if (id.isNotEmpty()) {
         return OriginModel(
             id = this.id,
-            name = this.name.orEmpty(),
-            type = this.type.orEmpty(),
-            dimension = this.dimension.orEmpty(),
-            created = this.created.orEmpty()
+            name = this.name,
+            type = this.type,
+            dimension = this.dimension,
+            created = this.created
         )
     }
     return OriginModel()
 }
 
 fun CharacterDetailsQuery.Episode.toEpisodeModel(): EpisodeModel {
-    if (!this.id.isNullOrEmpty()) {
+    if (this.id.isNotEmpty()) {
         return EpisodeModel(
             id = this.id,
-            name = this.name.orEmpty(),
-            airDate = this.air_date.orEmpty(),
-            episode = this.episode.orEmpty(),
-            created = this.created.orEmpty()
+            name = this.name,
+            airDate = this.air_date,
+            episode = this.episode,
+            created = this.created
         )
     }
     return EpisodeModel()
