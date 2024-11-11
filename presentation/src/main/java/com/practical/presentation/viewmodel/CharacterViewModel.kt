@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CharacterViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
     private val getCharacterUseCase: GetCharacterUseCase,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 
 ) : ViewModel() {
 
@@ -34,7 +34,7 @@ class CharacterViewModel @Inject constructor(
     }
 
     fun fetchCharacters() {
-        viewModelScope.launch(defaultDispatcher) {
+        viewModelScope.launch(coroutineDispatcher) {
             getCharactersUseCase.invoke()
                 .catch { _charactersState.emit(ResultState.Error(it)) }
                 .collect { result ->
