@@ -7,19 +7,17 @@ import com.practical.domain.OriginModel
 
 
 fun CharacterDetailsQuery.Character.toCharacterModel(): CharacterModel {
-    return this.id.let {
-        CharacterModel(
-            id = this.id,
-            name = this.name,
-            status = this.status,
-            species = this.species,
-            type = this.type,
-            origin = this.origin.toOriginModel(),
-            image = this.image,
-            created = this.created,
-            episodes = this.episode.mapNotNull { it?.toEpisodeModel() }
-        )
-    }
+    return CharacterModel(
+        id = this.id,
+        name = this.name,
+        status = this.status,
+        species = this.species,
+        type = this.type,
+        origin = this.origin.toOriginModel(),
+        image = this.image,
+        created = this.created,
+        episodes = this.episode.mapNotNull { it?.toEpisodeModel() }
+    )
 
 }
 
