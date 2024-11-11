@@ -1,5 +1,6 @@
-query CharacterDetails {
-    character(id: "") {
+# CharacterDetails.graphql
+query CharacterDetails($id: ID!) {
+    character(id: $id) {
         id
         name
         status
@@ -23,3 +24,4 @@ query CharacterDetails {
         }
     }
 }
+
