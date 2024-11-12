@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.practical.presentation.screens.CharacterListScreen
 import com.practical.presentation.screens.CharacterScreen
+import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 import com.practical.presentation.viewmodel.CharacterViewModel
 import com.practical.presentation.viewmodel.ViewModelFactory
 
@@ -22,7 +23,7 @@ fun AppNavGraph(navController: NavHostController, viewModelFactory: ViewModelFac
         }
         composable<CharacterScreenData> { backStackEntry ->
             val screen: CharacterScreenData = backStackEntry.toRoute()
-            val characterViewModel: CharacterViewModel = viewModel(factory = viewModelFactory)
+            val characterViewModel: CharacterDetailsViewModel = viewModel(factory = viewModelFactory)
             CharacterScreen(screen.id, screen.name, characterViewModel, navController)
         }
     }

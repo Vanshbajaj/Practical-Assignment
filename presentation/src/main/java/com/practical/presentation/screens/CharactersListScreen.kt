@@ -79,7 +79,7 @@ fun CharacterListScreen(
 @Composable
 private fun CharacterGrid(
     characters: List<CharactersListModel>,
-    onNavigateToCharacterScreen: (String, String) -> Unit,
+    onNavigateToCharacterScreen: (String, String) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
@@ -104,8 +104,7 @@ private fun CharacterItem(
             .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
             .clickable {
-                onNavigateToCharacterScreen.invoke(character.id, character.name)
-            }
+                onNavigateToCharacterScreen.invoke(character.id, character.name) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()

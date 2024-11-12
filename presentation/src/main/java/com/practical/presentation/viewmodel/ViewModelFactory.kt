@@ -16,7 +16,10 @@ class ViewModelFactory @Inject constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(CharacterViewModel::class.java) -> {
-                CharacterViewModel(getCharactersUseCase, getCharacterUseCase, ioDispatcher) as T
+                CharacterViewModel(getCharactersUseCase, ioDispatcher) as T
+            }
+            modelClass.isAssignableFrom(CharacterDetailsViewModel::class.java) -> {
+                CharacterDetailsViewModel(getCharacterUseCase, ioDispatcher) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class")

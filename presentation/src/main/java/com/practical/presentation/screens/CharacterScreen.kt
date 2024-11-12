@@ -22,6 +22,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -37,6 +42,7 @@ import com.practical.domain.EpisodeModel
 import com.practical.domain.ResultState
 import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
+import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,12 +50,12 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 fun CharacterScreen(
     characterId: String,
     characterName: String,
-    characterViewModel: CharacterViewModel,
+    characterViewModel: CharacterDetailsViewModel,
     navController: NavController,
 ) {
-    LaunchedEffect(characterId) {
-        characterViewModel.getCharacter(characterId)
-    }
+    val getCharacter by rememberSaveable(characterId) { mutableStateOf(characterId) }
+    characterViewModel.getCharacter(getCharacter)
+
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
@@ -129,7 +135,7 @@ private fun TopData(character: CharacterModel) {
 
 
         Text(
-            text = "EPISODES",
+            text = stringResource(R.string.episodes),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(
