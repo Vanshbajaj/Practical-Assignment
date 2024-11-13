@@ -35,7 +35,7 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 fun CharacterListScreen(
     viewModel: CharacterViewModel,
     modifier: Modifier = Modifier,
-    onNavigateToCharacterScreen: (String, String) -> Unit = { characterId, characterName -> },
+    onNavigateToCharacterScreen: (String, String) -> Unit = { _, _ -> },
 ) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
     Column(
@@ -85,7 +85,7 @@ private fun CharacterGrid(
         columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].id }) { index ->
+        items(characters.size, key = { characters[it].id.orEmpty() }) { index ->
             CharacterItem(character = characters[index], onNavigateToCharacterScreen)
         }
     }
@@ -104,7 +104,7 @@ private fun CharacterItem(
             .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
             .clickable {
-                onNavigateToCharacterScreen.invoke(character.id, character.name) }
+                onNavigateToCharacterScreen.invoke(character.id.orEmpty(), character.name.orEmpty()) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -117,7 +117,7 @@ private fun CharacterItem(
                     .aspectRatio(CharactersListScreen.IMAGE_RATIO)
             )
             Text(
-                text = character.name,
+                text = character.name.orEmpty(),
                 color = Color.White,
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 modifier = Modifier

@@ -7,9 +7,15 @@ import kotlinx.coroutines.Dispatchers
 
 @Module
 object DispatcherModule {
-    @Provides
     @IoDispatcher
-    fun provideIoDispatcher(): CoroutineDispatcher {
-        return Dispatchers.IO
-    }
+    @Provides
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+    @DefaultDispatcher
+    @Provides
+    fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @MainDispatcher
+    @Provides
+    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 }

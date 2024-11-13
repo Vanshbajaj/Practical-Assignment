@@ -6,7 +6,6 @@ import com.data.graphql.CharactersListQuery
 import com.practical.data.toCharacterModel
 import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
-import com.practical.domain.OriginModel
 import com.practical.domain.ResultState
 import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
@@ -27,9 +26,9 @@ class CharacterRepositoryImpl @Inject constructor(
         }
         val characters = response.data?.characters?.results?.map { character ->
             CharactersListModel(
-                id = character?.id.orEmpty(),
-                name = character?.name.orEmpty(),
-                image = character?.image.orEmpty(),
+                id = character?.id,
+                name = character?.name,
+                image = character?.image,
             )
         } ?: emptyList()
         emit(ResultState.Success(characters))
@@ -44,9 +43,10 @@ class CharacterRepositoryImpl @Inject constructor(
             if (response.hasErrors()) {
                 emit(ResultState.Error(Exception(response.errors?.joinToString())))
             } else {
-                val character = response.data?.character?.toCharacterModel()
-                character?.let {
+                response.data?.character?.toCharacterModel()?.let { character ->
                     emit(ResultState.Success(character))
+                } ?: run {
+                    emit(ResultState.Error(Exception("Character not found")))
                 }
             }
         }.catch { e ->
