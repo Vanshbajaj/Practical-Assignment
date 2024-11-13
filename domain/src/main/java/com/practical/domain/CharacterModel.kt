@@ -14,11 +14,11 @@ data class CharacterModel(
 )
 
 data class OriginModel(
-    val id: String = "",
+    val id: String? =null,
     val name: String = "",
-    val type: String = "",
-    val dimension: String = "",
-    val created: String = "",
+    val type: String? = null,
+    val dimension: String? = null,
+    val created: String? =null,
 )
 
 data class EpisodeModel(

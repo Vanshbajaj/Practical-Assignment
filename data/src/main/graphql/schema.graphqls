@@ -120,7 +120,7 @@ type Location {
   """
   The id of the location.
   """
-  id: ID!
+  id: ID
 
   """
   The name of the location.
@@ -130,12 +130,12 @@ type Location {
   """
   The type of the location.
   """
-  type: String!
+  type: String
 
   """
   The dimension in which the location is located.
   """
-  dimension: String!
+  dimension: String
 
   """
   List of characters who have been last seen in the location.
@@ -145,7 +145,7 @@ type Location {
   """
   Time at which the location was created in the database.
   """
-  created: String!
+  created: String
 }
 
 """
