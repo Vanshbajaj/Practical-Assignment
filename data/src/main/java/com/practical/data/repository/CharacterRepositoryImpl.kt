@@ -3,6 +3,7 @@ package com.practical.data.repository
 import com.apollographql.apollo.ApolloClient
 import com.data.graphql.CharacterDetailsQuery
 import com.data.graphql.CharactersListQuery
+import com.practical.common.Constants
 import com.practical.data.toCharacterModel
 import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
@@ -46,7 +47,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 response.data?.character?.toCharacterModel()?.let { character ->
                     emit(ResultState.Success(character))
                 } ?: run {
-                    emit(ResultState.Error(Exception("Character not found")))
+                    emit(ResultState.Error(Exception(message =Constants.error)))
                 }
             }
         }.catch { e ->

@@ -19,7 +19,7 @@ class ViewModelFactory @Inject constructor(
                 CharacterViewModel(getCharactersUseCase, coroutineDispatcher) as T
             }
             modelClass.isAssignableFrom(CharacterDetailsViewModel::class.java) -> {
-                CharacterDetailsViewModel(getCharacterUseCase, coroutineDispatcher) as T
+                CharacterDetailsViewModel(getCharacterUseCase) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class")

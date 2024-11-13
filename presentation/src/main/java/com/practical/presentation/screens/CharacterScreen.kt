@@ -1,6 +1,7 @@
 package com.practical.presentation.screens
 
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,9 +14,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -23,12 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.domain.ResultState
-import com.practical.presentation.AppScaffold
 import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
@@ -37,33 +35,31 @@ import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 @Composable
 fun CharacterScreen(
     characterId: String,
-    characterName: String,
     characterViewModel: CharacterDetailsViewModel,
-    navController: NavController,
 ) {
-    val getCharacter by rememberSaveable(characterId) { mutableStateOf(characterId) }
-    characterViewModel.getCharacter(getCharacter)
-
+    LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
-
-    AppScaffold(title = characterName, navController) {
-        CharacterScreenContent(
-            charactersState,
-            Modifier.padding(it)
-        )
-    }
+    CharacterScreenContent(charactersState)
 }
 
 
 @Composable
 private fun CharacterScreenContent(
     state: ResultState<CharacterModel>,
-    modifier: Modifier = Modifier,
 ) {
     when (state) {
         is ResultState.Loading -> {
-            // Show a loading indicator
-            CircularProgressIndicator()
+            Row(horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.dimens.paddingMedium)
+            ) {
+                CircularProgressIndicator(
+                    Modifier.align(
+                        Alignment.CenterVertically
+                    )
+                )
+            }
         }
 
         is ResultState.Success -> {
@@ -73,7 +69,7 @@ private fun CharacterScreenContent(
 
         is ResultState.Error -> {
             // Show an error message
-            Text(text = "Failed to load character", modifier = modifier)
+            Text(text = "Failed to load character")
         }
     }
 }
@@ -115,6 +111,7 @@ private fun TopData(character: CharacterModel) {
             items(character.episodes.size) { episode ->
                 EpisodeCard(episode = character.episodes[episode])
             }
+
         }
     }
 }

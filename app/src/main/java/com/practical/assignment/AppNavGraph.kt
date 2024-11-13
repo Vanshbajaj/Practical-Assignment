@@ -17,14 +17,17 @@ fun AppNavGraph(navController: NavHostController, viewModelFactory: ViewModelFac
     NavHost(navController, startDestination = Home) {
         composable<Home> {
             val characterViewModel: CharacterViewModel = viewModel(factory = viewModelFactory)
-            CharacterListScreen(characterViewModel) { characterId, characterName ->
-                navController.navigate(CharacterScreenData(characterId, characterName))
+            CharacterListScreen(characterViewModel) { characterId ->
+                navController.navigate(CharacterScreenData(characterId))
             }
         }
         composable<CharacterScreenData> { backStackEntry ->
             val screen: CharacterScreenData = backStackEntry.toRoute()
-            val characterViewModel: CharacterDetailsViewModel = viewModel(factory = viewModelFactory)
-            CharacterScreen(screen.id, screen.name, characterViewModel, navController)
+            val characterViewModel: CharacterDetailsViewModel =
+                viewModel(factory = viewModelFactory)
+            CharacterScreen(screen.id, characterViewModel)
         }
     }
+
 }
+

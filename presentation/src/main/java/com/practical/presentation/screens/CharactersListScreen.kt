@@ -34,12 +34,11 @@ import com.practical.presentation.viewmodel.CharacterViewModel
 @Composable
 fun CharacterListScreen(
     viewModel: CharacterViewModel,
-    modifier: Modifier = Modifier,
-    onNavigateToCharacterScreen: (String, String) -> Unit = { _, _ -> },
+    onNavigateToCharacterScreen: (String) -> Unit,
 ) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
@@ -79,7 +78,7 @@ fun CharacterListScreen(
 @Composable
 private fun CharacterGrid(
     characters: List<CharactersListModel>,
-    onNavigateToCharacterScreen: (String, String) -> Unit
+    onNavigateToCharacterScreen: (String) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
@@ -95,7 +94,7 @@ private fun CharacterGrid(
 @Composable
 private fun CharacterItem(
     character: CharactersListModel,
-    onNavigateToCharacterScreen: (String, String) -> Unit,
+    onNavigateToCharacterScreen: (String) -> Unit,
 ) {
     val imageUrl = remember(character.image) { character.image }
 
@@ -104,7 +103,7 @@ private fun CharacterItem(
             .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
             .clickable {
-                onNavigateToCharacterScreen.invoke(character.id.orEmpty(), character.name.orEmpty()) }
+                onNavigateToCharacterScreen.invoke(character.id.orEmpty()) }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
