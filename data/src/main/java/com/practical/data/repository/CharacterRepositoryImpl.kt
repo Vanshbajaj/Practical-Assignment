@@ -47,7 +47,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 response.data?.character?.toCharacterModel()?.let { character ->
                     emit(ResultState.Success(character))
                 } ?: run {
-                    emit(ResultState.Error(Exception(message =Constants.error)))
+                    emit(ResultState.Error(Exception(Constants.error)))
                 }
             }
         }.catch { e ->
