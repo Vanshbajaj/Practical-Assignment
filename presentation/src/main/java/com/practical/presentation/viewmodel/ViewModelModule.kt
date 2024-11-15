@@ -14,9 +14,9 @@ class ViewModelModule {
     fun provideViewModelFactory(
         getCharactersUseCase: GetCharactersUseCase,
         getCharacterUseCase: GetCharacterUseCase,
-        @IoDispatcher coroutineDispatcher: CoroutineDispatcher,
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 
-        ): ViewModelFactory {
-        return ViewModelFactory(getCharactersUseCase, getCharacterUseCase, coroutineDispatcher)
+    ): ViewModelFactory {
+        return ViewModelFactory(getCharactersUseCase, getCharacterUseCase,coroutineDispatcher)
     }
 }
