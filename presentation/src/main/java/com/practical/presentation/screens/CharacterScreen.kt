@@ -38,7 +38,7 @@ fun CharacterScreen(
     characterViewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
+    LaunchedEffect(characterId,modifier) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
     CharacterScreenContent(charactersState)
 }
