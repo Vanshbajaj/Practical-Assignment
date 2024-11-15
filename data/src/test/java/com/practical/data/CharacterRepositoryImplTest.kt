@@ -2,23 +2,26 @@ package com.practical.data
 
 import app.cash.turbine.test
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.exception.ApolloNetworkException
+import com.apollographql.apollo.api.ApolloResponse
 import com.data.graphql.CharactersListQuery
 import com.practical.common.Constants
-import com.practical.data.network.NetworkException
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
 import com.practical.domain.EpisodeModel
 import com.practical.domain.OriginModel
+import com.practical.domain.ResultState
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -80,62 +83,109 @@ class CharacterRepositoryImplTest {
 
             // Test the repository method
             repositoryWebServer.getCharactersList().test {
+                // Expect Loading state first
+                assertEquals(ResultState.Loading, awaitItem())
+
                 // Expect Success with the correct list of characters (only two characters in the mock data)
                 val expectedList = listOf(
                     CharactersListModel(
                         id = "1",
                         name = "Rick Sanchez",
                         image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
-                    ), CharactersListModel(
+                    ),
+                    CharactersListModel(
                         id = "2",
                         name = "Morty Smith",
                         image = "https://rickandmortyapi.com/api/character/avatar/2.jpeg"
                     )
                 )
+
+                // Await the Success state, and extract the data from ResultState.Success
+                val actualResult = awaitItem()
+                assertTrue(actualResult is ResultState.Success)
+                val actualData = (actualResult as ResultState.Success).data
+
                 // Filter the actual data to make sure only the first two characters are checked
-                val filteredData = awaitItem().take(2)
+                val filteredData = actualData.take(2)
+
+                // Assert that the actual data matches the expected list
                 assertEquals(expectedList, filteredData)
+
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
 
     @Test
-    fun `should return error state when server response contains errors`() = runTest {
-        coEvery {
-            apolloClient.query(CharactersListQuery()).execute()
-        } throws ApolloNetworkException("Server Error")
+    fun `given GraphQL errors, when getCharacters is called, then emits loading followed by error`() =
+        runTest {
+            // Mock the Apollo Client
+            val response: ApolloResponse<CharactersListQuery.Data> = mockk {
+                every { hasErrors() } returns true
+                //every { errors } returns listOf(mockk()) // Ensure this is a valid mock
+            }
+            coEvery { apolloClient.query(any<CharactersListQuery>()).execute() } returns response
 
-        // 2. Test the Flow using Turbine
-        repository.getCharactersList().test {
-            // Expecting an error
-            val error = awaitError()
-            assert(error is ApolloNetworkException)
-            cancelAndIgnoreRemainingEvents()
+            // Create the repository with the mocked Apollo client
+
+
+            // When: The getCharacters function is called
+            repository.getCharactersList().test {
+                // Then: Assert that the first emitted state is Loading
+                assertEquals(ResultState.Loading, awaitItem())
+                // Then: Assert that the next emitted state is Error
+                val actualErrorState = awaitItem()
+                assertTrue(actualErrorState is ResultState.Error)
+                assertTrue(actualErrorState.toString().contains("GraphQL errors:"))
+                // Then: Ensure there are no more emissions
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
 
+    @Test
+    fun `given an unexpected exception, when getCharacters is called, then emits loading followed by error`() =
+        runTest {
+            val expectedException = Exception("Network error")
+            coEvery {
+                apolloClient.query(any<CharactersListQuery>()).execute()
+            } throws expectedException
+            // Create the repository with the mocked Apollo client
+            // When: The getCharacters function is called
+            repository.getCharactersList().test {
+                // Then: Assert that the first emitted state is Loading
+                assertEquals(ResultState.Loading, awaitItem())
+                assertEquals(ResultState.Error(expectedException), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 
     /******************************   get Character By Id  ***************************************************/
-
-
     @Test
     fun `character data for when ApolloClient query is successful`() = runTest {
         // Given
         val characterId = "6"
         val characterModel = CharacterModel(
+            id = "6",
             name = "Abadango Cluster Princess",
             status = "Alive",
             species = "Alien",
+            type = "",
             origin = OriginModel(
+                id = "2",
                 name = "Abadango",
+                type = "Cluster",
                 dimension = "unknown",
+                created = "2017-11-10T13:06:38.182Z"
             ),
             image = "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
+            created = "2017-11-04T19:50:28.250Z",
             episodes = listOf(
                 EpisodeModel(
                     id = "27",
                     name = "Rest and Ricklaxation",
+                    airDate = "August 27, 2017",
+                    episode = "S03E06",
+                    created = "2017-11-10T12:56:36.515Z"
                 )
             )
         )
@@ -145,36 +195,46 @@ class CharacterRepositoryImplTest {
     {
       "data": {
         "character": {
-      
+          "id": "6",
           "name": "Abadango Cluster Princess",
           "status": "Alive",
           "species": "Alien",
+          "type": "Princess",  // Correct type for Abadango Cluster Princess
           "origin": {
-            "name": "Abadango"
+            "id": "2",
+            "name": "Abadango",
+            "type": "Cluster",
+            "dimension": "unknown",
+            "created": "2017-11-10T13:06:38.182Z"
           },
           "image": "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
+          "created": "2017-11-04T19:50:28.250Z",
           "episodes": [
             {
+              "id": "27",
               "name": "Rest and Ricklaxation",
-              "episode": "S03E06"
+              "airDate": "August 27, 2017",
+              "episode": "S03E06",
+              "created": "2017-11-10T12:56:36.515Z"
             }
           ]
         }
       }
     }
-""".trimIndent()
-
+    """.trimIndent()
         mockWebServer.enqueue(MockResponse().setBody(mockGraphQLResponse).setResponseCode(200))
         //When
         repositoryWebServer.getCharacter(characterId).test {
             //Then
-            assertEquals((characterModel), awaitItem())
+            assertEquals(ResultState.Loading, awaitItem())
+            assertEquals(ResultState.Success(characterModel), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
+
     }
 
     @Test
-    fun `should return error state when server response contains errors for id`() = runTest {
+    fun `should return error state when server response contains errors`() = runTest {
         // Given
         val characterId = "2"
         val mockErrorMessage = "NO Data"
@@ -187,18 +247,18 @@ class CharacterRepositoryImplTest {
                 .addHeader("Content-Type", "application/json")
         )
 
-        // Simulate ApolloClient throwing an exception when making the request
-        coEvery {
-            apolloClient.query(any<CharactersListQuery>()).execute()
-        } throws ApolloNetworkException("GraphQL Error: $mockErrorMessage")
-
         // When & Then
         repository.getCharacter(characterId).test {
-            // Expect the flow to throw an error
-            val error = awaitError() // Capture the error emitted by the flow
-            // Assert the error is an instance of ApolloNetworkException
-            assert(error is ApolloNetworkException)
-            cancelAndIgnoreRemainingEvents()
+            // Assert that the first emitted item is Loading
+            assertEquals(ResultState.Loading, awaitItem())
+
+            // Assert that the second emitted item is Error
+            val errorState = awaitItem()
+            assertTrue(errorState is ResultState.Error)
+            assertEquals(mockErrorMessage, (errorState as ResultState.Error).exception.message)
+
+            awaitComplete() // Ensure the flow completes without unconsumed events
         }
     }
 }
+
