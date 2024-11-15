@@ -107,7 +107,7 @@ private fun CharacterItem(
         modifier = modifier
             .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
-            .clickable(enabled = !character.id.isNullOrEmpty()) {
+            .clickable(enabled = character.id.isNullOrEmpty().not()) {
                 character.id?.let { characterId -> onNavigateToCharacterScreen.invoke(characterId) }
             }
     ) {
