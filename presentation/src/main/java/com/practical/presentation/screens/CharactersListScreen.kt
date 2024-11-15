@@ -30,23 +30,19 @@ import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
-@SuppressWarnings("ModifierReused")
 @Composable
-fun CharacterListScreen(
-    viewModel: CharacterViewModel,
+fun CharacterListScreen(viewModel: CharacterViewModel,
     modifier: Modifier = Modifier,
     onNavigateToCharacterScreen: (String) -> Unit,
 
     ) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
-    Column(
-        modifier = modifier
+    Column(modifier = modifier
             .fillMaxWidth()
             .padding(MaterialTheme.dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = stringResource(R.string.rick_morty_app),
+        Text(text = stringResource(R.string.rick_morty_app),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(MaterialTheme.dimens.paddingSmall)
@@ -83,12 +79,11 @@ private fun CharacterGrid(
     onNavigateToCharacterScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyVerticalGrid(
-        modifier = modifier,
+    LazyVerticalGrid(modifier = modifier,
         columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
-        items(characters.size, key = { characters[it].id.orEmpty() }) { index ->
+        items(characters.size) { index ->
             CharacterItem(character = characters[index], onNavigateToCharacterScreen)
         }
     }
@@ -103,8 +98,7 @@ private fun CharacterItem(
 ) {
     val imageUrl = remember(character.image) { character.image }
 
-    Card(
-        modifier = modifier
+    Card(modifier = modifier
             .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
             .clickable(enabled = character.id.isNullOrEmpty().not()) {
@@ -114,21 +108,22 @@ private fun CharacterItem(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            AsyncImage(
-                model = imageUrl,
+            AsyncImage(model = imageUrl,
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()
                     .aspectRatio(CharactersListScreen.IMAGE_RATIO)
             )
-            Text(
-                text = character.name.orEmpty(),
-                color = Color.White,
-                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                modifier = Modifier
-                    .padding(MaterialTheme.dimens.paddingSmall)
-                    .align(Alignment.BottomCenter)
-            )
+            character.name?.let {
+                Text(
+                    text = it,
+                    color = Color.White,
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                    modifier = Modifier
+                        .padding(MaterialTheme.dimens.paddingSmall)
+                        .align(Alignment.BottomCenter)
+                )
+            }
         }
     }
 }

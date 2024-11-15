@@ -2,6 +2,7 @@ package com.practical.presentation.screens
 
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,41 +39,44 @@ fun CharacterScreen(
     characterViewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(characterId,modifier) { characterViewModel.getCharacter(characterId) }
+    LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
-    CharacterScreenContent(charactersState)
+    CharacterScreenContent(charactersState,
+        modifier.padding(MaterialTheme.dimens.paddingExtraSmall)
+    )
 }
 
 
 @Composable
 private fun CharacterScreenContent(
     state: ResultState<CharacterModel>,
-    modifier: Modifier = Modifier,
-) {
-    when (state) {
-        is ResultState.Loading -> {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.dimens.paddingMedium)
-            ) {
-                CircularProgressIndicator(
-                    Modifier.align(
-                        Alignment.CenterVertically
+    modifier: Modifier = Modifier) {
+    Box(modifier.padding(MaterialTheme.dimens.paddingExtraSmall)) {
+        when (state) {
+            is ResultState.Loading -> {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MaterialTheme.dimens.paddingMedium)
+                ) {
+                    CircularProgressIndicator(
+                        Modifier.align(
+                            Alignment.CenterVertically
+                        )
                     )
-                )
+                }
             }
-        }
 
-        is ResultState.Success -> {
-            // When data is loaded, display the character details
-            TopData(character = state.data)
-        }
+            is ResultState.Success -> {
+                // When data is loaded, display the character details
+                TopData(character = state.data)
+            }
 
-        is ResultState.Error -> {
-            // Show an error message
-            Text(text = "Failed to load character")
+            is ResultState.Error -> {
+                // Show an error message
+                Text(text = "Failed to load character")
+            }
         }
     }
 }
@@ -87,11 +91,10 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
             contentDescription = character.name,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(screenHeight / CharacterScreenValues.screenHeightbyTwo)
+                .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
         )
 
-        Text(
-            text = character.name,
+        Text(text = character.name,
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             fontWeight = FontWeight.Bold
         )
@@ -99,8 +102,7 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
         Text(text = stringResource(R.string.status, character.status))
         Text(text = stringResource(R.string.species, character.species))
         Text(text = stringResource(R.string.gender))
-        Text(
-            text = stringResource(R.string.episodes),
+        Text(text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(
@@ -108,30 +110,25 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
                 vertical = MaterialTheme.dimens.paddingSmall
             )
         )
-        LazyRow(
-            modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)
-        ) { items(character.episodes.size) { episode ->
+        LazyRow(modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)) {
+            items(character.episodes.size) { episode ->
                 EpisodeCard(episode = character.episodes[episode])
             }
-
         }
     }
 }
 
 @Composable
-private fun EpisodeCard(episode: EpisodeModel,modifier: Modifier=Modifier) {
-    Card(modifier = modifier
-            .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
-            .width(MaterialTheme.dimens.cardWidth)
-    ) {
+private fun EpisodeCard(episode: EpisodeModel, modifier: Modifier = Modifier) {
+    Card(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
+            .width(MaterialTheme.dimens.cardWidth)) {
         Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)
-        ) {
+            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)) {
             Text(text = episode.name, fontSize = MaterialTheme.typography.labelLarge.fontSize)
         }
     }
 }
 
 internal object CharacterScreenValues {
-    const val screenHeightbyTwo = 2
+    const val SCREEN_HEIGHT_BY_TWO = 2
 }
