@@ -57,7 +57,7 @@ fun PracticalAssignmentTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = {
-            CompositionLocalProvider(LocalDimens provides MaterialDimens) {
+            CompositionLocalProvider(LocalDimens provides MaterialDimens ) {
                 content()
             }
         }
