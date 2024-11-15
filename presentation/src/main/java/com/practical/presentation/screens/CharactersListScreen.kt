@@ -80,7 +80,7 @@ fun CharacterListScreen(
 private fun CharacterGrid(
     characters: List<CharactersListModel>,
     onNavigateToCharacterScreen: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
         modifier = modifier,
@@ -98,7 +98,7 @@ private fun CharacterGrid(
 private fun CharacterItem(
     character: CharactersListModel,
     onNavigateToCharacterScreen: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val imageUrl = remember(character.image) { character.image }
 

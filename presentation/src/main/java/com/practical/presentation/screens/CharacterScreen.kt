@@ -37,7 +37,7 @@ import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 fun CharacterScreen(
     characterId: String,
     characterViewModel: CharacterDetailsViewModel,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
@@ -51,7 +51,7 @@ fun CharacterScreen(
 @Composable
 private fun CharacterScreenContent(
     state: ResultState<CharacterModel>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier.padding(MaterialTheme.dimens.paddingExtraSmall)) {
         when (state) {
@@ -104,7 +104,7 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
 
         Text(text = stringResource(R.string.status, character.status))
         Text(text = stringResource(R.string.species, character.species))
-        Text(text = stringResource(R.string.gender))
+        Text(text = stringResource(R.string.gender,character.type))
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
