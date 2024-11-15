@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.detekt.plugin) apply true
     alias(libs.plugins.ksp.plugin) apply false
     alias(libs.plugins.kotlin.compose.complier) apply false
-    alias(libs.plugins.seriazlation.plugin) apply  false
+    alias(libs.plugins.seriazlation.plugin) apply false
 
 }
 dependencies {

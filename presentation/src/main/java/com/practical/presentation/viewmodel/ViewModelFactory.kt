@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ViewModelFactory @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
     private val getCharacterUseCase: GetCharacterUseCase,
-    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
+    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -18,6 +18,7 @@ class ViewModelFactory @Inject constructor(
             modelClass.isAssignableFrom(CharacterViewModel::class.java) -> {
                 CharacterViewModel(getCharactersUseCase, coroutineDispatcher) as T
             }
+
             modelClass.isAssignableFrom(CharacterDetailsViewModel::class.java) -> {
                 CharacterDetailsViewModel(getCharacterUseCase) as T
             }

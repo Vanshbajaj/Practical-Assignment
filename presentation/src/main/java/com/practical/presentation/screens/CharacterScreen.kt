@@ -41,7 +41,8 @@ fun CharacterScreen(
 ) {
     LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
-    CharacterScreenContent(charactersState,
+    CharacterScreenContent(
+        charactersState,
         modifier.padding(MaterialTheme.dimens.paddingExtraSmall)
     )
 }
@@ -50,7 +51,8 @@ fun CharacterScreen(
 @Composable
 private fun CharacterScreenContent(
     state: ResultState<CharacterModel>,
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier,
+) {
     Box(modifier.padding(MaterialTheme.dimens.paddingExtraSmall)) {
         when (state) {
             is ResultState.Loading -> {
@@ -94,7 +96,8 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
                 .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
         )
 
-        Text(text = character.name,
+        Text(
+            text = character.name,
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             fontWeight = FontWeight.Bold
         )
@@ -102,7 +105,8 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
         Text(text = stringResource(R.string.status, character.status))
         Text(text = stringResource(R.string.species, character.species))
         Text(text = stringResource(R.string.gender))
-        Text(text = stringResource(R.string.episodes),
+        Text(
+            text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(
@@ -120,10 +124,15 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
 
 @Composable
 private fun EpisodeCard(episode: EpisodeModel, modifier: Modifier = Modifier) {
-    Card(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
-            .width(MaterialTheme.dimens.cardWidth)) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)) {
+    Card(
+        modifier = modifier
+            .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
+            .width(MaterialTheme.dimens.cardWidth)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)
+        ) {
             Text(text = episode.name, fontSize = MaterialTheme.typography.labelLarge.fontSize)
         }
     }

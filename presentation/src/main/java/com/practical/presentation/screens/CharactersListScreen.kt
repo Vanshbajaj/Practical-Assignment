@@ -31,18 +31,21 @@ import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 @Composable
-fun CharacterListScreen(viewModel: CharacterViewModel,
+fun CharacterListScreen(
+    viewModel: CharacterViewModel,
     modifier: Modifier = Modifier,
     onNavigateToCharacterScreen: (String) -> Unit,
 
     ) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
-    Column(modifier = modifier
+    Column(
+        modifier = modifier
             .fillMaxWidth()
             .padding(MaterialTheme.dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = stringResource(R.string.rick_morty_app),
+        Text(
+            text = stringResource(R.string.rick_morty_app),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(MaterialTheme.dimens.paddingSmall)
@@ -79,7 +82,8 @@ private fun CharacterGrid(
     onNavigateToCharacterScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyVerticalGrid(modifier = modifier,
+    LazyVerticalGrid(
+        modifier = modifier,
         columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
@@ -99,16 +103,21 @@ private fun CharacterItem(
     val imageUrl = remember(character.image) { character.image }
 
     Card(modifier = modifier
-            .padding(MaterialTheme.dimens.paddingSmall)
-            .fillMaxWidth()
-            .clickable(enabled = character.id.isNullOrEmpty().not()) {
-                character.id?.let { characterId -> onNavigateToCharacterScreen.invoke(characterId) }
-            }
+        .padding(MaterialTheme.dimens.paddingSmall)
+        .fillMaxWidth()
+        .clickable(
+            enabled = character.id
+                .isNullOrEmpty()
+                .not()
+        ) {
+            character.id?.let { characterId -> onNavigateToCharacterScreen.invoke(characterId) }
+        }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            AsyncImage(model = imageUrl,
+            AsyncImage(
+                model = imageUrl,
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()

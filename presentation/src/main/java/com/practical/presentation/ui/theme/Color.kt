@@ -1,6 +1,7 @@
 package com.practical.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
+
 private const val COLOR_PURPLE_80_HEX = 0xFFD0BCFF
 private const val COLOR_PURPLE_GREY_80_HEX = 0xFFCCC2DC
 private const val COLOR_PINK_80_HEX = 0xFFEFB8C8

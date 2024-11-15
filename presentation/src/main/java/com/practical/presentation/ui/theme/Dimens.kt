@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 data class Dimens(
     val paddingExtraSmall: Dp,
@@ -15,7 +14,7 @@ data class Dimens(
     val marginSmall: Dp,
     val marginMedium: Dp,
     val marginLarge: Dp,
-    val cardWidth:Dp
+    val cardWidth: Dp,
 )
 
 
