@@ -36,6 +36,7 @@ import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 fun CharacterScreen(
     characterId: String,
     characterViewModel: CharacterDetailsViewModel,
+    modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
@@ -46,11 +47,13 @@ fun CharacterScreen(
 @Composable
 private fun CharacterScreenContent(
     state: ResultState<CharacterModel>,
+    modifier: Modifier = Modifier,
 ) {
     when (state) {
         is ResultState.Loading -> {
-            Row(horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(MaterialTheme.dimens.paddingMedium)
             ) {
@@ -76,9 +79,9 @@ private fun CharacterScreenContent(
 
 
 @Composable
-private fun TopData(character: CharacterModel) {
+private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    Column(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingSmall)) {
+    Column(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingSmall)) {
         AsyncImage(
             model = character.image,
             contentDescription = character.name,
@@ -107,8 +110,7 @@ private fun TopData(character: CharacterModel) {
         )
         LazyRow(
             modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)
-        ) {
-            items(character.episodes.size) { episode ->
+        ) { items(character.episodes.size) { episode ->
                 EpisodeCard(episode = character.episodes[episode])
             }
 
@@ -117,14 +119,12 @@ private fun TopData(character: CharacterModel) {
 }
 
 @Composable
-private fun EpisodeCard(episode: EpisodeModel) {
-    Card(
-        modifier = Modifier
+private fun EpisodeCard(episode: EpisodeModel,modifier: Modifier=Modifier) {
+    Card(modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
             .width(MaterialTheme.dimens.cardWidth)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Row(verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)
         ) {
             Text(text = episode.name, fontSize = MaterialTheme.typography.labelLarge.fontSize)

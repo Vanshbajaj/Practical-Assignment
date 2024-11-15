@@ -11,15 +11,20 @@ import javax.inject.Inject
 class CharacterDetailsViewModel @Inject constructor(
     private val getCharacterUseCase: GetCharacterUseCase,
 ) : ViewModel() {
+    private var characterId: String? = null
     private val _characterState = MutableStateFlow<ResultState<CharacterModel>>(ResultState.Loading)
     val characterState: StateFlow<ResultState<CharacterModel>> = _characterState
 
 
-    suspend fun getCharacter(id: String){
-        getCharacterUseCase.invoke(id).collect{collect->
-            _characterState.emit(collect)
+    suspend fun getCharacter(id: String) {
+        if (characterId == null) {
+            getCharacterUseCase.invoke(id).collect { collect ->
+                _characterState.emit(collect)
+                characterId = id
 
+            }
         }
+
     }
 
 }

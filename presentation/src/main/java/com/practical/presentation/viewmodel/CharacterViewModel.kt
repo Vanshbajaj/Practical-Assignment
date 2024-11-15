@@ -20,10 +20,9 @@ import javax.inject.Inject
 
 class CharacterViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
-    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
+    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 
-) : ViewModel() {
-
+    ) : ViewModel() {
     private val _charactersState =
         MutableStateFlow<ResultState<List<CharactersListModel>>>(ResultState.Loading)
     val charactersState: StateFlow<ResultState<List<CharactersListModel>>> = _charactersState

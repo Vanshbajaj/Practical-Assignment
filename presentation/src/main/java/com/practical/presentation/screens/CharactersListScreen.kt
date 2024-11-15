@@ -30,15 +30,17 @@ import com.practical.presentation.R
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
-
+@SuppressWarnings("ModifierReused")
 @Composable
 fun CharacterListScreen(
     viewModel: CharacterViewModel,
+    modifier: Modifier = Modifier,
     onNavigateToCharacterScreen: (String) -> Unit,
-) {
+
+    ) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(MaterialTheme.dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
@@ -78,9 +80,11 @@ fun CharacterListScreen(
 @Composable
 private fun CharacterGrid(
     characters: List<CharactersListModel>,
-    onNavigateToCharacterScreen: (String) -> Unit
+    onNavigateToCharacterScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
+        modifier = modifier,
         columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
@@ -95,15 +99,17 @@ private fun CharacterGrid(
 private fun CharacterItem(
     character: CharactersListModel,
     onNavigateToCharacterScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val imageUrl = remember(character.image) { character.image }
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .padding(MaterialTheme.dimens.paddingSmall)
             .fillMaxWidth()
-            .clickable {
-                onNavigateToCharacterScreen.invoke(character.id.orEmpty()) }
+            .clickable(enabled = !character.id.isNullOrEmpty()) {
+                character.id?.let { characterId -> onNavigateToCharacterScreen.invoke(characterId) }
+            }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()

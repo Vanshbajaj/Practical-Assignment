@@ -28,6 +28,24 @@ fun AppNavGraph(navController: NavHostController, viewModelFactory: ViewModelFac
             CharacterScreen(screen.id, characterViewModel)
         }
     }
-
 }
+
+
+//@Composable
+//fun RickAndMortyAppBar(title: String) {
+//    val topBarTitle = remember { mutableStateOf("text") }
+//    Row(
+//        modifier =
+//        Modifier
+//            .fillMaxWidth()
+//            .height(MaterialTheme.dimens.paddingMedium)
+//            .background(MaterialTheme.colorScheme.surface),
+//        horizontalArrangement = Arrangement.Center,
+//        verticalAlignment = Alignment.CenterVertically,
+//    ) {
+//        Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
+//    }
+//}
+
+
 
