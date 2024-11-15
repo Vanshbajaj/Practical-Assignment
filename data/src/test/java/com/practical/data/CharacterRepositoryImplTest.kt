@@ -6,12 +6,16 @@ import com.apollographql.apollo.api.ApolloResponse
 import com.data.graphql.CharactersListQuery
 import com.practical.common.Constants
 import com.practical.data.repository.CharacterRepositoryImpl
+import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
+import com.practical.domain.EpisodeModel
+import com.practical.domain.OriginModel
 import com.practical.domain.ResultState
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -154,4 +158,107 @@ class CharacterRepositoryImplTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    /******************************   get Character By Id  ***************************************************/
+    @Test
+    fun `character data for when ApolloClient query is successful`() = runTest {
+        // Given
+        val characterId = "6"
+        val characterModel = CharacterModel(
+            id = "6",
+            name = "Abadango Cluster Princess",
+            status = "Alive",
+            species = "Alien",
+            type = "",
+            origin = OriginModel(
+                id = "2",
+                name = "Abadango",
+                type = "Cluster",
+                dimension = "unknown",
+                created = "2017-11-10T13:06:38.182Z"
+            ),
+            image = "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
+            created = "2017-11-04T19:50:28.250Z",
+            episodes = listOf(
+                EpisodeModel(
+                    id = "27",
+                    name = "Rest and Ricklaxation",
+                    airDate = "August 27, 2017",
+                    episode = "S03E06",
+                    created = "2017-11-10T12:56:36.515Z"
+                )
+            )
+        )
+
+        // Set up the mock GraphQL response with more episodes, but we want only the first episode for comparison
+        val mockGraphQLResponse = """
+    {
+      "data": {
+        "character": {
+          "id": "6",
+          "name": "Abadango Cluster Princess",
+          "status": "Alive",
+          "species": "Alien",
+          "type": "Princess",  // Correct type for Abadango Cluster Princess
+          "origin": {
+            "id": "2",
+            "name": "Abadango",
+            "type": "Cluster",
+            "dimension": "unknown",
+            "created": "2017-11-10T13:06:38.182Z"
+          },
+          "image": "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
+          "created": "2017-11-04T19:50:28.250Z",
+          "episodes": [
+            {
+              "id": "27",
+              "name": "Rest and Ricklaxation",
+              "airDate": "August 27, 2017",
+              "episode": "S03E06",
+              "created": "2017-11-10T12:56:36.515Z"
+            }
+          ]
+        }
+      }
+    }
+    """.trimIndent()
+        mockWebServer.enqueue(MockResponse().setBody(mockGraphQLResponse).setResponseCode(200))
+        //When
+        repositoryWebServer.getCharacter(characterId).test {
+            //Then
+            assertEquals(ResultState.Loading, awaitItem())
+            assertEquals(ResultState.Success(characterModel), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+    }
+
+    @Test
+    fun `should return error state when server response contains errors`() = runTest {
+        // Given
+        val characterId = "2"
+        val mockErrorMessage = "NO Data"
+
+        // Mock the server response to simulate an error
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(500)
+                .setBody("{ \"errors\": [{\"message\": \"$mockErrorMessage\"}]}") // Simulating error response
+                .addHeader("Content-Type", "application/json")
+        )
+
+        // When & Then
+        repository.getCharacter(characterId).test {
+            // Assert that the first emitted item is Loading
+            assertEquals(ResultState.Loading, awaitItem())
+
+            // Assert that the second emitted item is Error
+            val errorState = awaitItem()
+            assertTrue(errorState is ResultState.Error)
+            assertEquals(mockErrorMessage, (errorState as ResultState.Error).exception.message)
+
+            awaitComplete() // Ensure the flow completes without unconsumed events
+        }
+    }
 }
+
