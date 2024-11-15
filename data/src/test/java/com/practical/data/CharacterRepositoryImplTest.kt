@@ -15,6 +15,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -198,22 +199,29 @@ class CharacterRepositoryImplTest {
           "name": "Abadango Cluster Princess",
           "status": "Alive",
           "species": "Alien",
-          "type": "Princess",
+          "type": "Princess",  // Correct type for Abadango Cluster Princess
           "origin": {
-            "name": "Abadango"
+            "id": "2",
+            "name": "Abadango",
+            "type": "Cluster",
+            "dimension": "unknown",
+            "created": "2017-11-10T13:06:38.182Z"
           },
           "image": "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
+          "created": "2017-11-04T19:50:28.250Z",
           "episodes": [
             {
+              "id": "27",
               "name": "Rest and Ricklaxation",
-              "episode": "S03E06"
+              "airDate": "August 27, 2017",
+              "episode": "S03E06",
+              "created": "2017-11-10T12:56:36.515Z"
             }
           ]
         }
       }
     }
-""".trimIndent()
-
+    """.trimIndent()
         mockWebServer.enqueue(MockResponse().setBody(mockGraphQLResponse).setResponseCode(200))
         //When
         repositoryWebServer.getCharacter(characterId).test {
