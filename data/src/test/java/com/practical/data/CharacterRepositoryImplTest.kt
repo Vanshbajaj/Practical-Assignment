@@ -159,6 +159,7 @@ class CharacterRepositoryImplTest {
         }
 
     /******************************   get Character By Id  ***************************************************/
+    @SuppressWarnings("LongMethod")
     @Test
     fun `character data for when ApolloClient query is successful`() = runTest {
         // Given
