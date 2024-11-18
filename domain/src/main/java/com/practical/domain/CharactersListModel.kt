@@ -1,7 +1,7 @@
 package com.practical.domain
 
 data class CharactersListModel(
-    val id: String,
-    val name: String,
-    val image: String,
+    val id: String?=null,
+    val name: String?=null,
+    val image: String?=null,
 )

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rick_morty_app"><![CDATA[Rick & Morty App]]></string>
+    <string name="status">STATUS:%1$s</string>
+    <string name="species">SPECIES: %1$s</string>
+    <string name="gender">GENDER: %1$s</string>
+    <string name="back">Back</string>
+    <string name="episodes">EPISODES</string>
 </resources>

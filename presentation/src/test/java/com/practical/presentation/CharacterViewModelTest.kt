@@ -30,7 +30,7 @@ class CharacterViewModelTest {
     fun setUp() {
         getCharactersUseCase = mockk(relaxed = true)
         getCharacterUseCase= mockk()
-        viewModel = CharacterViewModel(getCharactersUseCase,getCharacterUseCase, testDispatcher)
+        viewModel = CharacterViewModel(getCharactersUseCase, testDispatcher)
     }
 
     @Test

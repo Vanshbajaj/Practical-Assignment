@@ -18,7 +18,6 @@ fun CharacterDetailsQuery.Character.toCharacterModel(): CharacterModel {
         created = this.created,
         episodes = this.episode.mapNotNull { it?.toEpisodeModel() }
     )
-
 }
 
 fun CharacterDetailsQuery.Origin.toOriginModel(): OriginModel {

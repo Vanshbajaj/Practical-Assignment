@@ -9,25 +9,23 @@ import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharacterViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
-    private val getCharacterUseCase: GetCharacterUseCase,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 
-) : ViewModel() {
-
+    ) : ViewModel() {
     private val _charactersState =
         MutableStateFlow<ResultState<List<CharactersListModel>>>(ResultState.Loading)
     val charactersState: StateFlow<ResultState<List<CharactersListModel>>> = _charactersState
-    private val _characterState = MutableStateFlow<ResultState<CharacterModel>>(ResultState.Loading)
-    val characterState: StateFlow<ResultState<CharacterModel>> = _characterState
-
 
     init {
         fetchCharacters()
@@ -42,13 +40,4 @@ class CharacterViewModel @Inject constructor(
                 }
         }
     }
-
-    fun getCharacter(id: String) {
-        viewModelScope.launch {
-            getCharacterUseCase.invoke(id).collect { result ->
-                _characterState.emit(result)
-            }
-        }
-    }
 }
-
