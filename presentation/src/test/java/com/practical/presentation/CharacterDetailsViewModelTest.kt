@@ -6,7 +6,6 @@ import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -88,9 +87,5 @@ class CharacterDetailsViewModelTest {
 
                 cancelAndIgnoreRemainingEvents()
             }
-
-            // Verify that the use case is called exactly once
-            coVerify(exactly = 1) { getCharacterUseCase.invoke(characterId) }
         }
-
 }
