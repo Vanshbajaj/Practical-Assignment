@@ -21,10 +21,10 @@ class GetCharactersUseCaseTest {
     fun `should return Loading state when fetching characters`() = runTest {
         //Given
         coEvery { characterRepository.getCharactersList() } returns flow {
-            emit(com.practical.core.ResultState.Loading)
+            emit(ResultState.Loading)
             //When
             emit(
-                com.practical.core.ResultState.Success(
+                ResultState.Success(
                     listOf(
                         CharactersListModel(id = "1", name = "Character One")
                     )
@@ -35,10 +35,10 @@ class GetCharactersUseCaseTest {
         //Then
         getCharactersUseCase().test {
             // Collecting the first result (Loading)
-            assertTrue(awaitItem() is com.practical.core.ResultState.Loading)
+            assertTrue(awaitItem() is ResultState.Loading)
 
             // Collecting the second result (Success)
-            assertTrue(awaitItem() is com.practical.core.ResultState.Success)
+            assertTrue(awaitItem() is ResultState.Success)
             awaitComplete() // Ensure the flow completes
         }
     }
@@ -54,7 +54,7 @@ class GetCharactersUseCaseTest {
 
         coEvery { characterRepository.getCharactersList() } returns flow {
             emit(ResultState.Loading)
-            emit(com.practical.core.ResultState.Success(characterList))
+            emit(ResultState.Success(characterList))
         }
 
 
@@ -72,16 +72,16 @@ class GetCharactersUseCaseTest {
         val exception = RuntimeException("Error fetching characters")
         coEvery { characterRepository.getCharactersList() } returns flow {
             emit(ResultState.Loading)
-            emit(com.practical.core.ResultState.Error(exception))
+            emit(ResultState.Error(exception))
         }
 
         //When
         getCharactersUseCase().test {
             // Collecting the result emitted by the flow
-            assertTrue(awaitItem() is com.practical.core.ResultState.Loading)
+            assertTrue(awaitItem() is ResultState.Loading)
             assertEquals(
                 "Error fetching characters",
-                (awaitItem() as com.practical.core.ResultState.Error).exception.message
+                (awaitItem() as ResultState.Error).exception.message
             )
             awaitComplete() //Then
         }
