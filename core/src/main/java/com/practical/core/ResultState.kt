@@ -1,4 +1,4 @@
-package com.practical.domain
+package com.practical.core
 
 sealed class ResultState< out T> {
     data object Loading : ResultState<Nothing>()

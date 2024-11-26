@@ -28,6 +28,7 @@ class GetCharacterByIdUseCaseTest {
         getCharacterUseCase(characterId).test {
             // Collecting the result emitted by the flow
             assertTrue(awaitItem() is ResultState.Loading)
+            assertTrue(awaitItem() is ResultState.Success)
             awaitComplete() // Then
         }
     }
@@ -39,14 +40,14 @@ class GetCharacterByIdUseCaseTest {
         val characterModel = CharacterModel(id = characterId, name = "Test Character")
         coEvery { characterRepository.getCharacter(characterId) } returns flow {
             emit(ResultState.Loading)
-            emit(ResultState.Success(characterModel))
+            emit(com.practical.core.ResultState.Success(characterModel))
         }
 
         // When
         getCharacterUseCase(characterId).test {
             // Collecting the result emitted by the flow
-            assertTrue(awaitItem() is ResultState.Loading)
-            assertEquals(characterModel, (awaitItem() as ResultState.Success).data)
+            assertTrue(awaitItem() is com.practical.core.ResultState.Loading)
+            assertEquals(characterModel, (awaitItem() as com.practical.core.ResultState.Success).data)
             awaitComplete() // Then
         }
     }
@@ -57,16 +58,16 @@ class GetCharacterByIdUseCaseTest {
         val characterId = "123"
         coEvery { characterRepository.getCharacter(characterId) } returns flow {
             emit(ResultState.Loading)
-            emit(ResultState.Error(RuntimeException("Character not found")))
+            emit(com.practical.core.ResultState.Error(RuntimeException("Character not found")))
         }
 
         // When
         getCharacterUseCase(characterId).test {
             // Collecting the result emitted by the flow
-            assertTrue(awaitItem() is ResultState.Loading)
+            assertTrue(awaitItem() is com.practical.core.ResultState.Loading)
             assertEquals(
                 "Character not found",
-                (awaitItem() as ResultState.Error).exception.message
+                (awaitItem() as com.practical.core.ResultState.Error).exception.message
             )
             awaitComplete() // Then
         }
@@ -79,16 +80,16 @@ class GetCharacterByIdUseCaseTest {
         val characterId = "123"
         coEvery { characterRepository.getCharacter(characterId) } returns flow {
             emit(ResultState.Loading)
-            emit(ResultState.Error(RuntimeException("Something went wrong")))
+            emit(com.practical.core.ResultState.Error(RuntimeException("Something went wrong")))
         }
 
         //When
         getCharacterUseCase(characterId).test {
             // Collecting the result emitted by the flow
-            assertTrue(awaitItem() is ResultState.Loading)
+            assertTrue(awaitItem() is com.practical.core.ResultState.Loading)
             assertEquals(
                 "Something went wrong",
-                (awaitItem() as ResultState.Error).exception.message
+                (awaitItem() as com.practical.core.ResultState.Error).exception.message
             )
             awaitComplete() //Then
         }
