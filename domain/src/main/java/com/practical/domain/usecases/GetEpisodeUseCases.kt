@@ -6,7 +6,7 @@ import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetEpisodeUseCases(private val repository: CharacterRepository) {
-    operator fun invoke(id: String): Flow<com.practical.core.ResultState<EpisodeModelDetails>> {
+    operator fun invoke(id: String): Flow<ResultState<EpisodeModelDetails>> {
         return repository.getEpisodeId(id)
     }
 }
