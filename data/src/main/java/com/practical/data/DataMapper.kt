@@ -3,7 +3,6 @@ package com.practical.data
 import com.data.graphql.CharacterDetailsQuery
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
-import com.practical.domain.EpisodeModelDetails
 import com.practical.domain.OriginModel
 
 
