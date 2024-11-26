@@ -2,7 +2,7 @@ package com.practical.presentation
 
 import app.cash.turbine.test
 import com.practical.domain.CharactersListModel
-import com.practical.domain.ResultState
+import com.practical.core.ResultState
 import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.viewmodel.CharacterViewModel

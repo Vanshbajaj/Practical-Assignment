@@ -9,9 +9,8 @@ import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
 import com.practical.domain.EpisodeModel
-import com.practical.domain.EpisodeModelDetails
 import com.practical.domain.OriginModel
-import com.practical.domain.ResultState
+import com.practical.core.ResultState
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

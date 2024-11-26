@@ -10,7 +10,7 @@ import com.practical.data.toEpisodeModelDetails
 import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
 import com.practical.domain.EpisodeModelDetails
-import com.practical.domain.ResultState
+import com.practical.core.ResultState
 import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

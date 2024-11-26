@@ -2,7 +2,7 @@ package com.practical.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.practical.domain.CharacterModel
-import com.practical.domain.ResultState
+import com.practical.core.ResultState
 import com.practical.domain.usecases.GetCharacterUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
