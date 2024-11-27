@@ -52,16 +52,16 @@ class GetCharactersUseCaseTest {
         )
 
         coEvery { characterRepository.getCharactersList() } returns flow {
+            emit(ResultState.Loading)
             emit(ResultState.Success(characterList))
         }
 
 
         getCharactersUseCase().test {
             // Collecting the result emitted by the flow
-            val result = awaitItem()
-            assertTrue(result is ResultState.Success)
-            assertEquals(characterList, (result as ResultState.Success).data)
-            awaitComplete() // Ensure the flow completes
+            assertEquals(ResultState.Loading, awaitItem())
+            assertEquals(characterList, (awaitItem() as ResultState.Success).data)
+            awaitComplete()
         }
     }
 
@@ -70,17 +70,17 @@ class GetCharactersUseCaseTest {
         //Given
         val exception = RuntimeException("Error fetching characters")
         coEvery { characterRepository.getCharactersList() } returns flow {
+            emit(ResultState.Loading)
             emit(ResultState.Error(exception))
         }
 
         //When
         getCharactersUseCase().test {
             // Collecting the result emitted by the flow
-            val result = awaitItem()
-            assertTrue(result is ResultState.Error)
+            assertTrue(awaitItem() is ResultState.Loading)
             assertEquals(
                 "Error fetching characters",
-                (result as ResultState.Error).exception.message
+                (awaitItem() as ResultState.Error).exception.message
             )
             awaitComplete() //Then
         }
