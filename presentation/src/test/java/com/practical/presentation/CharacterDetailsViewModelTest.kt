@@ -11,7 +11,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CharacterDetailsViewModelTest {
@@ -20,13 +19,15 @@ class CharacterDetailsViewModelTest {
     private val viewModel = CharacterDetailsViewModel(getCharacterUseCase)
 
     @Test
-    fun `Given character is fetched successfully,emit Success with character details`() =
+    fun `Given character is fetched successfully, emit Success with character details`() =
         runTest {
             // Given: Mock the use case to return a successful character fetch
             val characterId = "123"
             val characterModel = CharacterModel(id = characterId, name = "Test Character")
+
+            // Mock the use case to return a flow emitting only Success (no Loading here)
             coEvery { getCharacterUseCase.invoke(characterId) } returns flow {
-                emit(ResultState.Success(characterModel))
+                emit(ResultState.Success(characterModel)) // Only emit Success
             }
 
             // When: Calling the getCharacter function on the ViewModel
@@ -35,7 +36,6 @@ class CharacterDetailsViewModelTest {
             // Then: Assert that the state emits Loading first, then Success with the correct character data
             viewModel.characterState.test {
                 assertEquals(ResultState.Success(characterModel), awaitItem())
-
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -55,11 +55,8 @@ class CharacterDetailsViewModelTest {
 
             // Then: Assert that the state emits Loading first, then Error with the exception message
             viewModel.characterState.test {
-                // Then expect Error state
-                val errorState = awaitItem()
-                assertTrue(errorState is ResultState.Error)
                 assertEquals(
-                    "Character not found", (errorState as ResultState.Error).exception.message
+                    "Character not found", (awaitItem() as ResultState.Error).exception.message
                 )
 
                 cancelAndIgnoreRemainingEvents()
@@ -82,10 +79,7 @@ class CharacterDetailsViewModelTest {
 
             // Then: Assert that the state emits Loading first, then Success once
             viewModel.characterState.test {
-                val successState = awaitItem()
-                assertTrue(successState is ResultState.Success)
-                assertEquals(characterModel, (successState as ResultState.Success).data)
-
+                assertEquals(characterModel, (awaitItem() as ResultState.Success).data)
                 cancelAndIgnoreRemainingEvents()
             }
 
