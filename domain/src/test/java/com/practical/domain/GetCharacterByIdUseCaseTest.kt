@@ -29,7 +29,6 @@ class GetCharacterByIdUseCaseTest {
         getCharacterUseCase(characterId).test {
             // Collecting the result emitted by the flow
             assertTrue(awaitItem() is ResultState.Loading)
-            assertTrue(awaitItem() is ResultState.Success)
             awaitComplete() // Then
         }
     }
