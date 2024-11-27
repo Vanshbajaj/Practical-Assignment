@@ -2,6 +2,7 @@ package com.practical.presentation
 
 import app.cash.turbine.test
 import com.practical.domain.CharactersListModel
+import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.viewmodel.CharacterViewModel
 import io.mockk.coEvery
@@ -40,9 +41,9 @@ class CharacterViewModelTest {
         val currentState = viewModel.charactersState.value
 
         // Then
-        assertEquals(UiState.Loading, currentState)
+        assertEquals(ResultState.Loading, currentState)
         val state = viewModel.charactersState.value
-        assertTrue(state is UiState.Loading)
+        assertTrue(state is ResultState.Loading)
     }
 
 
@@ -63,7 +64,9 @@ class CharacterViewModelTest {
         )
 
         coEvery { getCharactersUseCase.invoke() } returns flowOf(
-            expectedCharacters
+            ResultState.Success(
+                expectedCharacters
+            )
         )
 
         // Act
@@ -71,8 +74,8 @@ class CharacterViewModelTest {
 
         // Assert
         viewModel.charactersState.test {
-            assertTrue(awaitItem() is UiState.Loading)
-            assertEquals(expectedCharacters, (awaitItem() as UiState.Success).data)
+            assertTrue(awaitItem() is ResultState.Loading)
+            assertEquals(expectedCharacters, (awaitItem() as ResultState.Success).data)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -83,16 +86,17 @@ class CharacterViewModelTest {
             // Given
             val exception = RuntimeException("Error fetching characters")
             coEvery { getCharactersUseCase.invoke() } returns flow {
-                throw exception
+                emit(ResultState.Error(exception))
             }
             // When
             viewModel.fetchCharacters()
 
             // Then
             viewModel.charactersState.test {
-                assertTrue(awaitItem() is UiState.Loading)
-                assertEquals(UiState.Error(exception), awaitItem())
-                cancelAndIgnoreRemainingEvents()
+                assertTrue(awaitItem() is ResultState.Loading)
+                assertEquals(ResultState.Error(exception), awaitItem())
             }
+
         }
 }
+
