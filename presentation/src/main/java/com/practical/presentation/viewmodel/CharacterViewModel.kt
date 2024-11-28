@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.practical.domain.CharactersListModel
 import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharactersUseCase
+import com.practical.presentation.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

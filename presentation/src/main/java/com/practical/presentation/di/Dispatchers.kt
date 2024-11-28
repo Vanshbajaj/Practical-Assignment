@@ -1,4 +1,4 @@
-package com.practical.presentation.viewmodel
+package com.practical.presentation.di
 
 import javax.inject.Qualifier
 
