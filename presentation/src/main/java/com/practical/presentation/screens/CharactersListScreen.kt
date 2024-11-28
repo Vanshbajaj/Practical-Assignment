@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,11 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.data.network.NetworkException
+import com.practical.data.network.ClientNetworkException
 import com.practical.domain.CharactersListModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
-import com.practical.presentation.common.ErrorMessage
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
@@ -38,52 +36,50 @@ fun CharacterListScreen(
     viewModel: CharacterViewModel,
     modifier: Modifier = Modifier,
     onNavigateToCharacterScreen: (String) -> Unit,
-) {
+
+    ) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
     Column(
-        modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.dimens.paddingSmall),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.rick_morty_app),
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier
-                    .padding(MaterialTheme.dimens.paddingSmall)
-            )
-        }
-        Column(
-            Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            when (val state = charactersState) {
-                is UiState.Loading -> {
-                    CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
-                }
+        Text(
+            text = stringResource(R.string.rick_morty_app),
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier
+                .padding(MaterialTheme.dimens.paddingSmall)
+                .align(Alignment.CenterHorizontally)
 
-                is UiState.Success -> {
-                    CharacterGrid(state.data, onNavigateToCharacterScreen)
-                }
+        )
 
-                is UiState.Error -> {
-                    when (state.exception) {
-                        is NetworkException.ClientNetworkException -> {
-                            Text(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                text = stringResource(R.string.no_internet_data),
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
+        when (val state = charactersState) {
+            is UiState.Loading -> {
+                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+            }
+
+            is UiState.Success -> {
+                CharacterGrid(state.data, onNavigateToCharacterScreen)
+            }
+
+            is UiState.Error -> {
+                when (state.exception) {
+                    is ClientNetworkException -> {
+                        Text(
+                            text = stringResource(R.string.no_internet_data),
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
                     }
-
                 }
+
+
             }
         }
     }
 }
+
 
 @Composable
 private fun CharacterGrid(

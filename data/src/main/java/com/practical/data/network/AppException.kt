@@ -2,18 +2,15 @@ package com.practical.data.network
 
 
 open class NetworkException(
-    message: String,
     cause: Throwable? = null
-) : Exception(message, cause)
+) : Exception(cause)
 
 class ClientNetworkException(
-    message: String,
     cause: Throwable? = null
-) : NetworkException(message, cause)
+) : NetworkException(cause)
 
 class ApolloClientException(
-    message: String,
     cause: Throwable? = null
-) : NetworkException(message, cause)
+) : NetworkException(cause)
 
 
