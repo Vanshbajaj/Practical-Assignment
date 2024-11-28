@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface CharacterRepository {
-    fun getCharactersList(): Flow<ResultState<List<CharactersListModel>>>
-    fun getCharacter(id: String): Flow<ResultState<CharacterModel>>
-    fun getEpisodeId(id: String): Flow<ResultState<EpisodeModelDetails>>
+    fun getCharactersList(): Flow<List<CharactersListModel>>
+    fun getCharacter(id: String): Flow<CharacterModel>
+    fun getEpisodeId(id: String): Flow<EpisodeModelDetails>
 }
