@@ -27,8 +27,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
-import com.practical.domain.ResultState
 import com.practical.presentation.R
+import com.practical.presentation.UiState
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 
@@ -41,7 +41,8 @@ fun CharacterScreen(
 ) {
     LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
-    CharacterScreenContent(charactersState,
+    CharacterScreenContent(
+        charactersState,
         modifier.padding(MaterialTheme.dimens.paddingExtraSmall)
     )
 }
@@ -49,11 +50,12 @@ fun CharacterScreen(
 
 @Composable
 private fun CharacterScreenContent(
-    state: ResultState<CharacterModel>,
-    modifier: Modifier = Modifier) {
+    state: UiState<CharacterModel>,
+    modifier: Modifier = Modifier,
+) {
     Box(modifier.padding(MaterialTheme.dimens.paddingExtraSmall)) {
         when (state) {
-            is ResultState.Loading -> {
+            is UiState.Loading -> {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
@@ -68,14 +70,14 @@ private fun CharacterScreenContent(
                 }
             }
 
-            is ResultState.Success -> {
+            is UiState.Success -> {
                 // When data is loaded, display the character details
                 TopData(character = state.data)
             }
 
-            is ResultState.Error -> {
+            is UiState.Error -> {
                 // Show an error message
-                Text(text = "Failed to load character")
+                Text(text = "Failed to load character....u")
             }
         }
     }
@@ -122,10 +124,15 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
 
 @Composable
 private fun EpisodeCard(episode: EpisodeModel, modifier: Modifier = Modifier) {
-    Card(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
-            .width(MaterialTheme.dimens.cardWidth)) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)) {
+    Card(
+        modifier = modifier
+            .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
+            .width(MaterialTheme.dimens.cardWidth)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)
+        ) {
             Text(text = episode.name, fontSize = MaterialTheme.typography.labelLarge.fontSize)
         }
     }

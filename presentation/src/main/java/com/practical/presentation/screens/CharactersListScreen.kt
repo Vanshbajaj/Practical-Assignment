@@ -24,25 +24,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.practical.data.network.ClientNetworkException
 import com.practical.domain.CharactersListModel
-import com.practical.domain.ResultState
 import com.practical.presentation.R
+import com.practical.presentation.UiState
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
 @Composable
-fun CharacterListScreen(viewModel: CharacterViewModel,
+fun CharacterListScreen(
+    viewModel: CharacterViewModel,
     modifier: Modifier = Modifier,
     onNavigateToCharacterScreen: (String) -> Unit,
 
     ) {
     val charactersState by viewModel.charactersState.collectAsStateWithLifecycle()
-    Column(modifier = modifier
+    Column(
+        modifier = modifier
             .fillMaxWidth()
             .padding(MaterialTheme.dimens.paddingSmall),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = stringResource(R.string.rick_morty_app),
+        Text(
+            text = stringResource(R.string.rick_morty_app),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(MaterialTheme.dimens.paddingSmall)
@@ -51,22 +55,26 @@ fun CharacterListScreen(viewModel: CharacterViewModel,
         )
 
         when (val state = charactersState) {
-            is ResultState.Loading -> {
+            is UiState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
 
-            is ResultState.Success -> {
+            is UiState.Success -> {
                 CharacterGrid(state.data, onNavigateToCharacterScreen)
             }
 
-            is ResultState.Error -> {
-                state.exception.localizedMessage?.let {
-                    Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                    )
+            is UiState.Error -> {
+                when (state.exception) {
+                    is ClientNetworkException -> {
+                        Text(
+                            text = stringResource(R.string.no_internet_data),
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
                 }
+
+
             }
         }
     }
@@ -77,9 +85,10 @@ fun CharacterListScreen(viewModel: CharacterViewModel,
 private fun CharacterGrid(
     characters: List<CharactersListModel>,
     onNavigateToCharacterScreen: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    LazyVerticalGrid(modifier = modifier,
+    LazyVerticalGrid(
+        modifier = modifier,
         columns = GridCells.Fixed(CharactersListScreen.GRID_CELLS),
         contentPadding = PaddingValues(MaterialTheme.dimens.paddingSmall)
     ) {
@@ -94,21 +103,26 @@ private fun CharacterGrid(
 private fun CharacterItem(
     character: CharactersListModel,
     onNavigateToCharacterScreen: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val imageUrl = remember(character.image) { character.image }
 
     Card(modifier = modifier
-            .padding(MaterialTheme.dimens.paddingSmall)
-            .fillMaxWidth()
-            .clickable(enabled = character.id.isNullOrEmpty().not()) {
-                character.id?.let { characterId -> onNavigateToCharacterScreen.invoke(characterId) }
-            }
+        .padding(MaterialTheme.dimens.paddingSmall)
+        .fillMaxWidth()
+        .clickable(
+            enabled = character.id
+                .isNullOrEmpty()
+                .not()
+        ) {
+            character.id?.let { characterId -> onNavigateToCharacterScreen.invoke(characterId) }
+        }
     ) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            AsyncImage(model = imageUrl,
+            AsyncImage(
+                model = imageUrl,
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxSize()
