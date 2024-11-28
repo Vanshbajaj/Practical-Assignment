@@ -86,5 +86,4 @@ class CharacterDetailsViewModelTest {
             // Verify that the use case is called exactly once
             coVerify(exactly = 1) { getCharacterUseCase.invoke(characterId) }
         }
-
 }
