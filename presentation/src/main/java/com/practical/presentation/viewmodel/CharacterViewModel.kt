@@ -2,10 +2,10 @@ package com.practical.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practical.data.network.ClientNetworkException
 import com.practical.domain.CharactersListModel
+import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharactersUseCase
-import com.practical.presentation.UiState
+import com.practical.presentation.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,8 +19,8 @@ class CharacterViewModel @Inject constructor(
 
     ) : ViewModel() {
     private val _charactersState =
-        MutableStateFlow<UiState<List<CharactersListModel>>>(UiState.Loading)
-    val charactersState: StateFlow<UiState<List<CharactersListModel>>> = _charactersState
+        MutableStateFlow<ResultState<List<CharactersListModel>>>(ResultState.Loading)
+    val charactersState: StateFlow<ResultState<List<CharactersListModel>>> = _charactersState
 
     init {
         fetchCharacters()
@@ -29,14 +29,9 @@ class CharacterViewModel @Inject constructor(
     fun fetchCharacters() {
         viewModelScope.launch(coroutineDispatcher) {
             getCharactersUseCase.invoke()
-                .catch { _charactersState.emit(UiState.Error(it)) }
+                .catch { _charactersState.emit(ResultState.Error(it)) }
                 .collect { result ->
-                    if (result.isEmpty()){
-                        _charactersState.emit(UiState.Error(ClientNetworkException()))
-                    }else{
-                        _charactersState.emit(UiState.Success(result))
-                    }
-
+                    _charactersState.emit(result)
                 }
         }
     }
