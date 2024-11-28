@@ -2,7 +2,6 @@ package com.practical.presentation.di
 
 import javax.inject.Qualifier
 
-
 // IO Dispatcher
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
