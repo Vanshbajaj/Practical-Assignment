@@ -2,7 +2,6 @@ package com.practical.presentation
 
 import app.cash.turbine.test
 import com.practical.domain.CharacterModel
-import com.practical.domain.ResultState
 import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 import io.mockk.coEvery
@@ -26,7 +25,7 @@ class CharacterDetailsViewModelTest {
 
             // Mock the use case to return a flow emitting only Success (no Loading here)
             coEvery { getCharacterUseCase.invoke(characterId) } returns flow {
-                emit(ResultState.Success(characterModel)) // Only emit Success
+                emit((characterModel)) // Only emit Success
             }
 
             // When: Calling the getCharacter function on the ViewModel
@@ -34,7 +33,7 @@ class CharacterDetailsViewModelTest {
 
             // Then: Assert that the state emits Loading first, then Success with the correct character data
             viewModel.characterState.test {
-                assertEquals(ResultState.Success(characterModel), awaitItem())
+                assertEquals((characterModel), awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -46,7 +45,7 @@ class CharacterDetailsViewModelTest {
             val characterId = "123"
             val exception = RuntimeException("Character not found")
             coEvery { getCharacterUseCase.invoke(characterId) } returns flow {
-                emit(ResultState.Error(exception))
+
             }
 
             // When: Calling the getCharacter function on the ViewModel
@@ -55,7 +54,7 @@ class CharacterDetailsViewModelTest {
             // Then: Assert that the state emits Loading first, then Error with the exception message
             viewModel.characterState.test {
                 assertEquals(
-                    "Character not found", (awaitItem() as ResultState.Error).exception.message
+                    "Character not found", (awaitItem() as UiState.Error).exception.message
                 )
 
                 cancelAndIgnoreRemainingEvents()
@@ -69,7 +68,7 @@ class CharacterDetailsViewModelTest {
             val characterId = "123"
             val characterModel = CharacterModel(id = characterId, name = "Test Character")
             coEvery { getCharacterUseCase.invoke(characterId) } returns flow {
-                emit(ResultState.Success(characterModel))
+                emit(characterModel)
             }
 
             // When: Calling the getCharacter function on the ViewModel twice
@@ -78,7 +77,7 @@ class CharacterDetailsViewModelTest {
 
             // Then: Assert that the state emits Loading first, then Success once
             viewModel.characterState.test {
-                assertEquals(characterModel, (awaitItem() as ResultState.Success).data)
+                assertEquals(characterModel, (awaitItem() as UiState.Success).data)
                 cancelAndIgnoreRemainingEvents()
             }
         }
