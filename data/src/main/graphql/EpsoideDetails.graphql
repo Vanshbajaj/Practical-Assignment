@@ -1,19 +1,10 @@
 query Episode($id: ID!) {
     episode(id: $id) {
-        id
         name
         air_date
-        episode
-        created
         characters {
             id
-            name
-            status
-            species
-            type
-            gender
             image
-            created
         }
     }
 }
