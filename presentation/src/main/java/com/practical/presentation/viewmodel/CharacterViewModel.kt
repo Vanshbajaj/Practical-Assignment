@@ -6,6 +6,7 @@ import com.practical.data.network.ClientNetworkException
 import com.practical.domain.CharactersListModel
 import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.UiState
+import com.practical.presentation.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
