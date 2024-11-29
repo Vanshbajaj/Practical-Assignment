@@ -83,7 +83,7 @@ class CharacterViewModelTest {
             // Given
             val exception = RuntimeException("Error fetching characters")
             coEvery { getCharactersUseCase.invoke() } returns flow {
-                // emit(UiState.Error(exception))
+                throw exception
             }
             // When
             viewModel.fetchCharacters()
