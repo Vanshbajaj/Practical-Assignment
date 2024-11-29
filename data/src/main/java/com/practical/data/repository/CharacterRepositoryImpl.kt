@@ -19,6 +19,7 @@ import com.practical.domain.CharactersListModel
 import com.practical.domain.EpisodeModelDetails
 import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import javax.inject.Inject
@@ -42,24 +43,11 @@ class CharacterRepositoryImpl @Inject constructor(
             // Handle specific ApolloException cases
             when (t) {
                 is ApolloNetworkException -> {
-                    throw ClientNetworkException(t)
+                    throw ClientNetworkException()
                 }
 
-                is SubscriptionOperationException -> {
-                    throw ApolloClientException(t)
-                }
-
-                is SubscriptionConnectionException -> {
-                    throw ApolloClientException(
-                        t
-                    )
-                }
-
-                is RouterError -> {
-                    // In case of router errors, you may want to rethrow or log it accordingly
-                    throw ApolloClientException(
-                        t
-                    )
+                is SubscriptionOperationException, is SubscriptionConnectionException, is RouterError -> {
+                    throw ApolloClientException()
                 }
 
                 else -> {
@@ -77,47 +65,27 @@ class CharacterRepositoryImpl @Inject constructor(
     override fun getCharacter(id: String): Flow<CharacterModel> {
         return flow {
             val response = apolloClient.query(CharacterDetailsQuery(id)).execute()
-            try {
-                response.data?.character?.toCharacterModel()?.let { emit(it) }
-            } catch (t: ApolloException) {
-                // Handle specific ApolloException cases
-                when (t) {
-                    is ApolloNetworkException -> {
-                        throw ClientNetworkException(
-                            t
-                        )
-                    }
-
-                    is SubscriptionOperationException -> {
-                        throw ApolloClientException(
-                            t
-                        )
-                    }
-
-                    is SubscriptionConnectionException -> {
-                        throw ApolloClientException(
-                            t
-                        )
-                    }
-
-                    is RouterError -> {
-                        // In case of router errors, you may want to rethrow or log it accordingly
-                        throw ApolloClientException(
-
-                        )
-                    }
-
-                    else -> {
-                        // Default case for unknown ApolloExceptions
-                        throw DefaultApolloException("Unknown Apollo error occurred", t)
-                    }
+            response.data?.character?.toCharacterModel()?.let {
+                emit(it) // Emit character data
+            } ?: throw ApolloClientException() // Throw error if no character found
+        }.catch { throwable ->
+            // Handle and propagate errors from the data layer
+            when (throwable) {
+                is ApolloNetworkException -> {
+                    // Propagate ApolloNetworkException to ViewModel
+                    throw ApolloNetworkException("Network error occurred. Please check your internet connection.")
                 }
-            } catch (e: IOException) {
-                // Handle any other IOExceptions like network disconnections or timeouts
-                throw ApolloNetworkException("General I/O error occurred", e)
+                is ApolloClientException -> {
+                    throw ApolloClientException()
+                }
+                is IOException -> {
+                    throw ApolloNetworkException()
+                }
+                else -> {
+                    throw ApolloClientException()
+                }
             }
         }
-
     }
 
 
@@ -131,26 +99,11 @@ class CharacterRepositoryImpl @Inject constructor(
                 // Handle specific ApolloException cases
                 when (t) {
                     is ApolloNetworkException -> {
-                        throw ClientNetworkException(t)
+                        throw ClientNetworkException()
                     }
 
-                    is SubscriptionOperationException -> {
-                        throw ApolloClientException(
-                            t
-                        )
-                    }
-
-                    is SubscriptionConnectionException -> {
-                        throw ApolloClientException(
-                            t
-                        )
-                    }
-
-                    is RouterError -> {
-                        // In case of router errors, you may want to rethrow or log it accordingly
-                        throw ApolloClientException(
-                            t
-                        )
+                    is SubscriptionOperationException, is SubscriptionConnectionException, is RouterError -> {
+                        throw ApolloClientException()
                     }
 
                     else -> {
