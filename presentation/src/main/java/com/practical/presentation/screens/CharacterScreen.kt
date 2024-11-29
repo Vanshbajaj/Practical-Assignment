@@ -1,10 +1,10 @@
 package com.practical.presentation.screens
 
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.practical.data.network.ClientNetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
@@ -47,42 +48,54 @@ fun CharacterScreen(
     )
 }
 
-
 @Composable
 private fun CharacterScreenContent(
     state: UiState<CharacterModel>,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier.padding(MaterialTheme.dimens.paddingExtraSmall)) {
-        when (state) {
-            is UiState.Loading -> {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.dimens.paddingMedium)
-                ) {
-                    CircularProgressIndicator(
-                        Modifier.align(
-                            Alignment.CenterVertically
+    Box(
+       modifier.fillMaxSize() // Fill the entire screen
+    ) {
+        Column{
+            when (state) {
+                is UiState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        CircularProgressIndicator(
+                            Modifier.align(Alignment.Center)
                         )
-                    )
+                    }
                 }
-            }
 
-            is UiState.Success -> {
-                // When data is loaded, display the character details
-                TopData(character = state.data)
-            }
+                is UiState.Success -> {
+                    // When data is loaded, display the character details
+                    TopData(character = state.data)
+                }
 
-            is UiState.Error -> {
-                // Show an error message
-                Text(text = "Failed to load character....u")
+                is UiState.Error -> {
+                    // Error handling for network failure, etc.
+                    when (state.exception) {
+                        is ClientNetworkException -> {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.no_internet_data),
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodyLarge, // Optional: Add style
+                                    modifier = Modifier.align(Alignment.Center) // Ensure it is centered
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
-
 
 @Composable
 private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
@@ -141,3 +154,4 @@ private fun EpisodeCard(episode: EpisodeModel, modifier: Modifier = Modifier) {
 internal object CharacterScreenValues {
     const val SCREEN_HEIGHT_BY_TWO = 2
 }
+

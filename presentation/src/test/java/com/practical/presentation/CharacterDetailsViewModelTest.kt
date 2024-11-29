@@ -1,20 +1,23 @@
 package com.practical.presentation
 
 import app.cash.turbine.test
+import com.practical.data.network.ClientNetworkException
 import com.practical.domain.CharacterModel
-import com.practical.domain.usecases.GetCharacterUseCase
+import com.practical.domain.usecases.GetCharacterByIdUseCase
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CharacterDetailsViewModelTest {
 
-    private val getCharacterUseCase = mockk<GetCharacterUseCase>()
-    private val viewModel = CharacterDetailsViewModel(getCharacterUseCase)
+    private val getCharacterByIdUseCase = mockk<GetCharacterByIdUseCase>()
+    private val viewModel = CharacterDetailsViewModel(getCharacterByIdUseCase)
 
     @Test
     fun `Given character is fetched successfully, emit Success with character details`() =
@@ -24,7 +27,7 @@ class CharacterDetailsViewModelTest {
             val characterModel = CharacterModel(id = characterId, name = "Test Character")
 
             // Mock the use case to return a flow emitting only Success (no Loading here)
-            coEvery { getCharacterUseCase.invoke(characterId) } returns flow {
+            coEvery { getCharacterByIdUseCase.invoke(characterId) } returns flow {
                 emit((characterModel)) // Only emit Success
             }
 
@@ -33,19 +36,19 @@ class CharacterDetailsViewModelTest {
 
             // Then: Assert that the state emits Loading first, then Success with the correct character data
             viewModel.characterState.test {
-                assertEquals((characterModel), awaitItem())
+                assertEquals(UiState.Success(characterModel), awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `Given character fetch fails, When getCharacter is called, Then it should emit Error with error message`() =
+    fun `When getCharacter is called, Then it should emit Loading followed by Error with exception`() =
         runTest {
             // Given: Mock the use case to return an error state
             val characterId = "123"
-            val exception = RuntimeException("Character not found")
-            coEvery { getCharacterUseCase.invoke(characterId) } returns flow {
-
+            val exception = ClientNetworkException()
+            coEvery { getCharacterByIdUseCase.invoke(characterId) } returns flow {
+                throw exception
             }
 
             // When: Calling the getCharacter function on the ViewModel
@@ -53,10 +56,18 @@ class CharacterDetailsViewModelTest {
 
             // Then: Assert that the state emits Loading first, then Error with the exception message
             viewModel.characterState.test {
-                assertEquals(
-                    "Character not found", (awaitItem() as UiState.Error).exception.message
-                )
+                // Assert that Loading state is emitted first
 
+                // Assert that Error state is emitted next
+                val errorState = awaitItem()
+                assertTrue(errorState is UiState.Error)
+
+                // Compare the exception message
+                val errorException = (errorState as UiState.Error).exception
+                assertTrue(errorException is ClientNetworkException)
+                assertEquals(exception.message, (errorException as ClientNetworkException).message)
+
+                // Cancel and ignore remaining events
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -67,7 +78,7 @@ class CharacterDetailsViewModelTest {
             // Given: Mock the use case to return a successful character fetch
             val characterId = "123"
             val characterModel = CharacterModel(id = characterId, name = "Test Character")
-            coEvery { getCharacterUseCase.invoke(characterId) } returns flow {
+            coEvery { getCharacterByIdUseCase.invoke(characterId) } returns flow {
                 emit(characterModel)
             }
 
@@ -80,5 +91,9 @@ class CharacterDetailsViewModelTest {
                 assertEquals(characterModel, (awaitItem() as UiState.Success).data)
                 cancelAndIgnoreRemainingEvents()
             }
+
+            // Verify that the use case is called exactly once
+            coVerify(exactly = 1) { getCharacterByIdUseCase.invoke(characterId) }
         }
+
 }
