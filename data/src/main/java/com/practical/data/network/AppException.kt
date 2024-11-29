@@ -1,16 +1,10 @@
 package com.practical.data.network
 
 
-open class NetworkException(
-    cause: Throwable? = null
-) : Exception(cause)
+open class NetworkException : Exception()
 
-class ClientNetworkException(
-    cause: Throwable? = null
-) : NetworkException(cause)
+class ClientNetworkException : NetworkException()
 
-class ApolloClientException(
-    cause: Throwable? = null
-) : NetworkException(cause)
+class ApolloClientException : NetworkException()
 
 
