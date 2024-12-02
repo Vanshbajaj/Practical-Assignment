@@ -29,8 +29,12 @@ class CharacterRepositoryImpl @Inject constructor(
                     name = character?.name,
                     image = character?.image,
                 )
-            } ?: emptyList()
-            emit(characters)
+            }
+            if (characters == null) {
+                throw NetworkException.ClientNetworkException
+            } else {
+                emit(characters)
+            }
         }.catch { throwable ->
             when (throwable) {
                 is NetworkException.ClientNetworkException -> {
@@ -40,6 +44,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
+
                 else -> throw throwable
 
             }
@@ -52,8 +57,7 @@ class CharacterRepositoryImpl @Inject constructor(
             val response = apolloClient.query(CharacterDetailsQuery(id)).execute()
             response.data?.character?.toCharacterModel()?.let {
                 emit(it) // Emit character data
-            }
-                ?: throw NetworkException.ApolloClientException
+            } ?: throw NetworkException.ApolloClientException
         }.catch { throwable ->
             when (throwable) {
                 is NetworkException.ClientNetworkException -> {
@@ -63,6 +67,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
+
                 else -> throw throwable
 
             }
@@ -84,6 +89,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
+
                 else -> throw throwable
             }
         }
