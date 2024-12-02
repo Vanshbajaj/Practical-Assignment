@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.data.network.ClientNetworkException
+import com.practical.data.network.NetworkException
 import com.practical.domain.CharactersListModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
@@ -69,7 +69,7 @@ fun CharacterListScreen(
 
                 is UiState.Error -> {
                     when (state.exception) {
-                        is ClientNetworkException -> {
+                        is NetworkException.ClientNetworkException -> {
                             Text(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 text = stringResource(R.string.no_internet_data),

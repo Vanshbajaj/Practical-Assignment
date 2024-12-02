@@ -1,7 +1,7 @@
 package com.practical.presentation
 
 import app.cash.turbine.test
-import com.practical.data.network.ClientNetworkException
+import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.usecases.GetCharacterByIdUseCase
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
@@ -46,7 +46,7 @@ class CharacterDetailsViewModelTest {
         runTest {
             // Given: Mock the use case to return an error state
             val characterId = "123"
-            val exception = ClientNetworkException()
+            val exception = NetworkException.ClientNetworkException
             coEvery { getCharacterByIdUseCase.invoke(characterId) } returns flow {
                 throw exception
             }
@@ -64,8 +64,8 @@ class CharacterDetailsViewModelTest {
 
                 // Compare the exception message
                 val errorException = (errorState as UiState.Error).exception
-                assertTrue(errorException is ClientNetworkException)
-                assertEquals(exception.message, (errorException as ClientNetworkException).message)
+                assertTrue(errorException is NetworkException.ClientNetworkException)
+                assertEquals(exception.message, (errorException as NetworkException.ClientNetworkException).message)
 
                 // Cancel and ignore remaining events
                 cancelAndIgnoreRemainingEvents()

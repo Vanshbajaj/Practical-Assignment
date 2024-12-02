@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.data.network.ClientNetworkException
+import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
@@ -77,7 +77,7 @@ private fun CharacterScreenContent(
                 is UiState.Error -> {
                     // Error handling for network failure, etc.
                     when (state.exception) {
-                        is ClientNetworkException -> {
+                        is NetworkException.ClientNetworkException -> {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
