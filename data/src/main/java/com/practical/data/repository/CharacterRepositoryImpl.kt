@@ -31,7 +31,6 @@ class CharacterRepositoryImpl @Inject constructor(
                 )
             } ?: emptyList()
             emit(characters)
-
         }.catch { throwable ->
             when (throwable) {
                 is NetworkException.ClientNetworkException -> {
@@ -41,6 +40,8 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
+                else -> throw throwable
+
             }
 
         }
@@ -62,6 +63,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
+                else -> throw throwable
 
             }
         }
@@ -82,6 +84,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
+                else -> throw throwable
             }
         }
     }
