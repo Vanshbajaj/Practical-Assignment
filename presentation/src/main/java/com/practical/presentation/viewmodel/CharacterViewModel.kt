@@ -2,7 +2,7 @@ package com.practical.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practical.data.network.ClientNetworkException
+import com.practical.data.network.NetworkException
 import com.practical.domain.CharactersListModel
 import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.UiState
@@ -33,7 +33,7 @@ class CharacterViewModel @Inject constructor(
                 .catch { _charactersState.emit(UiState.Error(it)) }
                 .collect { result ->
                     if (result.isEmpty()){
-                        _charactersState.emit(UiState.Error(ClientNetworkException()))
+                        _charactersState.emit(UiState.Error(NetworkException.ClientNetworkException))
                     }else{
                         _charactersState.emit(UiState.Success(result))
                     }

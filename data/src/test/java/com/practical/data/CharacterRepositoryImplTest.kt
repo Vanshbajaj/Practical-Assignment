@@ -83,9 +83,6 @@ class CharacterRepositoryImplTest {
 
             // Test the repository method
             repositoryWebServer.getCharactersList().test {
-                // Expect Loading state first
-                // assertEquals(Loading, awaitItem())
-
                 // Expect Success with the correct list of characters (only two characters in the mock data)
                 val expectedList = listOf(
                     CharactersListModel(
@@ -98,14 +95,9 @@ class CharacterRepositoryImplTest {
                         image = "https://rickandmortyapi.com/api/character/avatar/2.jpeg"
                     )
                 )
-
-                // Await the Success state, and extract the data from ResultState.Success
-
                 // Filter the actual data to make sure only the first two characters are checked
                 val filteredData = awaitItem().take(2)
-
                 assertEquals(expectedList, filteredData)
-
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -124,7 +116,6 @@ class CharacterRepositoryImplTest {
         repository.getCharactersList().test {
             // Await the error emitted by the flow
             val error = awaitError() // Expecting the flow to throw an error
-
             // Assert that the error is of type ApolloNetworkException
             assert(error is ApolloNetworkException)
             // Clean up by canceling any remaining events
@@ -224,16 +215,7 @@ class CharacterRepositoryImplTest {
             val error = awaitError() // Capture the error emitted by the flow
           // Assert the error is an instance of ApolloNetworkException
             assert(error is ApolloNetworkException)
-
-
-            // Ensure no further events are emitted
             cancelAndIgnoreRemainingEvents()
         }
-
-
     }
-
 }
-
-
-
