@@ -1,7 +1,7 @@
 package com.practical.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.practical.data.network.ClientNetworkException
+import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.usecases.GetCharacterByIdUseCase
 import com.practical.presentation.UiState
@@ -26,7 +26,7 @@ class CharacterDetailsViewModel @Inject constructor(
             getCharacterByIdUseCase.invoke(id)
                 .catch {
                     // Emit error state when an exception occurs
-                    _characterState.emit(UiState.Error(ClientNetworkException()))
+                    _characterState.emit(UiState.Error(NetworkException.ClientNetworkException))
                 }
                 .collect { characterModel ->
                     // On success, emit success state
