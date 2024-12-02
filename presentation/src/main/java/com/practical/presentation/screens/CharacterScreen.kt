@@ -54,46 +54,36 @@ private fun CharacterScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
-       modifier.fillMaxSize() // Fill the entire screen
+        modifier.fillMaxSize() // Fill the entire screen
     ) {
-        Column{
-            when (state) {
-                is UiState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        CircularProgressIndicator(
-                            Modifier.align(Alignment.Center)
+        when (state) {
+            is UiState.Loading -> {
+                CircularProgressIndicator(
+                    Modifier.align(Alignment.Center)
+                )
+            }
+
+            is UiState.Success -> {
+                // When data is loaded, display the character details
+                TopData(character = state.data)
+            }
+
+            is UiState.Error -> {
+                // Error handling for network failure, etc.
+                when (state.exception) {
+                    is NetworkException.ClientNetworkException -> {
+                        Text(
+                            text = stringResource(R.string.no_internet_data),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyLarge, // Optional: Add style
+                            modifier = Modifier.align(Alignment.Center) // Ensure it is centered
                         )
-                    }
-                }
 
-                is UiState.Success -> {
-                    // When data is loaded, display the character details
-                    TopData(character = state.data)
-                }
-
-                is UiState.Error -> {
-                    // Error handling for network failure, etc.
-                    when (state.exception) {
-                        is NetworkException.ClientNetworkException -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.no_internet_data),
-                                    color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodyLarge, // Optional: Add style
-                                    modifier = Modifier.align(Alignment.Center) // Ensure it is centered
-                                )
-                            }
-                        }
                     }
                 }
             }
         }
+
     }
 }
 
