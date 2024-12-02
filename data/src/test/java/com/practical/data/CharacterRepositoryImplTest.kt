@@ -5,6 +5,7 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.exception.ApolloNetworkException
 import com.data.graphql.CharactersListQuery
 import com.practical.common.Constants
+import com.practical.data.network.NetworkException
 import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.CharacterModel
 import com.practical.domain.CharactersListModel
@@ -19,9 +20,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 
 @ExperimentalCoroutinesApi
 class CharacterRepositoryImplTest {
@@ -32,8 +31,6 @@ class CharacterRepositoryImplTest {
     private val repository: CharacterRepositoryImpl = CharacterRepositoryImpl(apolloClient)
     private lateinit var repositoryWebServer: CharacterRepositoryImpl
 
-    @get:Rule
-    val thrown: ExpectedException = ExpectedException.none()
 
     @Before
     fun setUp() {
@@ -105,20 +102,15 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `should return error state when server response contains errors`() = runTest {
-        val mockErrorMessage = "Server Error"
-
-        // Mock the ApolloClient query to throw an ApolloNetworkException
         coEvery {
-            apolloClient.query(any<CharactersListQuery>()).execute()
-        } throws ApolloNetworkException(mockErrorMessage)
+            apolloClient.query(CharactersListQuery()).execute()
+        } throws ApolloNetworkException("Server Error")
 
-        // When & Then: Expect the flow to emit an error
+        // 2. Test the Flow using Turbine
         repository.getCharactersList().test {
-            // Await the error emitted by the flow
-            val error = awaitError() // Expecting the flow to throw an error
-            // Assert that the error is of type ApolloNetworkException
+            // Expecting an error
+            val error = awaitError()
             assert(error is ApolloNetworkException)
-            // Clean up by canceling any remaining events
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -190,6 +182,7 @@ class CharacterRepositoryImplTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
     @Test
     fun `should return error state when server response contains errors for id`() = runTest {
         // Given
@@ -213,7 +206,7 @@ class CharacterRepositoryImplTest {
         repository.getCharacter(characterId).test {
             // Expect the flow to throw an error
             val error = awaitError() // Capture the error emitted by the flow
-          // Assert the error is an instance of ApolloNetworkException
+            // Assert the error is an instance of ApolloNetworkException
             assert(error is ApolloNetworkException)
             cancelAndIgnoreRemainingEvents()
         }
