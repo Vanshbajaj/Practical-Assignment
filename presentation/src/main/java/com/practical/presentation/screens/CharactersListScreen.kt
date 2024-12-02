@@ -25,10 +25,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.practical.data.network.NetworkException
 import com.practical.domain.CharactersListModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
-import com.practical.presentation.common.ErrorMessage
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
@@ -68,14 +68,21 @@ fun CharacterListScreen(
                 }
 
                 is UiState.Error -> {
-                    ErrorMessage(state.exception)
-                }
+                    when (state.exception) {
+                        is NetworkException.ClientNetworkException -> {
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                text = stringResource(R.string.no_internet_data),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
 
+                }
             }
         }
     }
 }
-
 
 @Composable
 private fun CharacterGrid(
