@@ -7,3 +7,6 @@ object Home
 
 @Serializable
 data class CharacterScreenData(val id: String)
+
+@Serializable
+data class EpisodeScreenData(val id: String)
