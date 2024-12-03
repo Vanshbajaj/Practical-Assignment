@@ -77,6 +77,14 @@ fun CharacterListScreen(
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
+
+                        is NetworkException.ApolloClientException -> {
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                text = stringResource(R.string.graphql_error),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
 
                 }
