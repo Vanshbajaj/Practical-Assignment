@@ -1,6 +1,8 @@
 package com.practical.presentation.screens
 
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +33,7 @@ import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
+import com.practical.presentation.ui.theme.Purple40
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 
@@ -39,11 +43,13 @@ fun CharacterScreen(
     characterId: String,
     characterViewModel: CharacterDetailsViewModel,
     modifier: Modifier = Modifier,
+    onNavigateToEpisodeScreen: (String) -> Unit,
 ) {
     LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
     CharacterScreenContent(
         charactersState,
+        onNavigateToEpisodeScreen,
         modifier.padding(MaterialTheme.dimens.paddingExtraSmall)
     )
 }
@@ -51,56 +57,69 @@ fun CharacterScreen(
 @Composable
 private fun CharacterScreenContent(
     state: UiState<CharacterModel>,
+    onNavigateToCharacterScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
-       modifier.fillMaxSize() // Fill the entire screen
+        modifier.fillMaxSize()
     ) {
-        Column{
-            when (state) {
-                is UiState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        CircularProgressIndicator(
-                            Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
+        when (state) {
+            is UiState.Loading -> {
+                CircularProgressIndicator(
+                    Modifier.align(Alignment.Center)
+                )
+            }
 
-                is UiState.Success -> {
-                    // When data is loaded, display the character details
-                    TopData(character = state.data)
-                }
+            is UiState.Success -> {
+                // When data is loaded, display the character details
+                TopData(character = state.data, onNavigateToCharacterScreen)
+            }
 
-                is UiState.Error -> {
-                    // Error handling for network failure, etc.
-                    when (state.exception) {
-                        is NetworkException.ClientNetworkException -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.no_internet_data),
-                                    color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodyLarge, // Optional: Add style
-                                    modifier = Modifier.align(Alignment.Center) // Ensure it is centered
-                                )
-                            }
-                        }
-                    }
-                }
+            is UiState.Error -> {
+                // Error handling for network failure, etc.
+                ErrorMessage(exception = state.exception, modifier = Modifier.fillMaxSize())
             }
         }
+
     }
 }
 
 @Composable
-private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
+fun ErrorMessage(exception: Throwable, modifier: Modifier = Modifier) {
+    when (exception) {
+        is NetworkException.ClientNetworkException -> {
+            ErrorText(R.string.no_internet_data,modifier)
+        }
+
+        is NetworkException.ApolloClientException -> {
+            ErrorText(R.string.graphql_error)
+        }
+
+    }
+}
+
+@Composable
+fun ErrorText(message: Int, modifier: Modifier = Modifier) {
+    Box(modifier.fillMaxSize()) {
+        Text(
+            text = stringResource(id = message),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+
+}
+
+
+@Composable
+private fun TopData(
+    character: CharacterModel,
+    onNavigateToCharacterScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    Column(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingSmall)) {
+    Column(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)) {
         AsyncImage(
             model = character.image,
             contentDescription = character.name,
@@ -111,13 +130,60 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
 
         Text(
             text = character.name,
-            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-            fontWeight = FontWeight.Bold
+            fontSize = MaterialTheme.typography.headlineLarge.fontSize
         )
 
-        Text(text = stringResource(R.string.status, character.status))
-        Text(text = stringResource(R.string.species, character.species))
-        Text(text = stringResource(R.string.gender))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = stringResource(R.string.status),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+                text = character.status,
+                style = MaterialTheme.typography.titleMedium,
+                color = if (character.status == "Alive") Purple40 else Color.Red
+            )
+        }
+
+        // Species Row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = stringResource(R.string.species),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+                text = character.species,
+                style = MaterialTheme.typography.titleMedium,
+                color = Purple40
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(R.string.gender),
+                style = MaterialTheme.typography.titleMedium
+            )
+//            Icon(
+//                imageVector = if (character.status == "MALE") Icons.Default.M else Icons.Default.Woman,
+//                contentDescription = null,
+//                tint = MaterialTheme.colors.primary
+//            )
+
+
+        }
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -129,18 +195,30 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
         )
         LazyRow(modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)) {
             items(character.episodes.size) { episode ->
-                EpisodeCard(episode = character.episodes[episode])
+                EpisodeCard(episode = character.episodes[episode], onNavigateToCharacterScreen)
             }
         }
     }
 }
 
 @Composable
-private fun EpisodeCard(episode: EpisodeModel, modifier: Modifier = Modifier) {
+private fun EpisodeCard(
+    episode: EpisodeModel,
+    onNavigateToCharacterScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Card(
         modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
             .width(MaterialTheme.dimens.cardWidth)
+            .clickable(
+                enabled = episode.id
+                    .isEmpty()
+                    .not()
+            ) {
+                episode.id.let { onNavigateToCharacterScreen.invoke(it) }
+
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
