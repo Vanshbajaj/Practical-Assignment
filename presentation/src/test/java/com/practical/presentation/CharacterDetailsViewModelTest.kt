@@ -24,7 +24,7 @@ class CharacterDetailsViewModelTest {
         runTest {
             // Given: Mock the use case to return a successful character fetch
             val characterId = "123"
-            val characterModel = CharacterModel(id = characterId, name = "Test Character")
+            val characterModel = CharacterModel(name = "Test Character")
 
             // Mock the use case to return a flow emitting only Success (no Loading here)
             coEvery { getCharacterByIdUseCase.invoke(characterId) } returns flow {
@@ -77,7 +77,7 @@ class CharacterDetailsViewModelTest {
         runTest {
             // Given: Mock the use case to return a successful character fetch
             val characterId = "123"
-            val characterModel = CharacterModel(id = characterId, name = "Test Character")
+            val characterModel = CharacterModel( name = "Test Character")
             coEvery { getCharacterByIdUseCase.invoke(characterId) } returns flow {
                 emit(characterModel)
             }
