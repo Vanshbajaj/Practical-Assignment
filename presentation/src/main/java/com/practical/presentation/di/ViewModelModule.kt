@@ -2,6 +2,7 @@ package com.practical.presentation.di
 
 import com.practical.domain.usecases.GetCharacterByIdUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
+import com.practical.domain.usecases.GetEpisodeUseCases
 import com.practical.presentation.factory.ViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -15,9 +16,23 @@ class ViewModelModule {
     fun provideViewModelFactory(
         getCharactersUseCase: GetCharactersUseCase,
         getCharacterByIdUseCase: GetCharacterByIdUseCase,
-        @IoDispatcher coroutineDispatcher: CoroutineDispatcher
-
+        @IoDispatcher coroutineDispatcher: CoroutineDispatcher,
     ): ViewModelFactory {
-        return ViewModelFactory(getCharactersUseCase, getCharacterByIdUseCase,coroutineDispatcher)
+        return ViewModelFactory(
+            getCharactersUseCase,
+            getCharacterByIdUseCase,
+            coroutineDispatcher
+        )
     }
+
+    @Provides
+    @Singleton
+    fun provideEpisodeDetailsViewModelFactory(
+        episodeDetailsFactory: EpisodeDetailsFactory,
+    ): EpisodeDetailsViewModelFactory {
+        return EpisodeDetailsViewModelFactory(
+           episodeDetailsFactory
+        )
+    }
+
 }
