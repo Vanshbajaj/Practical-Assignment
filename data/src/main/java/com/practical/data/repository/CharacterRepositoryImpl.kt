@@ -44,11 +44,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
-
-                else -> throw throwable
-
             }
-
         }
     }
 
@@ -67,13 +63,9 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
-
-                else -> throw throwable
-
             }
         }
     }
-
 
     override fun getEpisodeId(id: String): Flow<EpisodeModelDetails> {
         return flow {
@@ -89,8 +81,6 @@ class CharacterRepositoryImpl @Inject constructor(
                 is NetworkException.ApolloClientException -> {
                     throw NetworkException.ApolloClientException
                 }
-
-                else -> throw throwable
             }
         }
     }
