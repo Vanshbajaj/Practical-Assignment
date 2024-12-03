@@ -26,7 +26,15 @@ class CharacterDetailsViewModel @Inject constructor(
             getCharacterByIdUseCase.invoke(id)
                 .catch {
                     // Emit error state when an exception occurs
-                    _characterState.emit(UiState.Error(NetworkException.ClientNetworkException))
+                    when (it) {
+                        is NetworkException.ClientNetworkException -> {
+                            _characterState.emit(UiState.Error(NetworkException.ClientNetworkException))
+                        }
+
+                        is NetworkException.ApolloClientException -> {
+                            _characterState.emit(UiState.Error(NetworkException.ApolloClientException))
+                        }
+                    }
                 }
                 .collect { characterModel ->
                     // On success, emit success state
