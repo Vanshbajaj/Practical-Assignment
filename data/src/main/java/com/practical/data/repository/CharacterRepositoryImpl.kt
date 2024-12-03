@@ -12,7 +12,6 @@ import com.practical.domain.CharactersListModel
 import com.practical.domain.EpisodeModelDetails
 import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -29,14 +28,8 @@ class CharacterRepositoryImpl @Inject constructor(
                     name = character?.name,
                     image = character?.image,
                 )
-            }
-            if (characters == null) {
-                throw NetworkException.ClientNetworkException
-            } else {
-                emit(characters)
-            }
-        }.catch {
-            throw NetworkException.ApolloClientException
+            } ?: throw NetworkException.ClientNetworkException
+            emit(characters)
         }
     }
 
@@ -46,9 +39,6 @@ class CharacterRepositoryImpl @Inject constructor(
             response.data?.character?.toCharacterModel()?.let {
                 emit(it) // Emit character data
             } ?: throw NetworkException.ClientNetworkException
-        }.catch {
-            // Just rethrow the exception without modification
-            throw NetworkException.ApolloClientException
         }
     }
 
@@ -57,9 +47,6 @@ class CharacterRepositoryImpl @Inject constructor(
             val response = apolloClient.query(EpisodeQuery(id)).execute()
             response.data?.episode?.toEpisodeModelDetails()?.let { emit(it) }
                 ?: throw NetworkException.ClientNetworkException
-
-        }.catch {
-            NetworkException.ApolloClientException
         }
     }
 }
