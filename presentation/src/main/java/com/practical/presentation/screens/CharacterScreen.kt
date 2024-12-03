@@ -94,7 +94,7 @@ private fun CharacterScreenContent(
 fun ErrorMessage(exception: Throwable, modifier: Modifier = Modifier) {
     when (exception) {
         is NetworkException.ClientNetworkException -> {
-            ErrorText(R.string.no_internet_data,modifier)
+            ErrorText(R.string.no_internet_data, modifier)
         }
 
         is NetworkException.ApolloClientException -> {
@@ -255,15 +255,13 @@ private fun EpisodeCard(
     onNavigateToCharacterScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-
     Card(
         modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
             .width(MaterialTheme.dimens.cardWidth)
             .height(MaterialTheme.dimens.cardWidth)
             .clickable(
-                enabled = episode.id.isNotEmpty() // Only clickable if ID is not empty
+                enabled = episode.id.isNotEmpty()
             ) {
                 episode.id.let { onNavigateToCharacterScreen.invoke(it) }
             },
