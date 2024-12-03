@@ -1,7 +1,8 @@
-package com.practical.presentation.viewmodel
+package com.practical.presentation.di
 
 import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
+import com.practical.presentation.factory.ViewModelFactory
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher

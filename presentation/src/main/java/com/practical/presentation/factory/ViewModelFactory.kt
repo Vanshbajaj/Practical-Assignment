@@ -1,9 +1,12 @@
-package com.practical.presentation.viewmodel
+package com.practical.presentation.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
+import com.practical.presentation.di.IoDispatcher
+import com.practical.presentation.viewmodel.CharacterDetailsViewModel
+import com.practical.presentation.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
