@@ -80,6 +80,15 @@ private fun CharacterScreenContent(
                         )
 
                     }
+
+                    is NetworkException.ApolloClientException -> {
+                        Text(
+                            text = stringResource(R.string.graphql_error),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyLarge, // Optional: Add style
+                            modifier = Modifier.align(Alignment.Center) // Ensure it is centered
+                        )
+                    }
                 }
             }
         }

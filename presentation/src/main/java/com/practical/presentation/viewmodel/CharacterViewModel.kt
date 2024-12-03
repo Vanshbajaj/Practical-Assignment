@@ -30,11 +30,21 @@ class CharacterViewModel @Inject constructor(
     fun fetchCharacters() {
         viewModelScope.launch(coroutineDispatcher) {
             getCharactersUseCase.invoke()
-                .catch { _charactersState.emit(UiState.Error(it)) }
+                .catch {
+                    when (it) {
+                        is NetworkException.ClientNetworkException -> {
+                            _charactersState.emit(UiState.Error(NetworkException.ClientNetworkException))
+                        }
+
+                        is NetworkException.ApolloClientException -> {
+                            _charactersState.emit(UiState.Error(NetworkException.ApolloClientException))
+                        }
+                    }
+                }
                 .collect { result ->
-                    if (result.isEmpty()){
+                    if (result.isEmpty()) {
                         _charactersState.emit(UiState.Error(NetworkException.ClientNetworkException))
-                    }else{
+                    } else {
                         _charactersState.emit(UiState.Success(result))
                     }
 
