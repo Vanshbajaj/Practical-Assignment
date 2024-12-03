@@ -13,7 +13,7 @@ data class CharacterModel(
 
 data class OriginModel(
     val name: String = "",
-    val dimension: String = "",
+    val dimension: String? = null,
 )
 
 data class EpisodeModel(
