@@ -12,4 +12,5 @@
     <string name="label_name">NAME</string>
     <string name="label_dimension">DIMENSION</string>
     <string name="label_alive">Alive</string>
+    <string name="graphql_error">Graphql Error</string>
 </resources>

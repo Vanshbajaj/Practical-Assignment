@@ -30,14 +30,25 @@ class CharacterViewModel @Inject constructor(
     fun fetchCharacters() {
         viewModelScope.launch(coroutineDispatcher) {
             getCharactersUseCase.invoke()
-                .catch { _charactersState.emit(UiState.Error(it)) }
+                .catch { throwable ->
+                    // Handle specific network exceptions and emit a consistent UiState.Error
+                    val errorState = when (throwable) {
+                        is NetworkException.ClientNetworkException ->
+                            UiState.Error(throwable) // Pass original throwable
+                        is NetworkException.ApolloClientException ->
+                            UiState.Error(throwable) // Pass original throwable
+                        else ->
+                            UiState.Error(throwable) // Generic error handler for all other exceptions
+                    }
+                    _charactersState.emit(errorState)
+                }
                 .collect { result ->
+                    // Check if result is empty and emit the appropriate UiState
                     if (result.isEmpty()) {
                         _charactersState.emit(UiState.Error(NetworkException.ClientNetworkException))
                     } else {
                         _charactersState.emit(UiState.Success(result))
                     }
-
                 }
         }
     }
