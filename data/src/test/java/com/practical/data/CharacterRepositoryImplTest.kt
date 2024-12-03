@@ -2,7 +2,6 @@ package com.practical.data
 
 import app.cash.turbine.test
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.exception.ApolloNetworkException
 import com.data.graphql.CharactersListQuery
 import com.practical.common.Constants
 import com.practical.data.network.NetworkException
@@ -104,13 +103,13 @@ class CharacterRepositoryImplTest {
     fun `should return error state when server response contains errors`() = runTest {
         coEvery {
             apolloClient.query(CharactersListQuery()).execute()
-        } throws ApolloNetworkException("Server Error")
+        } throws NetworkException.ApolloClientException
 
         // 2. Test the Flow using Turbine
         repository.getCharactersList().test {
             // Expecting an error
             val error = awaitError()
-            assert(error is ApolloNetworkException)
+            assert(error is NetworkException.ApolloClientException)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -200,14 +199,14 @@ class CharacterRepositoryImplTest {
         // Simulate ApolloClient throwing an exception when making the request
         coEvery {
             apolloClient.query(any<CharactersListQuery>()).execute()
-        } throws ApolloNetworkException("GraphQL Error: $mockErrorMessage")
+        } throws NetworkException.ApolloClientException
 
         // When & Then
         repository.getCharacter(characterId).test {
             // Expect the flow to throw an error
             val error = awaitError() // Capture the error emitted by the flow
             // Assert the error is an instance of ApolloNetworkException
-            assert(error is ApolloNetworkException)
+            assert(error is NetworkException.ApolloClientException)
             cancelAndIgnoreRemainingEvents()
         }
     }
