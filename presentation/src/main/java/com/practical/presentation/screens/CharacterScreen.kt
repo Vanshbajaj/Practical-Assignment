@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -111,71 +112,39 @@ private fun TopData(
     modifier: Modifier = Modifier,
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+
     Column(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)) {
-        AsyncImage(
-            model = character.image,
-            contentDescription = character.name,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
+        CharacterImage(character = character, screenHeight = screenHeight)
+        CharacterInfo(character = character)
+        CharacterEpisodes(character = character, onNavigateToCharacterScreen)
+    }
+}
+
+@Composable
+private fun CharacterImage(character: CharacterModel, screenHeight: Dp) {
+    AsyncImage(
+        model = character.image,
+        contentDescription = character.name,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
+    )
+}
+
+@Composable
+private fun CharacterInfo(character: CharacterModel) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        CharacterRow(
+            label = stringResource(R.string.status),
+            value = character.status,
+            color = if (character.status == "Alive") Purple40 else Color.Red
         )
-
-        Text(
-            text = character.name,
-            fontSize = MaterialTheme.typography.headlineLarge.fontSize
+        CharacterRow(
+            label = stringResource(R.string.species),
+            value = character.species,
+            color = Purple40
         )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-                text = stringResource(R.string.status),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
-                text = character.status,
-                style = MaterialTheme.typography.titleMedium,
-                color = if (character.status == "Alive") Purple40 else Color.Red
-            )
-        }
-
-        // Species Row
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-                text = stringResource(R.string.species),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
-                text = character.species,
-                style = MaterialTheme.typography.titleMedium,
-                color = Purple40
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(R.string.gender),
-                style = MaterialTheme.typography.titleMedium
-            )
-//            Icon(
-//                imageVector = if (character.status == "MALE") Icons.Default.M else Icons.Default.Woman,
-//                contentDescription = null,
-//                tint = MaterialTheme.colors.primary
-//            )
-
-
-        }
+        CharacterRow(label = stringResource(R.string.gender), value = character.status)
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -185,10 +154,39 @@ private fun TopData(
                 vertical = MaterialTheme.dimens.paddingSmall
             )
         )
-        LazyRow(modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)) {
-            items(character.episodes.size) { episode ->
-                EpisodeCard(episode = character.episodes[episode], onNavigateToCharacterScreen)
-            }
+    }
+}
+
+
+@Composable
+private fun CharacterRow(label: String, value: String, color: Color = Purple40) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            color = color
+        )
+    }
+}
+
+
+@Composable
+private fun CharacterEpisodes(
+    character: CharacterModel,
+    onNavigateToCharacterScreen: (String) -> Unit,
+) {
+    LazyRow(modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)) {
+        items(character.episodes.size) { episode ->
+            EpisodeCard(episode = character.episodes[episode], onNavigateToCharacterScreen)
         }
     }
 }
