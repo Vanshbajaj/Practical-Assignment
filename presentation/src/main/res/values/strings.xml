@@ -7,4 +7,9 @@
     <string name="back">Back</string>
     <string name="episodes">EPISODES</string>
     <string name="no_internet_data">No Internet Found</string>
+    <string name="txt_male">Male</string>
+    <string name="label_origin">ORIGIN</string>
+    <string name="label_name">NAME</string>
+    <string name="label_dimension">DIMENSION</string>
+    <string name="label_alive">Alive</string>
 </resources>
