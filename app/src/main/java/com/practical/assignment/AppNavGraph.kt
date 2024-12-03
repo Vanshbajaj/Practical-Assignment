@@ -1,8 +1,9 @@
 package com.practical.assignment
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -41,13 +42,19 @@ fun AppNavGraph(
         composable<EpisodeScreenData> { backStackEntry ->
             val screen: EpisodeScreenData = backStackEntry.toRoute()
             val episodeId = screen.id
-            val episodeDetailsViewModel: EpisodeDetailsViewModel = remember(episodeId) {
-                episodeDetailsViewModelFactory.create(episodeId)
-            }
+//            val episodeDetailsViewModel: EpisodeDetailsViewModel =
+//                viewModel(factory = episodeDetailsViewModelFactory.create(episodeId))
+
+            val episodeDetailsViewModel: EpisodeDetailsViewModel =
+                viewModel(factory = object : ViewModelProvider.Factory {
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        if (modelClass.isAssignableFrom(EpisodeDetailsViewModel::class.java)) {
+                            return episodeDetailsViewModelFactory.create(episodeId) as T
+                        }
+                        throw IllegalArgumentException("Unknown ViewModel class")
+                    }
+                })
             EpisodeDetails(episodeDetailsViewModel, modifier = Modifier)
-
         }
-
     }
 }
-
