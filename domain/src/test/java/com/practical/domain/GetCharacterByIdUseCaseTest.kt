@@ -21,7 +21,6 @@ class GetCharacterByIdUseCaseTest {
         // Given
         val characterId = "1"
         val character = CharacterModel(
-            id = characterId,
             name = "Character 1",
             image = "http://example.com/character1.png"
         )
