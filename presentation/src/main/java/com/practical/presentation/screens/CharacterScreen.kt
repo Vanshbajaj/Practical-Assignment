@@ -1,6 +1,7 @@
 package com.practical.presentation.screens
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +36,7 @@ import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
+import com.practical.presentation.ui.theme.Purple
 import com.practical.presentation.ui.theme.Purple40
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
@@ -62,48 +65,56 @@ private fun CharacterScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier.fillMaxSize() // Fill the entire screen
+        modifier.fillMaxSize()
     ) {
-        Column {
-            when (state) {
-                is UiState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        CircularProgressIndicator(
-                            Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
+        when (state) {
+            is UiState.Loading -> {
+                CircularProgressIndicator(
+                    Modifier.align(Alignment.Center)
+                )
+            }
 
-                is UiState.Success -> {
-                    // When data is loaded, display the character details
-                    TopData(character = state.data, onNavigateToCharacterScreen)
-                }
+            is UiState.Success -> {
+                // When data is loaded, display the character details
+                TopData(character = state.data, onNavigateToCharacterScreen)
+            }
 
-                is UiState.Error -> {
-                    // Error handling for network failure, etc.
-                    when (state.exception) {
-                        is NetworkException.ClientNetworkException -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.no_internet_data),
-                                    color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodyLarge, // Optional: Add style
-                                    modifier = Modifier.align(Alignment.Center) // Ensure it is centered
-                                )
-                            }
-                        }
-                    }
-                }
+            is UiState.Error -> {
+                // Error handling for network failure, etc.
+                ErrorMessage(exception = state.exception, modifier = Modifier.fillMaxSize())
             }
         }
+
     }
 }
+
+@Composable
+fun ErrorMessage(exception: Throwable, modifier: Modifier = Modifier) {
+    when (exception) {
+        is NetworkException.ClientNetworkException -> {
+            ErrorText(R.string.no_internet_data, modifier)
+        }
+
+        is NetworkException.ApolloClientException -> {
+            ErrorText(R.string.graphql_error)
+        }
+
+    }
+}
+
+@Composable
+fun ErrorText(message: Int, modifier: Modifier = Modifier) {
+    Box(modifier.fillMaxSize()) {
+        Text(
+            text = stringResource(id = message),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+
+}
+
 
 @Composable
 private fun TopData(
@@ -115,6 +126,7 @@ private fun TopData(
 
     Column(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)) {
         CharacterImage(character = character, screenHeight = screenHeight)
+        Text(character.name, fontSize = MaterialTheme.typography.headlineLarge.fontSize)
         CharacterInfo(character = character)
         CharacterEpisodes(character = character, onNavigateToCharacterScreen)
     }
@@ -124,11 +136,12 @@ private fun TopData(
 private fun CharacterImage(character: CharacterModel, screenHeight: Dp) {
     AsyncImage(
         model = character.image,
-        contentDescription = character.name,
+        contentDescription = "",
         modifier = Modifier
             .fillMaxWidth()
             .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
     )
+
 }
 
 @Composable
@@ -144,7 +157,16 @@ private fun CharacterInfo(character: CharacterModel) {
             value = character.species,
             color = Purple40
         )
-        CharacterRow(label = stringResource(R.string.gender), value = character.status)
+        CharacterRow(label = stringResource(R.string.gender), value = character.gender)
+        Text(
+            stringResource(R.string.label_origin),
+            fontSize = MaterialTheme.typography.titleLarge.fontSize
+        )
+        CharacterRow(label = stringResource(R.string.label_name), value = character.origin.name)
+        CharacterRow(
+            label = stringResource(R.string.label_dimension),
+            value = character.origin.dimension.orEmpty()
+        )
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -201,20 +223,31 @@ private fun EpisodeCard(
         modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
             .width(MaterialTheme.dimens.cardWidth)
+            .height(MaterialTheme.dimens.cardWidth)
             .clickable(
-                enabled = episode.id
-                    .isEmpty()
-                    .not()
+                enabled = episode.id.isNotEmpty()
             ) {
                 episode.id.let { onNavigateToCharacterScreen.invoke(it) }
-
-            }
+            },
+        shape = RoundedCornerShape(MaterialTheme.dimens.paddingMedium),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Purple)
         ) {
-            Text(text = episode.name, fontSize = MaterialTheme.typography.labelLarge.fontSize)
+            Column(
+                verticalArrangement = Arrangement.Center, // Center content vertically
+                horizontalAlignment = Alignment.CenterHorizontally, // Center content horizontally
+                modifier = Modifier.fillMaxSize() // Make Column take up the full size of the Box
+            ) {
+                Text(
+                    text = episode.name,
+                    style = MaterialTheme.typography.bodyLarge, // You can customize this style
+                    color = Color.White, // Set text color to white
+                    modifier = Modifier.padding(8.dp) // Optional padding for better spacing
+                )
+            }
         }
     }
 }
