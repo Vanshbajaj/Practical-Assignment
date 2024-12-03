@@ -38,7 +38,7 @@ import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
-import com.practical.presentation.ui.theme.Gradient
+import com.practical.presentation.ui.theme.Purple
 import com.practical.presentation.ui.theme.Purple40
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
@@ -272,7 +272,7 @@ private fun EpisodeCard(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Gradient)
+                .background(Purple)
         ) {
             Column(
                 verticalArrangement = Arrangement.Center, // Center content vertically
