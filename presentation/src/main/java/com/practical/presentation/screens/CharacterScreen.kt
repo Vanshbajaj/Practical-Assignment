@@ -121,6 +121,7 @@ private fun TopData(
 
     Column(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)) {
         CharacterImage(character = character, screenHeight = screenHeight)
+        Text(character.name, fontSize = MaterialTheme.typography.headlineLarge.fontSize)
         CharacterInfo(character = character)
         CharacterEpisodes(character = character, onNavigateToCharacterScreen)
     }
@@ -130,11 +131,12 @@ private fun TopData(
 private fun CharacterImage(character: CharacterModel, screenHeight: Dp) {
     AsyncImage(
         model = character.image,
-        contentDescription = character.name,
+        contentDescription = "",
         modifier = Modifier
             .fillMaxWidth()
             .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
     )
+
 }
 
 @Composable
@@ -150,7 +152,16 @@ private fun CharacterInfo(character: CharacterModel) {
             value = character.species,
             color = Purple40
         )
-        CharacterRow(label = stringResource(R.string.gender), value = character.status)
+        CharacterRow(label = stringResource(R.string.gender), value = character.gender)
+        Text(
+            stringResource(R.string.label_origin),
+            fontSize = MaterialTheme.typography.titleLarge.fontSize
+        )
+        CharacterRow(label = stringResource(R.string.label_name), value = character.origin.name)
+        CharacterRow(
+            label = stringResource(R.string.label_dimension),
+            value = character.origin.dimension.orEmpty()
+        )
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -203,15 +214,13 @@ private fun EpisodeCard(
     onNavigateToCharacterScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-
     Card(
         modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
             .width(MaterialTheme.dimens.cardWidth)
             .height(MaterialTheme.dimens.cardWidth)
             .clickable(
-                enabled = episode.id.isNotEmpty() // Only clickable if ID is not empty
+                enabled = episode.id.isNotEmpty()
             ) {
                 episode.id.let { onNavigateToCharacterScreen.invoke(it) }
             },
