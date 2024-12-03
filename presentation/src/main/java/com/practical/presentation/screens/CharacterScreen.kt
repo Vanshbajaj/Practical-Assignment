@@ -1,17 +1,21 @@
 package com.practical.presentation.screens
 
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,6 +38,7 @@ import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
+import com.practical.presentation.ui.theme.Gradient
 import com.practical.presentation.ui.theme.Purple40
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
@@ -146,7 +152,7 @@ private fun TopData(
                 modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
                 text = character.status,
                 style = MaterialTheme.typography.titleMedium,
-                color = if (character.status == "Alive") Purple40 else Color.Red
+                color = if (character.status == stringResource(R.string.label_alive)) Purple40 else Color.Red
             )
         }
 
@@ -170,19 +176,61 @@ private fun TopData(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Start
         ) {
             Text(
                 text = stringResource(R.string.gender),
                 style = MaterialTheme.typography.titleMedium
             )
-//            Icon(
-//                imageVector = if (character.status == "MALE") Icons.Default.M else Icons.Default.Woman,
-//                contentDescription = null,
-//                tint = MaterialTheme.colors.primary
-//            )
-
-
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+                text = character.gender,
+                style = MaterialTheme.typography.titleMedium,
+                color = Purple40
+            )
+            if (character.gender == stringResource(R.string.txt_male)) {
+                Image(painter = painterResource(R.drawable.ic_male), contentDescription = "")
+            } else {
+                Image(painter = painterResource(R.drawable.ic_female), contentDescription = "")
+            }
+        }
+        Spacer(Modifier.padding(MaterialTheme.dimens.paddingExtraSmall))
+        Text(
+            text = stringResource(R.string.label_origin),
+            fontSize = MaterialTheme.typography.titleLarge.fontSize
+        )
+        Spacer(Modifier.padding(MaterialTheme.dimens.paddingExtraSmall))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = stringResource(R.string.label_name),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+                text = character.origin.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = Purple40
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = stringResource(R.string.label_dimension),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+                text = character.origin.dimension.orEmpty(),
+                style = MaterialTheme.typography.titleMedium,
+                color = Purple40
+            )
         }
         Text(
             text = stringResource(R.string.episodes),
@@ -207,24 +255,37 @@ private fun EpisodeCard(
     onNavigateToCharacterScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
+
     Card(
         modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
             .width(MaterialTheme.dimens.cardWidth)
+            .height(MaterialTheme.dimens.cardWidth)
             .clickable(
-                enabled = episode.id
-                    .isEmpty()
-                    .not()
+                enabled = episode.id.isNotEmpty() // Only clickable if ID is not empty
             ) {
                 episode.id.let { onNavigateToCharacterScreen.invoke(it) }
-
-            }
+            },
+        shape = RoundedCornerShape(MaterialTheme.dimens.paddingMedium),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Gradient)
         ) {
-            Text(text = episode.name, fontSize = MaterialTheme.typography.labelLarge.fontSize)
+            Column(
+                verticalArrangement = Arrangement.Center, // Center content vertically
+                horizontalAlignment = Alignment.CenterHorizontally, // Center content horizontally
+                modifier = Modifier.fillMaxSize() // Make Column take up the full size of the Box
+            ) {
+                Text(
+                    text = episode.name,
+                    style = MaterialTheme.typography.bodyLarge, // You can customize this style
+                    color = Color.White, // Set text color to white
+                    modifier = Modifier.padding(8.dp) // Optional padding for better spacing
+                )
+            }
         }
     }
 }
