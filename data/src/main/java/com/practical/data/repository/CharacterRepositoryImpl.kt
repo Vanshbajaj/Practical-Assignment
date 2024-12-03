@@ -35,16 +35,8 @@ class CharacterRepositoryImpl @Inject constructor(
             } else {
                 emit(characters)
             }
-        }.catch { throwable ->
-            when (throwable) {
-                is NetworkException.ClientNetworkException -> {
-                    throw NetworkException.ClientNetworkException
-                }
-
-                is NetworkException.ApolloClientException -> {
-                    throw NetworkException.ApolloClientException
-                }
-            }
+        }.catch {
+            throw NetworkException.ApolloClientException
         }
     }
 
@@ -53,17 +45,10 @@ class CharacterRepositoryImpl @Inject constructor(
             val response = apolloClient.query(CharacterDetailsQuery(id)).execute()
             response.data?.character?.toCharacterModel()?.let {
                 emit(it) // Emit character data
-            } ?: throw NetworkException.ApolloClientException
-        }.catch { throwable ->
-            when (throwable) {
-                is NetworkException.ClientNetworkException -> {
-                    throw NetworkException.ClientNetworkException
-                }
-
-                is NetworkException.ApolloClientException -> {
-                    throw NetworkException.ApolloClientException
-                }
-            }
+            } ?: throw NetworkException.ClientNetworkException
+        }.catch {
+            // Just rethrow the exception without modification
+            throw NetworkException.ApolloClientException
         }
     }
 
@@ -71,17 +56,11 @@ class CharacterRepositoryImpl @Inject constructor(
         return flow {
             val response = apolloClient.query(EpisodeQuery(id)).execute()
             response.data?.episode?.toEpisodeModelDetails()?.let { emit(it) }
+                ?: throw NetworkException.ClientNetworkException
 
-        }.catch { throwable ->
-            when (throwable) {
-                is NetworkException.ClientNetworkException -> {
-                    throw NetworkException.ClientNetworkException
-                }
-
-                is NetworkException.ApolloClientException -> {
-                    throw NetworkException.ApolloClientException
-                }
-            }
+        }.catch {
+            NetworkException.ApolloClientException
         }
     }
 }
+
