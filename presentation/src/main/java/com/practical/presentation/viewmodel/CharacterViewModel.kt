@@ -39,7 +39,12 @@ class CharacterViewModel @Inject constructor(
                         is NetworkException.ApolloClientException -> {
                             _charactersState.emit(UiState.Error(NetworkException.ApolloClientException))
                         }
+
+                        else -> {
+                            _charactersState.emit(UiState.Error(it))
+                        }
                     }
+
                 }
                 .collect { result ->
                     if (result.isEmpty()) {
