@@ -5,6 +5,7 @@ import com.practical.data.repository.CharacterRepositoryImpl
 import com.practical.domain.repository.CharacterRepository
 import com.practical.domain.usecases.GetCharacterByIdUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
+import com.practical.domain.usecases.GetEpisodeUseCases
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -27,6 +28,12 @@ object DataModule {
     @Singleton
     fun provideUseCase(repository: CharacterRepository): GetCharacterByIdUseCase {
         return GetCharacterByIdUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEpisodeUseCase(repository: CharacterRepository): GetEpisodeUseCases {
+        return GetEpisodeUseCases(repository)
     }
 
 }
