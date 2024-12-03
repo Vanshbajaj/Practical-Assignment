@@ -65,48 +65,56 @@ private fun CharacterScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier.fillMaxSize() // Fill the entire screen
+        modifier.fillMaxSize()
     ) {
-        Column {
-            when (state) {
-                is UiState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        CircularProgressIndicator(
-                            Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
+        when (state) {
+            is UiState.Loading -> {
+                CircularProgressIndicator(
+                    Modifier.align(Alignment.Center)
+                )
+            }
 
-                is UiState.Success -> {
-                    // When data is loaded, display the character details
-                    TopData(character = state.data, onNavigateToCharacterScreen)
-                }
+            is UiState.Success -> {
+                // When data is loaded, display the character details
+                TopData(character = state.data, onNavigateToCharacterScreen)
+            }
 
-                is UiState.Error -> {
-                    // Error handling for network failure, etc.
-                    when (state.exception) {
-                        is NetworkException.ClientNetworkException -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.no_internet_data),
-                                    color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodyLarge, // Optional: Add style
-                                    modifier = Modifier.align(Alignment.Center) // Ensure it is centered
-                                )
-                            }
-                        }
-                    }
-                }
+            is UiState.Error -> {
+                // Error handling for network failure, etc.
+                ErrorMessage(exception = state.exception, modifier = Modifier.fillMaxSize())
             }
         }
+
     }
 }
+
+@Composable
+fun ErrorMessage(exception: Throwable, modifier: Modifier = Modifier) {
+    when (exception) {
+        is NetworkException.ClientNetworkException -> {
+            ErrorText(R.string.no_internet_data,modifier)
+        }
+
+        is NetworkException.ApolloClientException -> {
+            ErrorText(R.string.graphql_error)
+        }
+
+    }
+}
+
+@Composable
+fun ErrorText(message: Int, modifier: Modifier = Modifier) {
+    Box(modifier.fillMaxSize()) {
+        Text(
+            text = stringResource(id = message),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+
+}
+
 
 @Composable
 private fun TopData(
