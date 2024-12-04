@@ -127,6 +127,7 @@ class CharacterRepositoryImplTest {
             name = "Abadango Cluster Princess",
             status = "Alive",
             species = "Alien",
+            gender = "Female",
             origin = OriginModel(
                 name = "Abadango",
                 dimension = "unknown",
@@ -149,6 +150,7 @@ class CharacterRepositoryImplTest {
           "name": "Abadango Cluster Princess",
           "status": "Alive",
           "species": "Alien",
+          "gender": "Female",
           "origin": {
             "name": "Abadango"
           },
