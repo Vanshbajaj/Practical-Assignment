@@ -1,7 +1,8 @@
-package com.practical.presentation.viewmodel
+package com.practical.presentation.di
 
-import com.practical.domain.usecases.GetCharacterUseCase
+import com.practical.domain.usecases.GetCharacterByIdUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
+import com.practical.presentation.factory.ViewModelFactory
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,10 +14,10 @@ class ViewModelModule {
     @Singleton
     fun provideViewModelFactory(
         getCharactersUseCase: GetCharactersUseCase,
-        getCharacterUseCase: GetCharacterUseCase,
+        getCharacterByIdUseCase: GetCharacterByIdUseCase,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher
 
     ): ViewModelFactory {
-        return ViewModelFactory(getCharactersUseCase, getCharacterUseCase,coroutineDispatcher)
+        return ViewModelFactory(getCharactersUseCase, getCharacterByIdUseCase,coroutineDispatcher)
     }
 }
