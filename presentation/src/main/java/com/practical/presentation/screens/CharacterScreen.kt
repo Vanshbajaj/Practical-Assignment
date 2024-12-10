@@ -136,7 +136,7 @@ private fun TopData(
 private fun CharacterImage(character: CharacterModel, screenHeight: Dp) {
     AsyncImage(
         model = character.image,
-        contentDescription = "",
+        contentDescription = character.name,
         modifier = Modifier
             .fillMaxWidth()
             .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
@@ -153,9 +153,7 @@ private fun CharacterInfo(character: CharacterModel) {
             color = if (character.status == "Alive") Purple40 else Color.Red
         )
         CharacterRow(
-            label = stringResource(R.string.species),
-            value = character.species,
-            color = Purple40
+            label = stringResource(R.string.species), value = character.species, color = Purple40
         )
         CharacterRow(label = stringResource(R.string.gender), value = character.gender)
         Text(
@@ -165,7 +163,7 @@ private fun CharacterInfo(character: CharacterModel) {
         CharacterRow(label = stringResource(R.string.label_name), value = character.origin.name)
         CharacterRow(
             label = stringResource(R.string.label_dimension),
-            value = character.origin.dimension.orEmpty()
+            value = character.origin.dimension
         )
         Text(
             text = stringResource(R.string.episodes),
@@ -183,13 +181,10 @@ private fun CharacterInfo(character: CharacterModel) {
 @Composable
 private fun CharacterRow(label: String, value: String, color: Color = Purple40) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
     ) {
         Text(
-            text = label,
-            style = MaterialTheme.typography.titleMedium
+            text = label, style = MaterialTheme.typography.titleMedium
         )
         Text(
             modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
@@ -245,7 +240,8 @@ private fun EpisodeCard(
                     text = episode.name,
                     style = MaterialTheme.typography.bodyLarge, // You can customize this style
                     color = Color.White, // Set text color to white
-                    modifier = Modifier.padding(8.dp) // Optional padding for better spacing
+                    modifier =
+                    Modifier.padding(MaterialTheme.dimens.paddingSmall) // Optional padding for better spacing
                 )
             }
         }
