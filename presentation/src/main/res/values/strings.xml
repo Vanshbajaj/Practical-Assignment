@@ -6,4 +6,6 @@
     <string name="gender">GENDER: %1$s</string>
     <string name="back">Back</string>
     <string name="episodes">EPISODES</string>
+    <string name="no_internet_data">No Internet Found</string>
+    <string name="graphql_error">Graphql Error</string>
 </resources>
