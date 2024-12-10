@@ -39,6 +39,7 @@ import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
+import com.practical.presentation.common.ErrorMessage
 import com.practical.presentation.ui.theme.Purple
 import com.practical.presentation.ui.theme.Purple40
 import com.practical.presentation.ui.theme.dimens
@@ -88,28 +89,16 @@ private fun CharacterScreenContent(
                     TopData(character = state.data, onNavigateToCharacterScreen)
                 }
 
-                is UiState.Error -> {
-                    // Error handling for network failure, etc.
-                    when (state.exception) {
-                        is NetworkException.ClientNetworkException -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.no_internet_data),
-                                    color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodyLarge, // Optional: Add style
-                                    modifier = Modifier.align(Alignment.Center) // Ensure it is centered
-                                )
-                            }
-                        }
-                    }
-                }
+            is UiState.Error -> {
+                // Error handling for network failure, etc.
+                ErrorMessage(exception = state.exception, modifier = Modifier.fillMaxSize())
             }
         }
+
     }
 }
+
+
 
 @Composable
 private fun TopData(
@@ -128,11 +117,11 @@ private fun TopData(
 }
 
 @Composable
-private fun CharacterImage(character: CharacterModel, screenHeight: Dp) {
+private fun CharacterImage(character: CharacterModel, screenHeight: Dp, modifier: Modifier = Modifier) {
     AsyncImage(
         model = character.image,
         contentDescription = "",
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
     )
@@ -140,8 +129,8 @@ private fun CharacterImage(character: CharacterModel, screenHeight: Dp) {
 }
 
 @Composable
-private fun CharacterInfo(character: CharacterModel) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         CharacterRow(
             label = stringResource(R.string.status),
             value = character.status,
@@ -176,9 +165,9 @@ private fun CharacterInfo(character: CharacterModel) {
 
 
 @Composable
-private fun CharacterRow(label: String, value: String, color: Color = Purple40) {
+private fun CharacterRow(label: String, value: String, color: Color = Purple40, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
     ) {
@@ -200,8 +189,9 @@ private fun CharacterRow(label: String, value: String, color: Color = Purple40) 
 private fun CharacterEpisodes(
     character: CharacterModel,
     onNavigateToCharacterScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    LazyRow(modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)) {
+    LazyRow(modifier = modifier.padding(MaterialTheme.dimens.paddingSmall)) {
         items(character.episodes.size) { episode ->
             EpisodeCard(episode = character.episodes[episode], onNavigateToCharacterScreen)
         }
@@ -246,7 +236,7 @@ private fun EpisodeCard(
         }
     }
 }
-
+}
 internal object CharacterScreenValues {
     const val SCREEN_HEIGHT_BY_TWO = 2
 }
