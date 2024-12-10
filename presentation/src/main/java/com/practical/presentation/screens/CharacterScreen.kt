@@ -33,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
@@ -92,7 +91,6 @@ private fun CharacterScreenContent(
 }
 
 
-
 @Composable
 private fun TopData(
     character: CharacterModel,
@@ -101,12 +99,45 @@ private fun TopData(
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     Column(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)) {
+<<<<<<< HEAD
         AsyncImage(
             model = character.image,
             contentDescription = character.name,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
+=======
+        CharacterImage(character = character, screenHeight = screenHeight)
+        Text(character.name, fontSize = MaterialTheme.typography.headlineLarge.fontSize)
+        CharacterInfo(character = character)
+        CharacterEpisodes(character = character, onNavigateToCharacterScreen)
+    }
+}
+
+@Composable
+private fun CharacterImage(
+    character: CharacterModel,
+    screenHeight: Dp,
+    modifier: Modifier = Modifier,
+) {
+    AsyncImage(
+        model = character.image,
+        contentDescription = character.name,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
+    )
+
+}
+
+@Composable
+private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        CharacterRow(
+            label = stringResource(R.string.status),
+            value = character.status,
+            color = if (character.status == "Alive") Purple40 else Color.Red
+>>>>>>> 24aae28 (Added Modifier to CharacterScreen)
         )
 
         Text(
@@ -212,10 +243,49 @@ private fun TopData(
                 vertical = MaterialTheme.dimens.paddingSmall
             )
         )
+<<<<<<< HEAD
         LazyRow(modifier = Modifier.padding(MaterialTheme.dimens.paddingSmall)) {
             items(character.episodes.size) { episode ->
                 EpisodeCard(episode = character.episodes[episode], onNavigateToCharacterScreen)
             }
+=======
+    }
+}
+
+
+@Composable
+private fun CharacterRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    color: Color = Purple40,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = label, style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            color = color
+        )
+    }
+}
+
+
+@Composable
+private fun CharacterEpisodes(
+    character: CharacterModel,
+    onNavigateToCharacterScreen: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyRow(modifier = modifier.padding(MaterialTheme.dimens.paddingSmall)) {
+        items(character.episodes.size) { episode ->
+            EpisodeCard(episode = character.episodes[episode], onNavigateToCharacterScreen)
+>>>>>>> 24aae28 (Added Modifier to CharacterScreen)
         }
     }
 }
