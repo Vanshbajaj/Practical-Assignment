@@ -29,6 +29,7 @@ import com.practical.data.network.NetworkException
 import com.practical.domain.CharactersListModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
+import com.practical.presentation.common.ErrorMessage
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterViewModel
 
