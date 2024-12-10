@@ -185,10 +185,9 @@ private fun TopData(
             Text(
                 modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
                 text = character.gender,
-                style = MaterialTheme.typography.titleMedium,
-                color = Purple40
-            )
-            if (character.gender == stringResource(R.string.txt_male)) {
+                style = MaterialTheme.typography.titleMedium, color = Purple40
+        )
+        if (character.gender == stringResource(R.string.txt_male)) {
                 Image(painter = painterResource(R.drawable.ic_male), contentDescription = "")
             } else {
                 Image(painter = painterResource(R.drawable.ic_female), contentDescription = "")
@@ -216,18 +215,15 @@ private fun TopData(
                 color = Purple40
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-                text = stringResource(R.string.label_dimension),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
-                text = character.origin.dimension.orEmpty(),
+    Row(
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = stringResource(R.string.label_dimension), style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+            text = character.origin.dimension.orEmpty(),
                 style = MaterialTheme.typography.titleMedium,
                 color = Purple40
             )
@@ -281,7 +277,8 @@ private fun EpisodeCard(
                     text = episode.name,
                     style = MaterialTheme.typography.bodyLarge, // You can customize this style
                     color = Color.White, // Set text color to white
-                    modifier = Modifier.padding(8.dp) // Optional padding for better spacing
+                    modifier =
+                    Modifier.padding(MaterialTheme.dimens.paddingSmall) // Optional padding for better spacing
                 )
             }
         }
