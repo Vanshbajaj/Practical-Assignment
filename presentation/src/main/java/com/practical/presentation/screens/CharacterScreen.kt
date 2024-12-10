@@ -38,6 +38,7 @@ import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
+import com.practical.presentation.common.ErrorMessage
 import com.practical.presentation.ui.theme.Purple
 import com.practical.presentation.ui.theme.Purple40
 import com.practical.presentation.ui.theme.dimens
@@ -90,32 +91,6 @@ private fun CharacterScreenContent(
     }
 }
 
-@Composable
-fun ErrorMessage(exception: Throwable, modifier: Modifier = Modifier) {
-    when (exception) {
-        is NetworkException.ClientNetworkException -> {
-            ErrorText(R.string.no_internet_data, modifier)
-        }
-
-        is NetworkException.ApolloClientException -> {
-            ErrorText(R.string.graphql_error)
-        }
-
-    }
-}
-
-@Composable
-fun ErrorText(message: Int, modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(id = message),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-
-}
 
 
 @Composable
