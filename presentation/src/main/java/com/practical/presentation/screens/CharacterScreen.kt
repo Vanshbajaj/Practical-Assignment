@@ -38,7 +38,8 @@ import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
 import com.practical.presentation.UiState
-import com.practical.presentation.ui.theme.Gradient
+import com.practical.presentation.common.ErrorMessage
+import com.practical.presentation.ui.theme.Purple
 import com.practical.presentation.ui.theme.Purple40
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
@@ -90,32 +91,6 @@ private fun CharacterScreenContent(
     }
 }
 
-@Composable
-fun ErrorMessage(exception: Throwable, modifier: Modifier = Modifier) {
-    when (exception) {
-        is NetworkException.ClientNetworkException -> {
-            ErrorText(R.string.no_internet_data,modifier)
-        }
-
-        is NetworkException.ApolloClientException -> {
-            ErrorText(R.string.graphql_error)
-        }
-
-    }
-}
-
-@Composable
-fun ErrorText(message: Int, modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(id = message),
-            color = MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-
-}
 
 
 @Composable
@@ -185,10 +160,9 @@ private fun TopData(
             Text(
                 modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
                 text = character.gender,
-                style = MaterialTheme.typography.titleMedium,
-                color = Purple40
-            )
-            if (character.gender == stringResource(R.string.txt_male)) {
+                style = MaterialTheme.typography.titleMedium, color = Purple40
+        )
+        if (character.gender == stringResource(R.string.txt_male)) {
                 Image(painter = painterResource(R.drawable.ic_male), contentDescription = "")
             } else {
                 Image(painter = painterResource(R.drawable.ic_female), contentDescription = "")
@@ -216,18 +190,15 @@ private fun TopData(
                 color = Purple40
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-                text = stringResource(R.string.label_dimension),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
-                text = character.origin.dimension.orEmpty(),
+    Row(
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = stringResource(R.string.label_dimension), style = MaterialTheme.typography.titleMedium
+        )
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
+            text = character.origin.dimension.orEmpty(),
                 style = MaterialTheme.typography.titleMedium,
                 color = Purple40
             )
@@ -255,15 +226,13 @@ private fun EpisodeCard(
     onNavigateToCharacterScreen: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-
     Card(
         modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
             .width(MaterialTheme.dimens.cardWidth)
             .height(MaterialTheme.dimens.cardWidth)
             .clickable(
-                enabled = episode.id.isNotEmpty() // Only clickable if ID is not empty
+                enabled = episode.id.isNotEmpty()
             ) {
                 episode.id.let { onNavigateToCharacterScreen.invoke(it) }
             },
@@ -272,7 +241,7 @@ private fun EpisodeCard(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Gradient)
+                .background(Purple)
         ) {
             Column(
                 verticalArrangement = Arrangement.Center, // Center content vertically
@@ -283,7 +252,8 @@ private fun EpisodeCard(
                     text = episode.name,
                     style = MaterialTheme.typography.bodyLarge, // You can customize this style
                     color = Color.White, // Set text color to white
-                    modifier = Modifier.padding(8.dp) // Optional padding for better spacing
+                    modifier =
+                    Modifier.padding(MaterialTheme.dimens.paddingSmall) // Optional padding for better spacing
                 )
             }
         }
