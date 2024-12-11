@@ -136,10 +136,12 @@ private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifi
             fontSize = MaterialTheme.typography.titleLarge.fontSize
         )
         CharacterRow(label = stringResource(R.string.label_name), value = character.origin.name)
-        CharacterRow(
-            label = stringResource(R.string.label_dimension),
-            value = character.origin.dimension
-        )
+        character.origin.dimension?.let {
+            CharacterRow(
+                label = stringResource(R.string.label_dimension),
+                value = it
+            )
+        }
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -227,4 +229,3 @@ private fun EpisodeCard(
 internal object CharacterScreenValues {
     const val SCREEN_HEIGHT_BY_TWO = 2
 }
-
