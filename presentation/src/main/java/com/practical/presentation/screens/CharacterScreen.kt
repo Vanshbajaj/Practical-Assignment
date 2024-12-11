@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
@@ -136,10 +135,12 @@ private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifi
             fontSize = MaterialTheme.typography.titleLarge.fontSize
         )
         CharacterRow(label = stringResource(R.string.label_name), value = character.origin.name)
-        CharacterRow(
-            label = stringResource(R.string.label_dimension),
-            value = character.origin.dimension
-        )
+        character.origin.dimension?.let {
+            CharacterRow(
+                label = stringResource(R.string.label_dimension),
+                value = it
+            )
+        }
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
