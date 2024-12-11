@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
@@ -90,7 +89,6 @@ private fun CharacterScreenContent(
 }
 
 
-
 @Composable
 private fun TopData(
     character: CharacterModel,
@@ -108,7 +106,11 @@ private fun TopData(
 }
 
 @Composable
-private fun CharacterImage(character: CharacterModel, screenHeight: Dp, modifier: Modifier = Modifier) {
+private fun CharacterImage(
+    character: CharacterModel,
+    screenHeight: Dp,
+    modifier: Modifier = Modifier,
+) {
     AsyncImage(
         model = character.image,
         contentDescription = character.name,
@@ -136,12 +138,10 @@ private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifi
             fontSize = MaterialTheme.typography.titleLarge.fontSize
         )
         CharacterRow(label = stringResource(R.string.label_name), value = character.origin.name)
-        character.origin.dimension?.let {
-            CharacterRow(
-                label = stringResource(R.string.label_dimension),
-                value = it
-            )
-        }
+        CharacterRow(
+            label = stringResource(R.string.label_dimension),
+            value = character.origin.dimension
+        )
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -156,7 +156,12 @@ private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifi
 
 
 @Composable
-private fun CharacterRow(label: String, value: String, color: Color = Purple40, modifier: Modifier = Modifier) {
+private fun CharacterRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    color: Color = Purple40,
+) {
     Row(
         modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
     ) {
