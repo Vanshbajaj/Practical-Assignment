@@ -1,14 +1,12 @@
 package com.practical.presentation.screens
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,14 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
 import com.practical.presentation.R
@@ -69,25 +65,19 @@ private fun CharacterScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier.fillMaxSize() // Fill the entire screen
+        modifier.fillMaxSize()
     ) {
-        Column {
-            when (state) {
-                is UiState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        CircularProgressIndicator(
-                            Modifier.align(Alignment.Center)
-                        )
-                    }
-                }
+        when (state) {
+            is UiState.Loading -> {
+                CircularProgressIndicator(
+                    Modifier.align(Alignment.Center)
+                )
+            }
 
-                is UiState.Success -> {
-                    // When data is loaded, display the character details
-                    TopData(character = state.data, onNavigateToCharacterScreen)
-                }
+            is UiState.Success -> {
+                // When data is loaded, display the character details
+                TopData(character = state.data, onNavigateToCharacterScreen)
+            }
 
             is UiState.Error -> {
                 // Error handling for network failure, etc.
@@ -97,7 +87,6 @@ private fun CharacterScreenContent(
 
     }
 }
-
 
 
 @Composable
@@ -117,10 +106,14 @@ private fun TopData(
 }
 
 @Composable
-private fun CharacterImage(character: CharacterModel, screenHeight: Dp, modifier: Modifier = Modifier) {
+private fun CharacterImage(
+    character: CharacterModel,
+    screenHeight: Dp,
+    modifier: Modifier = Modifier,
+) {
     AsyncImage(
         model = character.image,
-        contentDescription = "",
+        contentDescription = character.name,
         modifier = modifier
             .fillMaxWidth()
             .height(screenHeight / CharacterScreenValues.SCREEN_HEIGHT_BY_TWO)
@@ -137,9 +130,7 @@ private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifi
             color = if (character.status == "Alive") Purple40 else Color.Red
         )
         CharacterRow(
-            label = stringResource(R.string.species),
-            value = character.species,
-            color = Purple40
+            label = stringResource(R.string.species), value = character.species, color = Purple40
         )
         CharacterRow(label = stringResource(R.string.gender), value = character.gender)
         Text(
@@ -147,10 +138,12 @@ private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifi
             fontSize = MaterialTheme.typography.titleLarge.fontSize
         )
         CharacterRow(label = stringResource(R.string.label_name), value = character.origin.name)
-        CharacterRow(
-            label = stringResource(R.string.label_dimension),
-            value = character.origin.dimension.orEmpty()
-        )
+        character.origin.dimension?.let {
+            CharacterRow(
+                label = stringResource(R.string.label_dimension),
+                value = it
+            )
+        }
         Text(
             text = stringResource(R.string.episodes),
             fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -165,15 +158,17 @@ private fun CharacterInfo(character: CharacterModel, modifier: Modifier = Modifi
 
 
 @Composable
-private fun CharacterRow(label: String, value: String, color: Color = Purple40, modifier: Modifier = Modifier) {
+private fun CharacterRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    color: Color = Purple40,
+) {
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start
+        modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
     ) {
         Text(
-            text = label,
-            style = MaterialTheme.typography.titleMedium
+            text = label, style = MaterialTheme.typography.titleMedium
         )
         Text(
             modifier = Modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall),
@@ -230,14 +225,14 @@ private fun EpisodeCard(
                     text = episode.name,
                     style = MaterialTheme.typography.bodyLarge, // You can customize this style
                     color = Color.White, // Set text color to white
-                    modifier = Modifier.padding(8.dp) // Optional padding for better spacing
+                    modifier =
+                    Modifier.padding(MaterialTheme.dimens.paddingSmall) // Optional padding for better spacing
                 )
             }
         }
     }
 }
-}
+
 internal object CharacterScreenValues {
     const val SCREEN_HEIGHT_BY_TWO = 2
 }
-
