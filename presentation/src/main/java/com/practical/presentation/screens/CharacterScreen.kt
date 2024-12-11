@@ -236,3 +236,4 @@ private fun EpisodeCard(
 internal object CharacterScreenValues {
     const val SCREEN_HEIGHT_BY_TWO = 2
 }
+
