@@ -10,7 +10,7 @@ import com.practical.presentation.screens.CharacterListScreen
 import com.practical.presentation.screens.CharacterScreen
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 import com.practical.presentation.viewmodel.CharacterViewModel
-import com.practical.presentation.viewmodel.ViewModelFactory
+import com.practical.presentation.factory.ViewModelFactory
 
 @Composable
 fun AppNavGraph(navController: NavHostController, viewModelFactory: ViewModelFactory) {

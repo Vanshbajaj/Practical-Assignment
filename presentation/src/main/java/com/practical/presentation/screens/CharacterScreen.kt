@@ -1,10 +1,10 @@
 package com.practical.presentation.screens
 
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,10 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.practical.data.network.NetworkException
 import com.practical.domain.CharacterModel
 import com.practical.domain.EpisodeModel
-import com.practical.domain.ResultState
 import com.practical.presentation.R
+import com.practical.presentation.UiState
 import com.practical.presentation.ui.theme.dimens
 import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 
@@ -41,44 +42,66 @@ fun CharacterScreen(
 ) {
     LaunchedEffect(characterId) { characterViewModel.getCharacter(characterId) }
     val charactersState by characterViewModel.characterState.collectAsStateWithLifecycle()
-    CharacterScreenContent(charactersState,
+    CharacterScreenContent(
+        charactersState,
         modifier.padding(MaterialTheme.dimens.paddingExtraSmall)
     )
 }
 
-
 @Composable
 private fun CharacterScreenContent(
-    state: ResultState<CharacterModel>,
-    modifier: Modifier = Modifier) {
-    Box(modifier.padding(MaterialTheme.dimens.paddingExtraSmall)) {
+    state: UiState<CharacterModel>,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier.fillMaxSize()
+    ) {
         when (state) {
-            is ResultState.Loading -> {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.dimens.paddingMedium)
-                ) {
-                    CircularProgressIndicator(
-                        Modifier.align(
-                            Alignment.CenterVertically
-                        )
-                    )
-                }
+            is UiState.Loading -> {
+                CircularProgressIndicator(
+                    Modifier.align(Alignment.Center)
+                )
             }
 
-            is ResultState.Success -> {
+            is UiState.Success -> {
                 // When data is loaded, display the character details
                 TopData(character = state.data)
             }
 
-            is ResultState.Error -> {
-                // Show an error message
-                Text(text = "Failed to load character")
+            is UiState.Error -> {
+                // Error handling for network failure, etc.
+                ErrorMessage(exception = state.exception, modifier = Modifier.fillMaxSize())
             }
         }
+
     }
+}
+
+@Composable
+fun ErrorMessage(exception: Throwable, modifier: Modifier = Modifier) {
+    when (exception) {
+        is NetworkException.ClientNetworkException -> {
+            ErrorText(R.string.no_internet_data,modifier)
+        }
+
+        is NetworkException.ApolloClientException -> {
+            ErrorText(R.string.graphql_error)
+        }
+
+    }
+}
+
+@Composable
+fun ErrorText(message: Int, modifier: Modifier = Modifier) {
+    Box(modifier.fillMaxSize()) {
+        Text(
+            text = stringResource(id = message),
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+
 }
 
 
@@ -122,10 +145,15 @@ private fun TopData(character: CharacterModel, modifier: Modifier = Modifier) {
 
 @Composable
 private fun EpisodeCard(episode: EpisodeModel, modifier: Modifier = Modifier) {
-    Card(modifier = modifier.padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
-            .width(MaterialTheme.dimens.cardWidth)) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)) {
+    Card(
+        modifier = modifier
+            .padding(horizontal = MaterialTheme.dimens.paddingExtraSmall)
+            .width(MaterialTheme.dimens.cardWidth)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(MaterialTheme.dimens.paddingMedium)
+        ) {
             Text(text = episode.name, fontSize = MaterialTheme.typography.labelLarge.fontSize)
         }
     }
@@ -134,3 +162,4 @@ private fun EpisodeCard(episode: EpisodeModel, modifier: Modifier = Modifier) {
 internal object CharacterScreenValues {
     const val SCREEN_HEIGHT_BY_TWO = 2
 }
+

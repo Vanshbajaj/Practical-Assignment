@@ -2,8 +2,6 @@ package com.practical.presentation
 
 import app.cash.turbine.test
 import com.practical.domain.CharactersListModel
-import com.practical.domain.ResultState
-import com.practical.domain.usecases.GetCharacterUseCase
 import com.practical.domain.usecases.GetCharactersUseCase
 import com.practical.presentation.viewmodel.CharacterViewModel
 import io.mockk.coEvery
@@ -23,13 +21,11 @@ import org.junit.Test
 class CharacterViewModelTest {
     private lateinit var viewModel: CharacterViewModel
     private lateinit var getCharactersUseCase: GetCharactersUseCase
-    private lateinit var getCharacterUseCase: GetCharacterUseCase
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         getCharactersUseCase = mockk(relaxed = true)
-        getCharacterUseCase= mockk()
         viewModel = CharacterViewModel(getCharactersUseCase, testDispatcher)
     }
 
@@ -44,9 +40,9 @@ class CharacterViewModelTest {
         val currentState = viewModel.charactersState.value
 
         // Then
-        assertEquals(ResultState.Loading, currentState)
+        assertEquals(UiState.Loading, currentState)
         val state = viewModel.charactersState.value
-        assertTrue(state is ResultState.Loading)
+        assertTrue(state is UiState.Loading)
     }
 
 
@@ -67,9 +63,7 @@ class CharacterViewModelTest {
         )
 
         coEvery { getCharactersUseCase.invoke() } returns flowOf(
-            ResultState.Success(
-                expectedCharacters
-            )
+            expectedCharacters
         )
 
         // Act
@@ -77,8 +71,8 @@ class CharacterViewModelTest {
 
         // Assert
         viewModel.charactersState.test {
-            assertTrue(awaitItem() is ResultState.Loading)
-            assertEquals(expectedCharacters, (awaitItem() as ResultState.Success).data)
+            assertTrue(awaitItem() is UiState.Loading)
+            assertEquals(expectedCharacters, (awaitItem() as UiState.Success).data)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -89,17 +83,16 @@ class CharacterViewModelTest {
             // Given
             val exception = RuntimeException("Error fetching characters")
             coEvery { getCharactersUseCase.invoke() } returns flow {
-                emit(ResultState.Error(exception))
+                throw exception
             }
             // When
             viewModel.fetchCharacters()
 
             // Then
             viewModel.charactersState.test {
-                assertTrue(awaitItem() is ResultState.Loading)
-                assertEquals(ResultState.Error(exception), awaitItem())
+                assertTrue(awaitItem() is UiState.Loading)
+                assertEquals(UiState.Error(exception), awaitItem())
+                cancelAndIgnoreRemainingEvents()
             }
-
         }
 }
-

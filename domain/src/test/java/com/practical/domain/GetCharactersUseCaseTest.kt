@@ -5,7 +5,7 @@ import com.practical.domain.repository.CharacterRepository
 import com.practical.domain.usecases.GetCharactersUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -17,72 +17,53 @@ class GetCharactersUseCaseTest {
     private val getCharactersUseCase = GetCharactersUseCase(characterRepository)
 
     @Test
-    fun `should return Loading state when fetching characters`() = runTest {
+    fun `should return Success when characters are retrieved`() = runTest {
         //Given
-        coEvery { characterRepository.getCharactersList() } returns flow {
-            emit(ResultState.Loading)
-            //When
-            emit(
-                ResultState.Success(
-                    listOf(
-                        CharactersListModel(id = "1", name = "Character One")
-                    )
-                )
+        val charactersList = listOf(
+            CharactersListModel(
+                id = "1",
+                name = "Character 1",
+                image = "http://test.com/image1.png"
+            ),
+            CharactersListModel(
+                id = "2",
+                name = "Character 2",
+                image = "http://test.com/image2.png"
             )
-        }
+        )
+
+        // Mock the repository to return the character list
+        coEvery { characterRepository.getCharactersList() } returns flowOf(charactersList)
 
         //Then
         getCharactersUseCase().test {
-            // Collecting the first result (Loading)
-            assertTrue(awaitItem() is ResultState.Loading)
+            val emittedList = awaitItem()
 
-            // Collecting the second result (Success)
-            assertTrue(awaitItem() is ResultState.Success)
-            awaitComplete() // Ensure the flow completes
-        }
-    }
+            // Assert that the emitted list is the same as the mock character list
+            assertEquals(charactersList, emittedList)
 
-
-    @Test
-    fun `should return Success when characters are retrieved`() = runTest {
-        //Given
-        val characterList = listOf(
-            CharactersListModel(id = "1", name = "Character One"),
-            CharactersListModel(id = "2", name = "Character Two")
-        )
-
-        coEvery { characterRepository.getCharactersList() } returns flow {
-            emit(ResultState.Success(characterList))
-        }
-
-
-        getCharactersUseCase().test {
-            // Collecting the result emitted by the flow
-            val result = awaitItem()
-            assertTrue(result is ResultState.Success)
-            assertEquals(characterList, (result as ResultState.Success).data)
             awaitComplete() // Ensure the flow completes
         }
     }
 
     @Test
-    fun `should return Error when an exception occurs`() = runTest {
-        //Given
-        val exception = RuntimeException("Error fetching characters")
-        coEvery { characterRepository.getCharactersList() } returns flow {
-            emit(ResultState.Error(exception))
-        }
+    fun `should return empty list when repository returns empty list`() = runTest {
+        // Given
+        val emptyList = emptyList<CharactersListModel>()
 
-        //When
+        // Mock the repository to return an empty list
+        coEvery { characterRepository.getCharactersList() } returns flowOf(emptyList)
+
+        // When & Then
         getCharactersUseCase().test {
-            // Collecting the result emitted by the flow
-            val result = awaitItem()
-            assertTrue(result is ResultState.Error)
-            assertEquals(
-                "Error fetching characters",
-                (result as ResultState.Error).exception.message
-            )
-            awaitComplete() //Then
+            // Collect the emitted list from the flow
+            val emittedList = awaitItem()
+
+            // Assert that the emitted list is empty
+            assertTrue(emittedList.isEmpty())
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }
+

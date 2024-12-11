@@ -39,5 +39,4 @@ fun CharacterDetailsQuery.Episode.toEpisodeModel(): EpisodeModel {
         episode = this.episode,
         created = this.created
     )
-
 }
