@@ -5,22 +5,27 @@ import androidx.lifecycle.ViewModelProvider
 import com.practical.presentation.viewmodel.EpisodeDetailsViewModel
 import javax.inject.Inject
 
-
 class EpisodeDetailsViewModelFactory @Inject constructor(
     private val episodeDetailsFactory: EpisodeDetailsFactory, // Injected assisted factory
 ) : ViewModelProvider.Factory {
 
+    private var episodeId: String? = null
+
     fun create(episodeId: String): EpisodeDetailsViewModel {
-        // Create and return the ViewModel using the assisted factory
+        // Only update the episodeId if it's not already set
+        if (this.episodeId == null) {
+            this.episodeId = episodeId
+        }
+
         return episodeDetailsFactory.create(episodeId)
     }
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EpisodeDetailsViewModel::class.java)) {
-            return episodeDetailsFactory.create("") as T
+            // Ensure the episodeId is set before creating the ViewModel
+            checkNotNull(episodeId) { "Episode ID is missing" }
+            return episodeDetailsFactory.create(episodeId!!) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        error("Unknown ViewModel class: ${modelClass.simpleName}")
     }
 }
-
-
