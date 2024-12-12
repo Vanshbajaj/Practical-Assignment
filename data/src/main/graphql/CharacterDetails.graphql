@@ -1,21 +1,27 @@
 # CharacterDetails.graphql
 query CharacterDetails($id: ID!) {
     character(id: $id) {
+        id
         name
         status
         species
-        gender
-        image
+        type
         origin {
+            id
             name
+            type
             dimension
+            created
         }
+        image
+        created
         episode {
             id
             name
+            air_date
+            episode
+            created
         }
-
     }
 }
-
 
