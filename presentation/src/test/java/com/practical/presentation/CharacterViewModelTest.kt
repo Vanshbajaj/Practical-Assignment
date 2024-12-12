@@ -92,7 +92,6 @@ class CharacterViewModelTest {
             viewModel.charactersState.test {
                 assertTrue(awaitItem() is UiState.Loading)
                 assertEquals(UiState.Error(exception), awaitItem())
-                cancelAndIgnoreRemainingEvents()
             }
         }
 }

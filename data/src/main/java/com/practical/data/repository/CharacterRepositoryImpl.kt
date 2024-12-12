@@ -12,6 +12,7 @@ import com.practical.domain.CharactersListModel
 import com.practical.domain.EpisodeModelDetails
 import com.practical.domain.repository.CharacterRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -28,8 +29,20 @@ class CharacterRepositoryImpl @Inject constructor(
                     name = character?.name,
                     image = character?.image,
                 )
-            } ?: throw NetworkException.ClientNetworkException
+            } ?: emptyList()
             emit(characters)
+
+        }.catch { throwable ->
+            when (throwable) {
+                is NetworkException.ClientNetworkException -> {
+                    throw NetworkException.ClientNetworkException
+                }
+
+                is NetworkException.ApolloClientException -> {
+                    throw NetworkException.ApolloClientException
+                }
+            }
+
         }
     }
 
@@ -38,16 +51,38 @@ class CharacterRepositoryImpl @Inject constructor(
             val response = apolloClient.query(CharacterDetailsQuery(id)).execute()
             response.data?.character?.toCharacterModel()?.let {
                 emit(it) // Emit character data
-            } ?: throw NetworkException.ClientNetworkException
+            }
+                ?: throw NetworkException.ApolloClientException
+        }.catch { throwable ->
+            when (throwable) {
+                is NetworkException.ClientNetworkException -> {
+                    throw NetworkException.ClientNetworkException
+                }
+
+                is NetworkException.ApolloClientException -> {
+                    throw NetworkException.ApolloClientException
+                }
+
+            }
         }
     }
+
 
     override fun getEpisodeId(id: String): Flow<EpisodeModelDetails> {
         return flow {
             val response = apolloClient.query(EpisodeQuery(id)).execute()
             response.data?.episode?.toEpisodeModelDetails()?.let { emit(it) }
-                ?: throw NetworkException.ClientNetworkException
+
+        }.catch { throwable ->
+            when (throwable) {
+                is NetworkException.ClientNetworkException -> {
+                    throw NetworkException.ClientNetworkException
+                }
+
+                is NetworkException.ApolloClientException -> {
+                    throw NetworkException.ApolloClientException
+                }
+            }
         }
     }
 }
-
