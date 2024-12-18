@@ -12,7 +12,7 @@ import com.practical.data.network.NetworkException
 import com.practical.presentation.R
 
 @Composable
-fun ErrorText(message: Int, modifier: Modifier = Modifier) {
+private fun ErrorText(message: Int, modifier: Modifier = Modifier) {
     Box(modifier.fillMaxSize()) {
         Text(
             text = stringResource(id = message),
