@@ -23,8 +23,8 @@ class EpisodeDetailsViewModelFactory @Inject constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EpisodeDetailsViewModel::class.java)) {
             // Ensure the episodeId is set before creating the ViewModel
-            checkNotNull(episodeId) { "Episode ID is missing" }
-            return episodeDetailsFactory.create(episodeId!!) as T
+            requireNotNull(episodeId) { "Episode ID is missing" }
+            return episodeDetailsFactory.create(episodeId ?: "") as T
         }
         error("Unknown ViewModel class: ${modelClass.simpleName}")
     }

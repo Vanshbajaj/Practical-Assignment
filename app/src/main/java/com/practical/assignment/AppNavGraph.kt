@@ -1,7 +1,7 @@
 package com.practical.assignment
 
+
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,7 +10,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.practical.presentation.di.EpisodeDetailsViewModelFactory
 import com.practical.presentation.factory.ViewModelFactory
 import com.practical.presentation.screens.CharacterListScreen
 import com.practical.presentation.screens.CharacterScreen
@@ -19,11 +18,20 @@ import com.practical.presentation.viewmodel.CharacterDetailsViewModel
 import com.practical.presentation.viewmodel.CharacterViewModel
 import com.practical.presentation.viewmodel.EpisodeDetailsViewModel
 
+
+fun ViewModelFactory.episodeViewModelFactory(episodeId: String): ViewModelProvider.Factory {
+    return object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            // Provide the custom creation logic using the episodeId
+            return createEpisodeViewModel(episodeId) as T
+        }
+    }
+}
+
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
     viewModelFactory: ViewModelFactory,
-    episodeDetailsViewModelFactory: EpisodeDetailsViewModelFactory,
 ) {
     NavHost(navController, startDestination = Home) {
         composable<Home> {
@@ -44,12 +52,7 @@ fun AppNavGraph(
             val screen: EpisodeScreenData = backStackEntry.toRoute()
             val episodeId = screen.id
             val episodeDetailsViewModel: EpisodeDetailsViewModel = viewModel(
-                factory = object : ViewModelProvider.Factory {
-                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        // Provide the custom creation logic using the episodeId
-                        return episodeDetailsViewModelFactory.create(episodeId) as T
-                    }
-                }
+                factory = viewModelFactory.episodeViewModelFactory(episodeId)
             )
 
             // Display the Episode Details
@@ -58,5 +61,6 @@ fun AppNavGraph(
         }
 
     }
+
 }
 

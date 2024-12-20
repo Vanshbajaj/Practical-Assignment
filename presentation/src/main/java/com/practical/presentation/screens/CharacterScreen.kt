@@ -165,7 +165,8 @@ private fun CharacterRow(
     color: Color = Purple40,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start
     ) {
         Text(
             text = label, style = MaterialTheme.typography.titleMedium

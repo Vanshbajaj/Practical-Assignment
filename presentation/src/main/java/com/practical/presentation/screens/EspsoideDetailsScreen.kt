@@ -25,15 +25,16 @@ fun EpisodeDetails(viewModel: EpisodeDetailsViewModel, modifier: Modifier = Modi
             }
 
             is UiState.Error -> {
-                when(state.exception){
-                    is NetworkException.ClientNetworkException->{
-
+                when (state.exception) {
+                    is NetworkException.ClientNetworkException -> {
+                  //todo To add the Error data
                     }
 
                 }
             }
 
             is UiState.Success -> {
+                //todo to add the success Data
 
             }
         }

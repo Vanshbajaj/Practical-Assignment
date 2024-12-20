@@ -16,23 +16,17 @@ class ViewModelModule {
     fun provideViewModelFactory(
         getCharactersUseCase: GetCharactersUseCase,
         getCharacterByIdUseCase: GetCharacterByIdUseCase,
+        getEpisodeUseCases: GetEpisodeUseCases,
         @IoDispatcher coroutineDispatcher: CoroutineDispatcher,
     ): ViewModelFactory {
         return ViewModelFactory(
             getCharactersUseCase,
             getCharacterByIdUseCase,
+            getEpisodeUseCases,
             coroutineDispatcher
         )
     }
 
-    @Provides
-    @Singleton
-    fun provideEpisodeDetailsViewModelFactory(
-        episodeDetailsFactory: EpisodeDetailsFactory,
-    ): EpisodeDetailsViewModelFactory {
-        return EpisodeDetailsViewModelFactory(
-           episodeDetailsFactory
-        )
-    }
+
 
 }

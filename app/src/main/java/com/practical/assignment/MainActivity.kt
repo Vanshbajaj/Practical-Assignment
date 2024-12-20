@@ -16,8 +16,8 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    @Inject
-    lateinit var factory: EpisodeDetailsViewModelFactory
+//    @Inject
+//    lateinit var factory: EpisodeDetailsViewModelFactory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
             PracticalAssignmentTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    AppNavGraph(navController, viewModelFactory,factory)
+                    AppNavGraph(navController, viewModelFactory)
 
                 }
 
