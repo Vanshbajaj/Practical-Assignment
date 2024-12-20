@@ -54,13 +54,8 @@ fun AppNavGraph(
             val episodeDetailsViewModel: EpisodeDetailsViewModel = viewModel(
                 factory = viewModelFactory.episodeViewModelFactory(episodeId)
             )
-
             // Display the Episode Details
             EpisodeDetails(episodeDetailsViewModel, modifier = Modifier)
-
         }
-
     }
-
 }
-
