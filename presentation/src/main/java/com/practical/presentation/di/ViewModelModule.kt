@@ -26,7 +26,4 @@ class ViewModelModule {
             coroutineDispatcher
         )
     }
-
-
-
 }
