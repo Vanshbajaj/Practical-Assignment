@@ -123,27 +123,19 @@ class CharacterRepositoryImplTest {
         // Given
         val characterId = "6"
         val characterModel = CharacterModel(
-            id = "6",
             name = "Abadango Cluster Princess",
             status = "Alive",
             species = "Alien",
-            type = "",
+            gender = "Female",
             origin = OriginModel(
-                id = "2",
                 name = "Abadango",
-                type = "Cluster",
                 dimension = "unknown",
-                created = "2017-11-10T13:06:38.182Z"
             ),
             image = "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
-            created = "2017-11-04T19:50:28.250Z",
             episodes = listOf(
                 EpisodeModel(
                     id = "27",
                     name = "Rest and Ricklaxation",
-                    airDate = "August 27, 2017",
-                    episode = "S03E06",
-                    created = "2017-11-10T12:56:36.515Z"
                 )
             )
         )
@@ -153,11 +145,11 @@ class CharacterRepositoryImplTest {
     {
       "data": {
         "character": {
-          "id": "6",
+      
           "name": "Abadango Cluster Princess",
           "status": "Alive",
           "species": "Alien",
-          "type": "Princess",
+          "gender": "Female",
           "origin": {
             "name": "Abadango"
           },
