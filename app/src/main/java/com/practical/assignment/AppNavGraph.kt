@@ -55,7 +55,7 @@ fun AppNavGraph(
                 factory = viewModelFactory.episodeViewModelFactory(episodeId)
             )
             // Display the Episode Details
-            EpisodeDetails(episodeDetailsViewModel, modifier = Modifier)
+            EpisodeDetails(episodeDetailsViewModel.episodeState, modifier = Modifier)
         }
     }
 }
