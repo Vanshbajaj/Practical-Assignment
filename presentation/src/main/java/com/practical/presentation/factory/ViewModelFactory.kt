@@ -46,11 +46,7 @@ class ViewModelFactory @Inject constructor(
 
 
     fun createEpisodeViewModel(episodeId: String): EpisodeDetailsViewModel {
-        // Only update the episodeId if it's not already set
-        if (this.episodeId == null) {
-            this.episodeId = episodeId
-        }
-
+        this.episodeId = episodeId
         return create(EpisodeDetailsViewModel::class.java)
     }
 
