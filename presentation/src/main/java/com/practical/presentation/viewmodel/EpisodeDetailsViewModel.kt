@@ -27,7 +27,7 @@ class EpisodeDetailsViewModel @AssistedInject constructor(
         getEpisode()
     }
 
-    private fun getEpisode() {
+     fun getEpisode() {
         viewModelScope.launch(coroutineDispatcher) {
             episodeUseCases.invoke(episodeId)
                 .catch {
