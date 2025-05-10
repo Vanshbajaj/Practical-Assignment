@@ -2,6 +2,7 @@ package com.practical.assignment
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -55,7 +56,8 @@ fun AppNavGraph(
                 factory = viewModelFactory.episodeViewModelFactory(episodeId)
             )
             // Display the Episode Details
-            EpisodeDetails(episodeDetailsViewModel.episodeState, modifier = Modifier)
+            val stateFlow = episodeDetailsViewModel.episodeState.collectAsState()
+            EpisodeDetails(stateFlow, modifier = Modifier)
         }
     }
 }

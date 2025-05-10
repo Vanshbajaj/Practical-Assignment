@@ -15,11 +15,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.practical.data.network.NetworkException
 import com.practical.domain.Character
@@ -29,16 +29,15 @@ import com.practical.presentation.UiState
 import com.practical.presentation.common.ErrorMessage
 import com.practical.presentation.ui.theme.Purple
 import com.practical.presentation.ui.theme.dimens
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun EpisodeDetails(uiState: StateFlow<UiState<Episode>>, modifier: Modifier = Modifier) {
+fun EpisodeDetails(uiState: State<UiState<Episode>>, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .padding(MaterialTheme.dimens.paddingExtraSmall)
             .fillMaxSize()
     ) {
-        val episodeState by uiState.collectAsStateWithLifecycle()
+        val episodeState by uiState
         when (val state = episodeState) {
             UiState.Loading -> {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
