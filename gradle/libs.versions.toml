@@ -27,7 +27,7 @@ detektcompose = "0.4.16+"
 ksp = "2.0.21-1.0.26"
 mockwebserver = "4.10.0"
 navigationCompose = "2.8.3"
-serazaltion = "1.9.23"
+serazaltion = "2.1.21"
 turbine = "1.2.0"
 
 [libraries]
